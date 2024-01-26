@@ -3,4 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <page-encoding>UTF-8</page-encoding>
+            <include-prelude>/WEB-INF/shared/base.jsp</include-prelude>
+            <trim-directive-whitespaces>true</trim-directive-whitespaces>
+            <default-content-type>text/html</default-content-type>
+        </jsp-property-group>
+    </jsp-config>
+    
+    <context-param>
+        <param-name>appURLLocal</param-name>
+        <param-value>http://localhost:8080/java3_kirkwood_war_exploded</param-value>
+    </context-param>
+    <context-param>
+        <param-name>appURLCloud</param-name>
+        <param-value>https://jared-kw.azurewebsites.net/</param-value>
+    </context-param>
 </web-app>
