@@ -21,4 +21,14 @@
         <param-name>appURLCloud</param-name>
         <param-value>https://jared-kw.azurewebsites.net/</param-value>
     </context-param>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/errorHandler</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/errorHandler</location>
+    </error-page>
+
 </web-app>

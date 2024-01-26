@@ -19,8 +19,9 @@ public class ArtistJsonServlet extends HttpServlet {
     private static List<Artist> artists;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("artist", artists.get(0));
-        req.getRequestDispatcher("WEB-INF/demos/artist.jsp").forward(req, resp);
+        throw new ServletException();
+//        req.setAttribute("artist", artists.get(0));
+//        req.getRequestDispatcher("WEB-INF/demos/artist.jsp").forward(req, resp);
     }
 
     @Override
