@@ -16,7 +16,7 @@
         <div class="col-xs-12 col-sm-6 col-lg-5 mb-4">
             <h3>Personal Projects</h3>
             <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action">First link item</a>
+                <a href="email" class="list-group-item list-group-item-action">Email Thing</a>
                 <a href="#" class="list-group-item list-group-item-action">Second link item</a>
                 <a href="#" class="list-group-item list-group-item-action">Third link item</a>
                 <a href="#" class="list-group-item list-group-item-action">Fourth link item</a>
