@@ -8,9 +8,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 @WebServlet("/email")
 public class EmailServlet extends HttpServlet {
+    private static HashMap<String, String> results = new HashMap<>();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("WEB-INF/demos/email.jsp").forward(req, resp);
@@ -22,8 +24,11 @@ public class EmailServlet extends HttpServlet {
         String subject = req.getParameter("subject");
         String message = req.getParameter("message");
 
+        results.clear();
         CommunicationService.sendEmail(email, subject, message);
-        req.setAttribute("success", "Email Sent");
+
+        results.put("message", "Email Sent");
+        req.setAttribute("results", results);
         req.getRequestDispatcher("WEB-INF/demos/email.jsp").forward(req, resp);
     }
 }

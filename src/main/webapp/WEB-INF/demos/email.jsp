@@ -1,9 +1,10 @@
 <%@include file="/WEB-INF/shared/top.jsp"%>
     <title>Email</title>
+    <script src="js/email.js"></script>
 </head>
 <body>
-    <c:if test="${not empty results.success}">
-        <h5>${results.success}</h5>
+    <c:if test="${not empty results.message}">
+        <h5>${results.message}</h5>
     </c:if>
     <form action="${appURL}/email" method="post">
         <!-- Email Address -->
@@ -22,6 +23,6 @@
         <br>
 
         <!-- Submit Button -->
-        <input type="submit" value="Submit">
+        <input id="submit" type="submit" value="Submit">
     </form>
 <%@include file="/WEB-INF/shared/bottom.jsp"%>
