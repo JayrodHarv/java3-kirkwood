@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     NProgress.configure({ showSpinner: false, trickle: false });
     $('a[href]').click(showBar);
     $('form').submit(showBar);
