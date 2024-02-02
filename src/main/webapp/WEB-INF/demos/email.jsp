@@ -8,9 +8,11 @@
     <script src="js/email.js"></script>
 </head>
 <body>
-    <c:if test="${not empty results.message}">
-        <h5>${results.message}</h5>
-    </c:if>
+    <c:choose>
+        <c:when test="${not empty result and result eq true}"><p>Email Sent</p></c:when>
+        <c:when test="${not empty result and result eq false}"><p>Email Not Sent</p></c:when>
+        <c:otherwise><p>Use this form to send an email</p></c:otherwise>
+    </c:choose>
     <form action="${appURL}/email" method="post">
         <!-- Email Address -->
         <label for="email">Email Address:</label>
