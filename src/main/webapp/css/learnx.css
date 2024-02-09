@@ -1,0 +1,19 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+main {
+    min-height: 250px;
+}
+header ul.nav a.nav-link {
+    color: orangered;
+    font-weight: bold;
+}
+.carousel-caption h5 {
+    font-size: 40px;
+}
+.carousel-caption p {
+    font-size: 20px;
+}
+.carousel-caption {
+    margin-bottom: 200px;
+}
