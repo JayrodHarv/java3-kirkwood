@@ -1,4 +1,4 @@
-<%@include file="/WEB-INF/learnx/top.jsp"%>
+<%@include file="/WEB-INF/smp/top.jsp"%>
 <main>
     <section class="p-0 d-flex align-items-center position-relative overflow-hidden">
         <div class="container-fluid">
@@ -21,7 +21,7 @@
                             </c:if>
 
                             <!-- Form START -->
-                            <form method="POST" action="${appURL}/signup">
+                            <form method="POST" action="${appURL}/smp-signup">
                                 <!-- Email -->
                                 <div class="mb-4">
                                     <label for="inputEmail1" class="form-label">Email address *</label>
@@ -55,22 +55,11 @@
                                         </c:if>
                                     </div>
                                 </div>
-                                <!-- DOB -->
-                                <div class="mb-4">
-                                    <label for="date-of-birth" class="form-label">Date Of Birth *</label>
-                                    <div class="input-group input-group-lg">
-                                        <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="fa fa-calendar"></i></span>
-                                        <input type="text" class="<c:if test="${not empty results.dateOfBirthError}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="MM-DD-YYYY" id="date-of-birth" name="date-of-birth" value="${results.dateOfBirth}">
-                                        <c:if test="${not empty results.dateOfBirthError}">
-                                            <div class="invalid-feedback">${results.dateOfBirthError}</div>
-                                        </c:if>
-                                    </div>
-                                </div>
                                 <!-- Check box -->
                                 <div class="mb-4">
                                     <div class="form-check">
                                         <input <c:if test="${results.terms eq 'agree'}">checked</c:if> type="checkbox" class="<c:if test="${not empty results.termsOfServiceError}">is-invalid</c:if> form-check-input" id="checkbox-1" name="checkbox-1" value="agree">
-                                        <label class="form-check-label" for="checkbox-1">By signing up, you agree to the <a href="${appURL}/terms">terms and conditions</a></label>
+                                        <label class="form-check-label" for="checkbox-1">By signing up, you agree to the <a href="${appURL}/smp-terms">terms and conditions</a></label>
                                         <c:if test="${not empty results.termsOfServiceError}">
                                             <div class="invalid-feedback">${results.termsOfServiceError}</div>
                                         </c:if>
@@ -87,7 +76,7 @@
 
                             <!-- Sign in link -->
                             <div class="mt-4 text-center">
-                                <span>Already have an account? <a href="${appURL}/login">Log in here</a></span>
+                                <span>Already have an account? <a href="${appURL}/smp-login">Log in here</a></span>
                             </div>
                         </div>
                     </div>
@@ -96,4 +85,4 @@
         </div>
     </section>
 </main>
-<%@include file="/WEB-INF/learnx/bottom.jsp"%>
+<%@include file="/WEB-INF/smp/bottom.jsp"%>

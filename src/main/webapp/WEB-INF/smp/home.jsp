@@ -1,22 +1,5 @@
-<%@ include file="/WEB-INF/learnx/top.jsp"%>
-<main class="container">
-
-    <!-- Flash Message -->
-    <c:choose>
-        <c:when test="${not empty flashMessageSuccess}">
-            <div class="alert alert-success my-2">
-                    ${flashMessageSuccess}
-            </div>
-            <c:remove var="flashMessageSuccess" scope="session"></c:remove>
-        </c:when>
-        <c:when test="${not empty flashMessageWarning}">
-            <div class="alert alert-warning my-2">
-                    ${flashMessageWarning}
-            </div>
-            <c:remove var="flashMessageWarning" scope="session"></c:remove>
-        </c:when>
-    </c:choose>
-
+<%@ include file="/WEB-INF/smp/top.jsp"%>
+<main>
     <!-- Jumbo-Tron -->
     <div class="p-5 mb-4 bg-body-tertiary rounded-3">
         <div class="container-fluid py-5">
@@ -73,7 +56,5 @@
             </div>
         </div>
     </div>
-
 </main>
-<%@ include file="/WEB-INF/learnx/bottom.jsp"%>
-
+<%@ include file="/WEB-INF/smp/bottom.jsp"%>

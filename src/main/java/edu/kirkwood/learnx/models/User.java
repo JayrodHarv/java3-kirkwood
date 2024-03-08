@@ -1,6 +1,9 @@
 package edu.kirkwood.learnx.models;
 
+import edu.kirkwood.shared.Validators;
+
 import java.time.Instant;
+import java.util.regex.Matcher;
 
 public class User {
     private int id;
@@ -15,6 +18,10 @@ public class User {
     private Instant created_at;
     private Instant last_logged_in;
     private Instant updated_at;
+
+    public User() {
+
+    }
 
     public User(int id, String firstName, String lastName, String email, String phone, char[] password, String language, String status, String privileges, Instant created_at, Instant last_logged_in, Instant updated_at) {
         this.id = id;
@@ -60,6 +67,10 @@ public class User {
     }
 
     public void setEmail(String email) {
+        Matcher matcher = Validators.emailPattern.matcher(email);
+        if(!matcher.matches()) {
+            throw new IllegalArgumentException("Invalid Email Address");
+        }
         this.email = email;
     }
 
@@ -76,6 +87,16 @@ public class User {
     }
 
     public void setPassword(char[] password) {
+        // The only time the password should be null is when I set the activeUser session attribute
+        if(password == null) {
+            this.password = password;
+            return;
+        }
+        String pass = password.toString();
+        Matcher matcher = Validators.passwordPattern.matcher(pass);
+        if(!matcher.matches()) {
+            throw new IllegalArgumentException("Password must be 8 characters, with 3 of 4 (lowercase, uppercase, number, symbol)");
+        }
         this.password = password;
     }
 

@@ -8,7 +8,7 @@
         <div class="col-12 text-center">
             <h2>Oh no!</h2>
             <p class="mb-4">Either something went wrong or this page doesn't exist anymore.</p>
-            <a href="${appURL}" class="btn btn-outline-primary">Home page</a>
+            <a href="index.jsp" class="btn btn-outline-primary">Home page</a>
         </div>
     </div>
 </div>

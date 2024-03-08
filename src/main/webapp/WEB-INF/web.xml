@@ -19,16 +19,23 @@
     </context-param>
     <context-param>
         <param-name>appURLCloud</param-name>
-        <param-value>https://jared-kw.azurewebsites.net/</param-value>
+        <param-value>https://jared-kw.azurewebsites.net</param-value>
     </context-param>
-
-    <error-page>
-        <error-code>404</error-code>
-        <location>/errorHandler</location>
-    </error-page>
-    <error-page>
-        <exception-type>java.lang.Throwable</exception-type>
-        <location>/errorHandler</location>
-    </error-page>
-
+<!--    <error-page>-->
+<!--        <error-code>404</error-code>-->
+<!--        <location>/errorHandler</location>-->
+<!--    </error-page>-->
+<!--    <error-page>-->
+<!--        <exception-type>java.lang.Throwable</exception-type>-->
+<!--        <location>/errorHandler</location>-->
+<!--    </error-page>-->
+    <session-config>
+        <session-timeout>10</session-timeout>
+<!--        <cookie-config>-->
+<!--            <name>SESSIONID</name>-->
+<!--            <http-only>true</http-only>-->
+<!--            <secure>true</secure>-->
+<!--        </cookie-config>-->
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
 </web-app>

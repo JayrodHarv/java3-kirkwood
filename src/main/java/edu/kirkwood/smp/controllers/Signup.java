@@ -1,10 +1,8 @@
-package edu.kirkwood.learnx.controllers;
+package edu.kirkwood.smp.controllers;
 
-import edu.kirkwood.learnx.data.UserDAO;
-import edu.kirkwood.learnx.models.User;
+import edu.kirkwood.smp.data.UserDAO;
+import edu.kirkwood.smp.models.User;
 import edu.kirkwood.shared.CommunicationService;
-import edu.kirkwood.shared.Helpers;
-import edu.kirkwood.shared.Validators;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,14 +14,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 
-@WebServlet("/signup")
-public class SignupServlet extends HttpServlet {
+@WebServlet("/smp-signup")
+public class Signup extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("pageTitle", "Sign up for an account");
-        req.getRequestDispatcher("WEB-INF/learnx/signup.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/smp/smp-signup.jsp").forward(req, resp);
     }
 
     @Override
@@ -31,7 +28,6 @@ public class SignupServlet extends HttpServlet {
         String email = req.getParameter("inputEmail1");
         String password1 = req.getParameter("inputPassword1");
         String password2 = req.getParameter("inputPassword2");
-        String dateOfBirth = req.getParameter("date-of-birth");
         String[] terms = req.getParameterValues("checkbox-1");
         if(terms == null) {
             terms = new String[] {"0"};
@@ -45,7 +41,6 @@ public class SignupServlet extends HttpServlet {
         results.put("email", email);
         results.put("password1", password1);
         results.put("password2", password2);
-        results.put("dateOfBirth", dateOfBirth);
         results.put("terms", terms[0]);
 
         User user = new User();
@@ -65,35 +60,28 @@ public class SignupServlet extends HttpServlet {
         } catch(IllegalArgumentException e) {
             results.put("password1Error", e.getMessage());
         }
-        if(password2.equals("")) {
+        if(password1.isEmpty()) {
+            results.put("password1Error", "This input is required");
+        }
+        if(password2.isEmpty()) {
             results.put("password2Error", "This input is required");
         }
         if(!password1.equals(password2)) {
             results.put("password2Error", "Passwords don't match");
         }
-
-        Matcher matcher = Validators.dateOfBirthPattern.matcher(dateOfBirth);
-        if(!matcher.matches()) {
-            results.put("dateOfBirthError", "Invalid date of birth");
-        }
-        if(Helpers.ageInYears(dateOfBirth) < 13) {
-            results.put("dateOfBirthError", "You must be 13 years old or older to sign up");
-        }
-
-        if(terms == null || !terms[0].equals("agree")){
+        if(terms == null || !terms[0].equals("agree")) {
             results.put("termsOfServiceError", "You must agree to our terms of service");
         }
 
         if (!results.containsKey("emailError") && !results.containsKey("password1Error")
                 && !results.containsKey("password2Error") && !results.containsKey("termsOfServiceError")
-                && !results.containsKey("dateOfBirthError")
         ) {
             try {
                 List<String> twoFactorInfo = UserDAO.add(user);
                 if(!twoFactorInfo.isEmpty()) {
                     // Send user and email
                     String code = twoFactorInfo.get(0);
-                    CommunicationService.sendNewUserEmail(code, email);
+                    CommunicationService.sendNewSMPUserEmail(code, email);
                     // Todo: display an error is the email cannot be sent
                     // Gets an existing session; Creates new one if doesn't exist
                     HttpSession session = req.getSession();
@@ -105,7 +93,7 @@ public class SignupServlet extends HttpServlet {
                     session.setAttribute("email", email);
 
                     //redirect to confirmation page
-                    resp.sendRedirect("confirm");
+                    resp.sendRedirect("smp-confirm");
                     return;
                 }
                 results.put("userAddSuccess", "User added");
@@ -116,6 +104,6 @@ public class SignupServlet extends HttpServlet {
 
         req.setAttribute("results", results);
         req.setAttribute("pageTitle", "Sign up for an account");
-        req.getRequestDispatcher("WEB-INF/learnx/signup.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/smp/smp-signup.jsp").forward(req, resp);
     }
 }

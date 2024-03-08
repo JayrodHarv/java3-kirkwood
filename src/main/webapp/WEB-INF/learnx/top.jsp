@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/shared/top.jsp"%>
-    <title>LearnX | ${pageTitle}</title>
+    <title>${businessName} | ${pageTitle}</title>
     <link rel="shortcut icon" href="${appURL}/images/learnx/learnx-icon.png"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
