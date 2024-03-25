@@ -8,11 +8,10 @@
     <%-- Bootstrap CSS --%>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <%-- Custom CSS --%>
-    <link rel="stylesheet" type="text/css" href="${appURL}/css/learnx/custom.css">
+    <link rel="stylesheet" type="text/css" href="${appURL}/css/learnx.css">
     <%-- Progress bar CSS --%>
     <link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet"/>
     <link rel="stylesheet" href="${appURL}/css/nprogress.css">
-    <link rel="stylesheet" href="${appURL}/css/learnx.css">
     <link rel="stylesheet" href="${appURL}/css/loading.css">
 </head>
 <body>

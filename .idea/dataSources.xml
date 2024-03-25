@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="smp_db@jared-kw-db.mysql.database.azure.com" uuid="2937e34b-2c24-4970-8f6e-50a7eca66d68">
+    <data-source source="LOCAL" name="jared-kw-database@jared-kw-db.mysql.database.azure.com" uuid="2937e34b-2c24-4970-8f6e-50a7eca66d68">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://jared-kw-db.mysql.database.azure.com:3306/smp_db?serverTimezone=UTC&amp;useSSL=true&amp;requireSSL=false</jdbc-url>
+      <jdbc-url>jdbc:mysql://jared-kw-db.mysql.database.azure.com:3306/jared-kw-database?serverTimezone=UTC&amp;useSSL=true&amp;requireSSL=false</jdbc-url>
       <jdbc-additional-properties>
         <property name="AZURE_SQL_DB_SERVER" value="/subscriptions/041f274e-d160-4cda-a1fe-ad65109813a2/resourceGroups/jared-kw_group/providers/Microsoft.DBforMySQL/flexibleServers/jared-kw-db" />
       </jdbc-additional-properties>

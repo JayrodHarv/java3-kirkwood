@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/shared/top.jsp"%>
-<title>${smpName} | ${pageTitle}</title>
-<%--<link rel="shortcut icon" href="${appURL}/images/learnx/learnx-icon.png"/>--%>
+<title>${pageTitle} | ${smpName}</title>
+<link rel="shortcut icon" href="${appURL}/images/smp/void.png"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

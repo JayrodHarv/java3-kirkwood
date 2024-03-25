@@ -18,14 +18,14 @@ public class AllUsersServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         User userFromSession = (User)session.getAttribute("activeUser");
-        if(userFromSession == null || userFromSession.getStatus() != "active" || userFromSession.getPrivileges() != "admin") {
-            resp.sendRedirect("login");
-            session.setAttribute("flashMessageWarning", "You must be logged in to view this content");
+        if(userFromSession == null || !userFromSession.getStatus().equals("active") || !userFromSession.getPrivileges().equals("admin")) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         List<User> users = UserDAO.getAll();
         req.setAttribute("users", users);
         req.setAttribute("pageTitle", "All Users");
-        req.getRequestDispatcher("WEB-INF/learnx/all-users.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/learnx/all-users.jsp").forward(req,resp);
+
     }
 }

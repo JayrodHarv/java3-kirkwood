@@ -55,6 +55,17 @@
                                         </c:if>
                                     </div>
                                 </div>
+                                <!-- DisplayName -->
+                                <div class="mb-4">
+                                    <label for="inputDisplayName" class="form-label">Display Name *</label>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="bi bi-envelope-fill"></i></span>
+                                        <input type="text" class="<c:if test="${not empty results.displayNameError}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Display Name" id="inputDisplayName" name="inputDisplayName" value="${results.displayName}">
+                                        <c:if test="${not empty results.displayNameError}">
+                                            <div class="invalid-feedback">${results.displayNameError}</div>
+                                        </c:if>
+                                    </div>
+                                </div>
                                 <!-- Check box -->
                                 <div class="mb-4">
                                     <div class="form-check">

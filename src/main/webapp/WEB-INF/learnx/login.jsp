@@ -19,8 +19,18 @@
                                 <c:remove var="flashMessageSuccess" scope="session" />
                             </c:if>
 
+                            <c:if test="${not empty flashMessageWarning}">
+                                <div class="alert alert-warning mb-2" role="alert">
+                                        ${flashMessageWarning}
+                                </div>
+                                <c:remove var="flashMessageWarning" scope="session" />
+                            </c:if>
+
                             <!-- Form START -->
                             <form method="post" action="${appURL}/login">
+                                <c:if test="${not empty redirect}">
+                                    <input type="hidden" name="redirect" value="${redirect}"/>
+                                </c:if>
                                 <!-- Email -->
                                 <div class="mb-4">
                                     <label for="inputEmail1" class="form-label">Email address *</label>

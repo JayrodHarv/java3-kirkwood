@@ -59,7 +59,7 @@ public class Confirm2faCode extends HttpServlet {
             user.setPassword(null);
             session.removeAttribute("code");
             session.removeAttribute("email");
-            session.setAttribute("activeUser", user);
+            session.setAttribute("activeSMPUser", user);
             session.setAttribute("flashMessageSuccess", "Welcome new user");
             // add easter egg
             resp.sendRedirect("smp");

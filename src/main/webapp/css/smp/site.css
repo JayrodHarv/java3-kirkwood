@@ -5,7 +5,7 @@ main {
     min-height: 250px;
 }
 header ul.nav a.nav-link {
-    color: orangered;
+    color: white;
     font-weight: bold;
 }
 .carousel-caption h5 {
@@ -17,12 +17,7 @@ header ul.nav a.nav-link {
 .carousel-caption {
     margin-bottom: 200px;
 }
-.btn-outline-orange, .btn-orange:hover {
-    outline-color: #F16623;
-    border-color: #F16623;
-    color: #F16623;
-}
-.btn-orange, .btn-outline-orange:hover {
-    background-color: #F16623;
-    color: white;
+
+header .nav-link:hover {
+    color: yellow;
 }

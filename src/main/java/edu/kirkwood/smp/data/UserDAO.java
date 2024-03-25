@@ -73,10 +73,11 @@ public class UserDAO {
         List<String> results = new ArrayList<>();
         try (Connection connection = getConnection()) {
             if (connection != null) {
-                try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_user(?, ?)}")) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_user(?, ?, ?)}")) {
                     statement.setString(1, user.getEmail());
                     String encryptedPassword = BCrypt.hashpw(new String(user.getPassword()), BCrypt.gensalt(12));
                     statement.setString(2, encryptedPassword);
+                    statement.setString(3, user.getDisplayName());
                     int rowsAffected = statement.executeUpdate();
                     if(rowsAffected == 1) {
                         try (CallableStatement statement2 = connection.prepareCall("{CALL sp_get_2fa_code(?)}")) {

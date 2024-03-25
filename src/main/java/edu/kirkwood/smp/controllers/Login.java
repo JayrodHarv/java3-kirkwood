@@ -63,7 +63,7 @@ public class Login extends HttpServlet {
                         session.setMaxInactiveInterval(30 * 24 * 60 * 60);
                     }
 
-                    session.setAttribute("activeUser", userFromDatabase);
+                    session.setAttribute("activeSMPUser", userFromDatabase);
                     session.setAttribute("flashMessageSuccess", "Welcome back!");
                     resp.sendRedirect("smp");
                     return;

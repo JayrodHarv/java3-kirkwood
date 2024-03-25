@@ -28,6 +28,7 @@ public class Signup extends HttpServlet {
         String email = req.getParameter("inputEmail1");
         String password1 = req.getParameter("inputPassword1");
         String password2 = req.getParameter("inputPassword2");
+        String displayName = req.getParameter("inputDisplayName");
         String[] terms = req.getParameterValues("checkbox-1");
         if(terms == null) {
             terms = new String[] {"0"};
@@ -41,6 +42,7 @@ public class Signup extends HttpServlet {
         results.put("email", email);
         results.put("password1", password1);
         results.put("password2", password2);
+        results.put("displayName", displayName);
         results.put("terms", terms[0]);
 
         User user = new User();
@@ -48,6 +50,12 @@ public class Signup extends HttpServlet {
             user.setEmail(email);
         } catch (IllegalArgumentException e) {
             results.put("emailError", e.getMessage());
+        }
+
+        try {
+            user.setDisplayName(displayName);
+        } catch (IllegalArgumentException e) {
+            results.put("displayNameError", e.getMessage());
         }
 
         User userFromDB = UserDAO.get(email);
@@ -69,12 +77,18 @@ public class Signup extends HttpServlet {
         if(!password1.equals(password2)) {
             results.put("password2Error", "Passwords don't match");
         }
+
+        if(displayName == null || displayName.isEmpty()) {
+            results.put("displayNameError", "You must enter a display name.");
+        }
+
         if(terms == null || !terms[0].equals("agree")) {
             results.put("termsOfServiceError", "You must agree to our terms of service");
         }
 
         if (!results.containsKey("emailError") && !results.containsKey("password1Error")
                 && !results.containsKey("password2Error") && !results.containsKey("termsOfServiceError")
+                && !results.containsKey("displayNameError")
         ) {
             try {
                 List<String> twoFactorInfo = UserDAO.add(user);

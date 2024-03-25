@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/smp/top.jsp"%>
-<main>
+<main class="m-3">
     <!-- Jumbo-Tron -->
     <div class="p-5 mb-4 bg-body-tertiary rounded-3">
         <div class="container-fluid py-5">
@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <div id="carouselExampleCaptions" class="carousel slide mb-4">
+    <div id="carouselExampleCaptions" class="carousel slide mb-4 w-75 mx-auto">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
