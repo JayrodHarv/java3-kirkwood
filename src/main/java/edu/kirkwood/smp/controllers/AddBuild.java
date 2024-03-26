@@ -58,8 +58,6 @@ public class AddBuild extends HttpServlet {
         Map<String, String> results = new HashMap<>();
         results.put("buildName", buildName);
         results.put("description", description);
-//        req.setAttribute("selectedTags", inputTags);
-
 
         // Input Validation
         if(buildName == null || buildName.isEmpty()) {
@@ -68,8 +66,11 @@ public class AddBuild extends HttpServlet {
         if(description == null || description.isEmpty()) {
             results.put("descriptionError", "Description is required. Ideas of what to include in description: build time, built by who, inspired by...");
         }
-        if(inputTags == null || inputTags.length < 1) {
+        if(inputTags == null || inputTags.length == 0) {
             results.put("tagError", "You must add at least one tag to this new build.");
+        } else {
+            List<String> tagStrList = Arrays.asList(inputTags);
+            req.setAttribute("selectedTags", tagStrList);
         }
 
         if (!results.containsKey("buildNameError") && !results.containsKey("descriptionError")

@@ -27,9 +27,9 @@
         <div class="mb-4">
             <label for="tags" class="form-label">Tags</label>
             <div class="input-group input-group-lg">
-                <select multiple class="form-select <c:if test="${not empty results.tagError}">is-invalid</c:if>" id="tags">
+                <select multiple class="form-select <c:if test="${not empty results.tagError}">is-invalid</c:if>" id="tags" name="tags">
                     <c:forEach items="${tags}" var="t">
-                        <option value="${t.getTagID()}" data-bs-toggle="tooltip" title="${t.getDescription()}">${t.getTagID()}</option>
+                        <option value="${t.getTagID()}" <c:if test="${selectedTags.contains(t.getTagID())}">selected</c:if> data-bs-toggle="tooltip" title="${t.getDescription()}">${t.getTagID()}</option>
                     </c:forEach>
                 </select>
             </div>

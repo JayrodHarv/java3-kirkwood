@@ -33,14 +33,9 @@ public class ServerBuilds extends HttpServlet {
         }
 
         req.setAttribute("results", results);
-        req.setAttribute("buildings", builds);
+        req.setAttribute("builds", builds);
         req.setAttribute("tags", tags);
         req.setAttribute("pageTitle", "Server Builds");
         req.getRequestDispatcher("WEB-INF/smp/server-builds.jsp").forward(req, resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
     }
 }

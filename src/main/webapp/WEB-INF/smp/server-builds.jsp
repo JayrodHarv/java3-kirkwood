@@ -16,7 +16,7 @@
           <div class="card mb-4">
   <%--          <img class="card-img-top" src="data:image/png;base64,${b.BuildingID}">--%>
             <div class="card-body">
-              <h5 class="card-title">${b.getName()}</h5>
+              <h5 class="card-title">${b.getBuildID()}</h5>
               <p class="card-text">${b.getDescription()}</p>
             </div>
           </div>
