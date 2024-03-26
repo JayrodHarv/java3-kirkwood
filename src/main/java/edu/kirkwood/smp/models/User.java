@@ -6,13 +6,12 @@ import java.time.Instant;
 import java.util.regex.Matcher;
 
 public class User {
-    private int UserID;
-    private String Email;
+    private String UserID;
     private char[] Password;
     private String DisplayName;
     private String Language;
     private String Status;
-    private String Privileges;
+    private String Role;
     private Instant CreatedAt;
     private Instant LastLoggedIn;
     private Instant UpdatedAt;
@@ -22,38 +21,29 @@ public class User {
 
     }
 
-    public User(int userID, String email, char[] password, String displayName, String language, String status, String privileges, Instant createdAt, Instant lastLoggedIn, Instant updatedAt, byte[] pfp) {
+    public User(String userID, char[] password, String displayName, String language, String status, String role, Instant createdAt, Instant lastLoggedIn, Instant updatedAt, byte[] pfp) {
         UserID = userID;
-        Email = email;
         Password = password;
         DisplayName = displayName;
         Language = language;
         Status = status;
-        Privileges = privileges;
+        Role = role;
         CreatedAt = createdAt;
         LastLoggedIn = lastLoggedIn;
         UpdatedAt = updatedAt;
         Pfp = pfp;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return UserID;
     }
 
-    public void setUserID(int userID) {
-        UserID = userID;
-    }
-
-    public String getEmail() {
-        return Email;
-    }
-
-    public void setEmail(String email) {
-        Matcher matcher = Validators.emailPattern.matcher(email);
+    public void setUserID(String userID) {
+        Matcher matcher = Validators.emailPattern.matcher(userID);
         if(!matcher.matches()) {
             throw new IllegalArgumentException("Invalid Email Address");
         }
-        this.Email = email;
+        this.UserID = userID;
     }
 
     public char[] getPassword() {
@@ -98,12 +88,12 @@ public class User {
         Status = status;
     }
 
-    public String getPrivileges() {
-        return Privileges;
+    public String getRole() {
+        return Role;
     }
 
-    public void setPrivileges(String privileges) {
-        Privileges = privileges;
+    public void setRole(String role) {
+        Role = role;
     }
 
     public Instant getCreatedAt() {

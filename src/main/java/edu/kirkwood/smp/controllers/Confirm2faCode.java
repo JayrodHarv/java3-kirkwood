@@ -53,7 +53,7 @@ public class Confirm2faCode extends HttpServlet {
             String email = (String)session.getAttribute("email");
             User user = UserDAO.get(email);
             user.setStatus("active");
-            user.setPrivileges("user");
+            user.setRole("user");
             user.setLastLoggedIn(Instant.now().atOffset(ZoneOffset.UTC).toInstant());
             UserDAO.update(user);
             user.setPassword(null);

@@ -79,7 +79,7 @@
                                 <!-- Button -->
                                 <div class="align-items-center mt-0">
                                     <div class="d-grid">
-                                        <button class="btn btn-orange mb-0" type="submit">Sign Up</button>
+                                        <button class="btn btn-primary mb-0" type="submit">Sign Up</button>
                                     </div>
                                 </div>
                             </form>

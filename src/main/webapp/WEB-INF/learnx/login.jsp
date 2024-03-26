@@ -58,7 +58,7 @@
                                 <!-- Button -->
                                 <div class="align-items-center mt-0">
                                     <div class="d-grid">
-                                        <button class="btn btn-orange mb-0" type="submit">Login</button>
+                                        <button class="btn btn-primary mb-0" type="submit">Login</button>
                                     </div>
                                 </div>
                             </form>

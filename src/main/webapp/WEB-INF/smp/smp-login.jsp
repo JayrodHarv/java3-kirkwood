@@ -13,6 +13,22 @@
                                 <p class="alert alert-danger my-2">${results.loginFail}</p>
                             </c:if>
 
+                            <!-- Flash Message -->
+                            <c:choose>
+                                <c:when test="${not empty flashMessageSuccess}">
+                                    <div class="alert alert-success my-2">
+                                            ${flashMessageSuccess}
+                                    </div>
+                                    <c:remove var="flashMessageSuccess" scope="session"></c:remove>
+                                </c:when>
+                                <c:when test="${not empty flashMessageWarning}">
+                                    <div class="alert alert-warning my-2">
+                                            ${flashMessageWarning}
+                                    </div>
+                                    <c:remove var="flashMessageWarning" scope="session"></c:remove>
+                                </c:when>
+                            </c:choose>
+
                             <!-- Form START -->
                             <form method="post" action="${appURL}/smp-login">
                                 <!-- Email -->
@@ -42,7 +58,7 @@
                                 <!-- Button -->
                                 <div class="align-items-center mt-0">
                                     <div class="d-grid">
-                                        <button class="btn btn-orange mb-0" type="submit">Login</button>
+                                        <button class="btn btn-primary mb-0" type="submit">Login</button>
                                     </div>
                                 </div>
                             </form>

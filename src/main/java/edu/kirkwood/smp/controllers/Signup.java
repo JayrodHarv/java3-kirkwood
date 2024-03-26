@@ -47,7 +47,7 @@ public class Signup extends HttpServlet {
 
         User user = new User();
         try {
-            user.setEmail(email);
+            user.setUserID(email);
         } catch (IllegalArgumentException e) {
             results.put("emailError", e.getMessage());
         }
@@ -112,7 +112,7 @@ public class Signup extends HttpServlet {
                 }
                 results.put("userAddSuccess", "User added");
             } catch (RuntimeException e) {
-                results.put("userAddFail", "User not added");
+                results.put("userAddFail", "User not added" + e.getMessage());
             }
         }
 

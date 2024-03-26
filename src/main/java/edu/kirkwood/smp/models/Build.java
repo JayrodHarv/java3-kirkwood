@@ -3,28 +3,30 @@ package edu.kirkwood.smp.models;
 import java.time.Instant;
 import java.util.List;
 
-public class Building {
-    private int BuildingID;
-    private int UserID;
+public class Build {
+    private String BuildID;
+    private String UserID;
     private List<Tag> Tags;
-    private String Name;
     private byte[] Image;
     private Instant CreatedAt;
     private String Description;
 
-    public Building(int userID, List<Tag> tags, String name, Instant createdAt, String description) {
+    public Build() {
+
+    }
+
+    public Build(String buildID, String userID, List<Tag> tags, Instant createdAt, String description) {
+        BuildID = buildID;
         UserID = userID;
         Tags = tags;
-        Name = name;
         CreatedAt = createdAt;
         Description = description;
     }
 
-    public Building(int buildingID, int userID, List<Tag> tags, String name, byte[] image, Instant createdAt, String description) {
-        BuildingID = buildingID;
+    public Build(String buildID, String userID, List<Tag> tags, byte[] image, Instant createdAt, String description) {
+        BuildID = buildID;
         UserID = userID;
         Tags = tags;
-        Name = name;
         Image = image;
         CreatedAt = createdAt;
         Description = description;
@@ -38,19 +40,19 @@ public class Building {
         CreatedAt = createdAt;
     }
 
-    public int getBuildingID() {
-        return BuildingID;
+    public String getBuildID() {
+        return BuildID;
     }
 
-    public void setBuildingID(int buildingID) {
-        BuildingID = buildingID;
+    public void setBuildID(String buildID) {
+        BuildID = buildID;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return UserID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(String userID) {
         UserID = userID;
     }
 
@@ -60,14 +62,6 @@ public class Building {
 
     public void setTags(List<Tag> tags) {
         Tags = tags;
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
     }
 
     public byte[] getImage() {

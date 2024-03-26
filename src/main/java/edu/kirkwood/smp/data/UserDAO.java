@@ -40,7 +40,7 @@ public class UserDAO {
 //        return users;
 //    }
 
-    public static User get(String email){
+    public static User get(String email) {
         User user = null;
         try(Connection connection = getConnection();
             CallableStatement statement = connection.prepareCall("{CALL sp_get_user(?)}");
@@ -48,18 +48,17 @@ public class UserDAO {
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                int UserID = resultSet.getInt("UserID");
+                String UserID = resultSet.getString("UserID");
                 String DisplayName = resultSet.getString("DisplayName");
-                String Email = resultSet.getString("Email");
                 char[] Password = resultSet.getString("Password").toCharArray();
                 String Language = resultSet.getString("Language");
                 String Status = resultSet.getString("Status");
-                String Privileges = resultSet.getString("Privileges");
+                String Role = resultSet.getString("Role");
                 Instant CreatedAt = resultSet.getTimestamp("CreatedAt").toInstant();
                 Instant LastLoggedIn = resultSet.getTimestamp("LastLoggedIn").toInstant();
                 Instant UpdatedAt = resultSet.getTimestamp("UpdatedAt").toInstant();
                 byte[] Pfp = resultSet.getBytes("Pfp");
-                user = new User(UserID, Email, Password, DisplayName, Language, Status, Privileges, CreatedAt, LastLoggedIn, UpdatedAt, Pfp);
+                user = new User(UserID, Password, DisplayName, Language, Status, Role, CreatedAt, LastLoggedIn, UpdatedAt, Pfp);
             }
             resultSet.close();
         } catch (SQLException e) {
@@ -74,14 +73,14 @@ public class UserDAO {
         try (Connection connection = getConnection()) {
             if (connection != null) {
                 try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_user(?, ?, ?)}")) {
-                    statement.setString(1, user.getEmail());
+                    statement.setString(1, user.getUserID());
                     String encryptedPassword = BCrypt.hashpw(new String(user.getPassword()), BCrypt.gensalt(12));
                     statement.setString(2, encryptedPassword);
                     statement.setString(3, user.getDisplayName());
                     int rowsAffected = statement.executeUpdate();
                     if(rowsAffected == 1) {
                         try (CallableStatement statement2 = connection.prepareCall("{CALL sp_get_2fa_code(?)}")) {
-                            statement2.setString(1, user.getEmail());
+                            statement2.setString(1, user.getUserID());
                             try(ResultSet resultSet = statement2.executeQuery()) {
                                 if(resultSet.next()) {
                                     String code = resultSet.getString("Code");
@@ -103,14 +102,13 @@ public class UserDAO {
     public static void update(User user) {
         try (Connection connection = getConnection()) {
             if (connection != null) {
-                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_user(?, ?, ?, ?, ?, ?, ?)}")) {
-                    statement.setInt(1, user.getUserID());
-                    statement.setString(2, user.getEmail());
-                    statement.setString(3, user.getDisplayName());
-                    statement.setString(4, user.getLanguage());
-                    statement.setString(5, user.getStatus());
-                    statement.setString(6, user.getPrivileges());
-                    statement.setTimestamp(7, Timestamp.from(user.getLastLoggedIn()));
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_user(?, ?, ?, ?, ?, ?)}")) {
+                    statement.setString(1, user.getUserID());
+                    statement.setString(2, user.getDisplayName());
+                    statement.setString(3, user.getLanguage());
+                    statement.setString(4, user.getStatus());
+                    statement.setString(5, user.getRole());
+                    statement.setTimestamp(6, Timestamp.from(user.getLastLoggedIn()));
                     statement.executeUpdate();
                     // TODO: Return the rows affected and throw exception if user not updated
                 }
