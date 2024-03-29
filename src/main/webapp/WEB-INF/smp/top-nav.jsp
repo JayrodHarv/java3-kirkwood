@@ -1,13 +1,12 @@
-<div class="container-fluid p-0 sticky-top">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between mb-4 p-3 bg-dark">
-        <div class="col-md-3 mb-2 mb-md-0">
+<div class="container-fluid px-3 sticky-top bg-dark py-1">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between">
+        <div class="mb-md-0 align-items-center">
             <a href="${appURL}/smp" class="d-inline-flex link-body-emphasis text-decoration-none">
-                <img src="${appURL}/images/smp/void.png" style="height: 32px" alt="Logo">
-                <h3 class="text-light">${smpName}</h3>
+                <img src="${appURL}/images/smp/NoGoOutsideWebsiteIcon.png" style="height: 65px" alt="Logo">
             </a>
         </div>
 
-        <ul class="nav col-12 col-md-auto mb-2 justify-content-left mb-md-0">
+        <ul class="nav col-12 col-md-auto me-md-auto mb-2 justify-content-center mb-md-0">
             <li><a href="${appURL}/smp" class="nav-link px-2 link-secondary">Home</a></li>
             <li><a href="${appURL}/world-map" class="nav-link px-2">World Map</a></li>
             <li><a href="${appURL}/server-builds" class="nav-link px-2">Server Builds</a></li>

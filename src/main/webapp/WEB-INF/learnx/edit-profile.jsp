@@ -12,39 +12,47 @@
                         <h3 class="card-header-title text-light">Edit Profile</h3>
                     </div>
                     <div class="card-body">
+
+                        <!-- Flash Message -->
+                        <c:choose>
+                            <c:when test="${not empty flashMessageSuccess}">
+                                <div class="alert alert-success my-2">
+                                        ${flashMessageSuccess}
+                                </div>
+                                <c:remove var="flashMessageSuccess" scope="session"></c:remove>
+                            </c:when>
+                            <c:when test="${not empty flashMessageWarning}">
+                                <div class="alert alert-warning my-2">
+                                        ${flashMessageWarning}
+                                </div>
+                                <c:remove var="flashMessageWarning" scope="session"></c:remove>
+                            </c:when>
+                        </c:choose>
+
                         <form action="${appURL}/edit-profile" method="post" class="row">
                             <%-- First Name--%>
                             <div class="col-md-6">
                                 <label class="form-label" for="firstNameInput">First Name</label>
                                 <input class="form-control" type="text" id="firstNameInput" name="firstNameInput"
-                                       value="${activeUser.firstName}">
+                                       value="${fn:escapeXml(activeUser.firstName)}">
                             </div>
                             <%-- Last Name--%>
                             <div class="col-md-6">
                                 <label class="form-label" for="lastNameInput">Last Name</label>
                                 <input class="form-control" type="text" id="lastNameInput" name="lastNameInput"
-                                       value="${activeUser.lastName}">
-                            </div>
-
-                            <!-- Email id -->
-                            <div class="col-md-6">
-                                <label class="form-label" for="emailInput">Email</label>
-                                <input class="form-control" type="text" id="emailInput" name="emailInput" value="${activeUser.email}">
-                            </div>
-
-                            <!-- Phone number -->
-                            <div class="col-md-6">
-                                <label class="form-label" for="phoneInput">Phone number</label>
-                                <input type="text" class="form-control" id="phoneInput" name="phoneInput" value="${activeUser.phone}">
+                                       value="${fn:escapeXml(activeUser.lastName)}">
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label" for="languageInput">Language</label>
-                                <select class="form-select" name="languageInput" id="languageInput">
-                                    <option value="en-US" <c:if test="${activeUser.language eq 'en-US'}">selected</c:if>>English</option>
-                                    <option value="fr-FR" <c:if test="${activeUser.language eq 'fr-FR'}">selected</c:if>>French</option>
-                                    <option value="en-US" <c:if test="${activeUser.language eq 'es-MX'}">selected</c:if>>English</option>
+                                <select class="form-select <c:if test="${not empty results.languageError}">is-invalid</c:if>" name="languageInput" id="languageInput">
+                                    <option value="en" <c:if test="${activeUser.language eq 'en'}">selected</c:if>>English</option>
+                                    <option value="fr" <c:if test="${activeUser.language eq 'fr'}">selected</c:if>>French</option>
+                                    <option value="es" <c:if test="${activeUser.language eq 'de'}">selected</c:if>>German</option>
                                 </select>
+                                <c:if test="${not empty results.languageError}">
+                                    <div class="invalid-feedback">${results.languageError}</div>
+                                </c:if>
                             </div>
 
                             <!-- Save button -->

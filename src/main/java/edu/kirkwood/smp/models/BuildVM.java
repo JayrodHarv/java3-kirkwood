@@ -2,31 +2,26 @@ package edu.kirkwood.smp.models;
 
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
 
-public class Build {
+public class BuildVM {
     private String BuildID;
-    private String UserID;
     private byte[] Image;
-    private String WorldID;
-    private String BuildTypeID;
     private Date DateBuilt;
     private Instant CreatedAt;
     private String Description;
+    private User user;
+    private World World;
+    private BuildType BuildType;
 
-    public Build() {
-
-    }
-
-    public Build(String buildID, String userID, byte[] image, String worldID, String buildTypeID, Date dateBuilt, Instant createdAt, String description) {
+    public BuildVM(String buildID, byte[] image, Date dateBuilt, Instant createdAt, String description, User user, edu.kirkwood.smp.models.World world, edu.kirkwood.smp.models.BuildType buildType) {
         BuildID = buildID;
-        UserID = userID;
         Image = image;
-        WorldID = worldID;
-        BuildTypeID = buildTypeID;
         DateBuilt = dateBuilt;
         CreatedAt = createdAt;
         Description = description;
+        this.user = user;
+        World = world;
+        BuildType = buildType;
     }
 
     public String getBuildID() {
@@ -37,36 +32,12 @@ public class Build {
         BuildID = buildID;
     }
 
-    public String getUserID() {
-        return UserID;
-    }
-
-    public void setUserID(String userID) {
-        UserID = userID;
-    }
-
     public byte[] getImage() {
         return Image;
     }
 
     public void setImage(byte[] image) {
         Image = image;
-    }
-
-    public String getWorldID() {
-        return WorldID;
-    }
-
-    public void setWorldID(String worldID) {
-        WorldID = worldID;
-    }
-
-    public String getBuildTypeID() {
-        return BuildTypeID;
-    }
-
-    public void setBuildTypeID(String buildTypeID) {
-        BuildTypeID = buildTypeID;
     }
 
     public Date getDateBuilt() {
@@ -91,5 +62,29 @@ public class Build {
 
     public void setDescription(String description) {
         Description = description;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public edu.kirkwood.smp.models.World getWorld() {
+        return World;
+    }
+
+    public void setWorld(edu.kirkwood.smp.models.World world) {
+        World = world;
+    }
+
+    public edu.kirkwood.smp.models.BuildType getBuildType() {
+        return BuildType;
+    }
+
+    public void setBuildType(edu.kirkwood.smp.models.BuildType buildType) {
+        BuildType = buildType;
     }
 }

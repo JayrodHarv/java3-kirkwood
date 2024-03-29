@@ -2,7 +2,5 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/create_smp_db.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/src/main/java/edu/kirkwood/smp/data/BuildDAO.java" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/src/main/java/edu/kirkwood/smp/data/UserDAO.java" dialect="MySQL" />
   </component>
 </project>

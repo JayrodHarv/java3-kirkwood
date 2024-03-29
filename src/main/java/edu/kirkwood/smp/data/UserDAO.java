@@ -40,6 +40,34 @@ public class UserDAO {
 //        return users;
 //    }
 
+    public static List<User> getAll() {
+        List<User> users = new ArrayList<>();
+        try(Connection connection = getConnection();
+            CallableStatement statement = connection.prepareCall("{CALL sp_get_all_users()}");
+            ResultSet resultSet = statement.executeQuery()
+        ) {
+            while(resultSet.next()) {
+                String UserID = resultSet.getString("UserID");
+                String DisplayName = resultSet.getString("DisplayName");
+                char[] Password = resultSet.getString("Password").toCharArray();
+                String Language = resultSet.getString("Language");
+                String Status = resultSet.getString("Status");
+                String Role = resultSet.getString("Role");
+                Instant CreatedAt = resultSet.getTimestamp("CreatedAt").toInstant();
+                Instant LastLoggedIn = resultSet.getTimestamp("LastLoggedIn").toInstant();
+                Instant UpdatedAt = resultSet.getTimestamp("UpdatedAt").toInstant();
+                byte[] Pfp = resultSet.getBytes("Pfp");
+                User user = new User(UserID, Password, DisplayName, Language, Status, Role, CreatedAt, LastLoggedIn, UpdatedAt, Pfp);
+                users.add(user);
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            System.out.println("Likely bad SQL query");
+            System.out.println(e.getMessage());
+        }
+        return users;
+    }
+
     public static User get(String email) {
         User user = null;
         try(Connection connection = getConnection();

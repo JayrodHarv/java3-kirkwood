@@ -26,6 +26,10 @@
         <location>/errorHandler</location>
     </error-page>
     <error-page>
+        <error-code>405</error-code>
+        <location>/errorHandler</location>
+    </error-page>
+    <error-page>
         <exception-type>java.lang.Throwable</exception-type>
         <location>/errorHandler</location>
     </error-page>

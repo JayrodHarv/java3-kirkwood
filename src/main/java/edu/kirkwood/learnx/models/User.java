@@ -105,6 +105,10 @@ public class User {
     }
 
     public void setLanguage(String language) {
+        Matcher matcher = Validators.languagePattern.matcher(language);
+        if(!matcher.matches()) {
+            throw new IllegalArgumentException("Invalid language");
+        }
         this.language = language;
     }
 

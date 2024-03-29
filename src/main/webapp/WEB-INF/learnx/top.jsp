@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="${appURL}/css/learnx.css">
     <%-- Progress bar CSS --%>
     <link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="${appURL}/css/nprogress.css">
+<%--    <link rel="stylesheet" href="${appURL}/css/nprogress.css">--%>
     <link rel="stylesheet" href="${appURL}/css/loading.css">
 </head>
 <body>

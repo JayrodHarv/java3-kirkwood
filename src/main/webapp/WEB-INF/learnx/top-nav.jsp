@@ -7,18 +7,18 @@
         </div>
 
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="${appURL}/learnx" class="nav-link px-2 link-secondary">Home</a></li>
-            <li><a href="${appURL}/courses" class="nav-link px-2">Courses</a></li>
+            <li><a href="${appURL}/learnx" class="nav-link px-2 <c:if test="${pageTitle eq 'Home'}">link-secondary text-decoration-underline</c:if>">Home</a></li>
+            <li><a href="${appURL}/courses" class="nav-link px-2 <c:if test="${pageTitle eq 'Courses'}">link-secondary text-decoration-underline</c:if>">Courses</a></li>
 
             <c:choose>
                 <c:when test="${sessionScope.activeUser.privileges eq 'student'}">
-                    <li><a href="#" class="nav-link px-2">Student Dashboard</a></li>
+                    <li><a href="#" class="nav-link px-2 <c:if test="${pageTitle eq 'Student Dashboard'}">link-secondary text-decoration-underline</c:if>">Student Dashboard</a></li>
                 </c:when>
                 <c:when test="${sessionScope.activeUser.privileges eq 'teacher'}">
-                    <li><a href="#" class="nav-link px-2">Teacher Dashboard</a></li>
+                    <li><a href="#" class="nav-link px-2 <c:if test="${pageTitle eq 'Teacher Dashboard'}">link-secondary text-decoration-underline</c:if>">Teacher Dashboard</a></li>
                 </c:when>
                 <c:when test="${sessionScope.activeUser.privileges eq 'admin'}">
-                    <li><a href="#" class="nav-link px-2">Admin Dashboard</a></li>
+                    <li><a href="#" class="nav-link px-2 <c:if test="${pageTitle eq 'Admin Dashboard'}">link-secondary text-decoration-underline</c:if>">Admin Dashboard</a></li>
                 </c:when>
             </c:choose>
         </ul>

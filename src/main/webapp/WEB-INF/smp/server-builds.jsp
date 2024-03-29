@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/smp/top.jsp"%>
-<main class="container-fluid">
+<main class="container-fluid p-3" style="margin-bottom: 40px">
   <div class="d-flex justify-content-md-between">
     <h2>${pageTitle}</h2>
     <div class="text-end">

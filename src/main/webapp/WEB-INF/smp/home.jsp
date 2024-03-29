@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/smp/top.jsp"%>
-<main class="m-3">
+<main class="container-fluid p-3" style="margin-bottom: 40px">
 
     <!-- Flash Message -->
     <c:choose>
@@ -17,23 +17,14 @@
         </c:when>
     </c:choose>
 
-    <!-- Jumbo-Tron -->
-    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
-        <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold">Custom jumbotron</h1>
-            <p class="col-md-8 fs-4">Using a series of utilities, you can create this jumbotron, just like the one in previous versions of Bootstrap. Check out the examples below for how you can remix and restyle it to your liking.</p>
-            <button class="btn btn-primary btn-lg" type="button">Example button</button>
-        </div>
-    </div>
-
-    <div id="carouselExampleCaptions" class="carousel slide mb-4 w-75 mx-auto">
+    <div id="carouselExampleCaptions" class="carousel slide mb-4 mx-auto" style="width: 86%">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="${appURL}/images/learnx/slider-01.jpg" class="d-block w-100" alt="Person with graduation hat">
+                <img src="${appURL}/images/smp/void.png" class="d-block w-100" alt="Person with graduation hat">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>First slide label</h5>
                     <p>Some representative placeholder content for the first slide.</p>

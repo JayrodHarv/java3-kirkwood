@@ -21,6 +21,12 @@ public class User {
 
     }
 
+    public User(String userID, String displayName, byte[] pfp) {
+        UserID = userID;
+        DisplayName = displayName;
+        Pfp = pfp;
+    }
+
     public User(String userID, char[] password, String displayName, String language, String status, String role, Instant createdAt, Instant lastLoggedIn, Instant updatedAt, byte[] pfp) {
         UserID = userID;
         Password = password;
