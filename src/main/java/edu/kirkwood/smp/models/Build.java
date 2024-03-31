@@ -11,6 +11,7 @@ public class Build {
     private String WorldID;
     private String BuildTypeID;
     private Date DateBuilt;
+    private String Coordinates;
     private Instant CreatedAt;
     private String Description;
 
@@ -18,13 +19,14 @@ public class Build {
 
     }
 
-    public Build(String buildID, String userID, byte[] image, String worldID, String buildTypeID, Date dateBuilt, Instant createdAt, String description) {
+    public Build(String buildID, String userID, byte[] image, String worldID, String buildTypeID, Date dateBuilt, String coordinates, Instant createdAt, String description) {
         BuildID = buildID;
         UserID = userID;
         Image = image;
         WorldID = worldID;
         BuildTypeID = buildTypeID;
         DateBuilt = dateBuilt;
+        Coordinates = coordinates;
         CreatedAt = createdAt;
         Description = description;
     }
@@ -75,6 +77,14 @@ public class Build {
 
     public void setDateBuilt(Date dateBuilt) {
         DateBuilt = dateBuilt;
+    }
+
+    public String getCoordinates() {
+        return Coordinates;
+    }
+
+    public void setCoordinates(String coordinates) {
+        Coordinates = coordinates;
     }
 
     public Instant getCreatedAt() {

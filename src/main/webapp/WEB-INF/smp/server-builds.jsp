@@ -14,9 +14,13 @@
       <c:if test="${builds.size() > 0}">
         <c:forEach items="${builds}" var="b">
           <div class="card mb-4">
-  <%--          <img class="card-img-top" src="data:image/png;base64,${b.BuildingID}">--%>
+            <div class="card-header d-flex justify-content-md-between">
+              <h5>${b.getBuildID()}</h5>
+              <p class="text-end">${b.getDateBuilt()}</p>
+            </div>
+            <img class="card-img-middle" src="images/smp/void.png">
             <div class="card-body">
-              <h5 class="card-title">${b.getBuildID()}</h5>
+
               <p class="card-text">${b.getDescription()}</p>
             </div>
           </div>

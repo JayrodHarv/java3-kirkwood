@@ -2,13 +2,18 @@
 <main class="container py-3" style="margin-bottom: 40px">
     <form action="${appURL}/add-build" method="POST" enctype="multipart/form-data">
 
+        <%-- Build Add Fail--%>
+        <c:if test="${not empty results.buildAddFail}">
+            <p class="alert alert-danger my-2">${results.buildAddFail}</p>
+        </c:if>
+
         <!-- Build Info -->
         <div class="container-fluid p-0">
             <h5 class="form-label">Build Info</h5>
 
             <!-- Build Name -->
             <div class="input-group mb-4">
-                <label for="buildName" class="input-group-text">Build Name</label>
+                <label for="buildName" class="input-group-text">Build Name *</label>
                 <input type="text" class="form-control rounded-end <c:if test="${not empty results.buildNameError}">is-invalid</c:if>" placeholder="Ex. Brucemore" id="buildName" name="buildName" value="${results.buildName}">
                 <c:if test="${not empty results.buildNameError}">
                     <div class="invalid-feedback">${results.buildNameError}</div>
@@ -17,23 +22,51 @@
 
             <!-- Description -->
             <div class="input-group mb-4">
-                <label for="description" class="input-group-text">Description</label>
+                <label for="description" class="input-group-text">Description *</label>
                 <input type="text" class="form-control rounded-end <c:if test="${not empty results.descriptionError}">is-invalid</c:if>" id="description" name="description" value="${results.description}">
                 <c:if test="${not empty results.descriptionError}">
                     <div class="invalid-feedback">${results.descriptionError}</div>
                 </c:if>
             </div>
+
+            <!-- Date Built -->
+            <div class="input-group mb-4">
+                <label for="dateBuilt" class="input-group-text">Date Built</label>
+                <input type="date" class="datepicker form-control rounded-end" id="dateBuilt" name="dateBuilt">
+                <c:if test="${not empty results.dateBuiltError}">
+                    <div class="invalid-feedback">${results.dateBuiltError}</div>
+                </c:if>
+            </div>
+
+            <!-- Tags TODO: Make it so user can create new tag if one doesn't exist for their needs -->
+            <div class="container-fluid p-0 justify-content-between">
+                <h5 class="form-label">Coordinates</h5>
+                <div class="input-group mb-4 fit-content">
+                    <label class="input-group-text" for="xCoord">X</label>
+                    <input type="number" class="form-control <c:if test="${not empty results.coordError}">is-invalid</c:if>" id="xCoord" name="xCoord" value="${results.xCoord}">
+                    <label class="input-group-text" for="yCoord">Y</label>
+                    <input type="number" class="form-control <c:if test="${not empty results.coordError}">is-invalid</c:if>" id="yCoord" name="yCoord" value="${results.yCoord}">
+                    <label class="input-group-text" for="zCoord">Z</label>
+                    <input type="number" class="form-control rounded-end <c:if test="${not empty results.coordError}">is-invalid</c:if>" id="zCoord" name="zCoord" value="${results.zCoord}">
+                    <c:if test="${not empty results.coordError}">
+                        <div class="invalid-feedback">${results.coordError}</div>
+                    </c:if>
+                </div>
+            </div>
         </div>
 
         <!-- Image -->
-        <div class="container-fluid p-0">
-            <h5 class="form-label">Image</h5>
-            <div class="input-group mb-4">
+        <div class="container-fluid p-0 mb-4">
+            <h5 class="form-label">Image *</h5>
+            <div class="input-group">
                 <%-- TODO: It's getting late but do this later for displaying input image https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file --%>
                 <input type="file" accept="image/*" class="form-control <c:if test="${not empty results.imageError}">is-invalid</c:if>" id="image" name="image" value="${results.image}">
                 <c:if test="${not empty results.imageError}">
                     <div class="invalid-feedback">${results.imageError}</div>
                 </c:if>
+            </div>
+            <div id="imagePreview">
+
             </div>
         </div>
 

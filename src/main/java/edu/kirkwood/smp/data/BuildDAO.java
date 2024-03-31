@@ -2,6 +2,7 @@ package edu.kirkwood.smp.data;
 
 import edu.kirkwood.smp.models.*;
 
+import javax.sql.rowset.serial.SerialBlob;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class BuildDAO {
                     String BuildID = resultSet.getString("BuildID");
                     byte[] Image = resultSet.getBytes("Image");
                     Date DateBuilt = resultSet.getDate("DateBuilt");
+                    String Coordinates = resultSet.getString("Coordinates");
                     Instant CreatedAt = resultSet.getTimestamp("CreatedAt").toInstant();
                     String BuildDescription = resultSet.getString("build_description");
 
@@ -46,7 +48,7 @@ public class BuildDAO {
                     String BuildTypeDescription = resultSet.getString("buildtype_description");
                     BuildType buildType = new BuildType(BuildTypeID, BuildTypeDescription);
 
-                    BuildVM buildVM = new BuildVM(BuildID, Image, DateBuilt, CreatedAt, BuildDescription, user, world, buildType);
+                    BuildVM buildVM = new BuildVM(BuildID, Image, DateBuilt, Coordinates, CreatedAt, BuildDescription, user, world, buildType);
                     builds.add(buildVM);
                 }
             }
@@ -61,14 +63,19 @@ public class BuildDAO {
         boolean result = false;
         try (Connection connection = getConnection()) {
             if (connection != null) {
-                try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_build(?,?,?,?,?,?,?)}")) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_build(?,?,?,?,?,?,?,?)}")) {
                     statement.setString(1, build.getBuildID());
                     statement.setString(2, build.getUserID());
-                    statement.setBytes(3, build.getImage());
+                    statement.setBlob(3, new SerialBlob(build.getImage()));
                     statement.setString(4, build.getWorldID());
                     statement.setString(5, build.getBuildTypeID());
-                    statement.setDate(6, new Date(build.getDateBuilt().getTime()));
-                    statement.setString(7, build.getDescription());
+                    if(build.getDateBuilt() != null) {
+                        statement.setDate(6, new Date(build.getDateBuilt().getTime()));
+                    } else {
+                        statement.setDate(6, null);
+                    }
+                    statement.setString(7, build.getCoordinates());
+                    statement.setString(8, build.getDescription());
                     int rowsAffected = statement.executeUpdate();
                     if(rowsAffected == 1) {
                         result = true;

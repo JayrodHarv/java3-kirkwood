@@ -34,7 +34,7 @@ CREATE TABLE User (
 	CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	LastLoggedIn DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	UpdatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	Pfp BLOB,
+	Pfp LONGBLOB,
     CONSTRAINT fk_User_Role
         FOREIGN KEY(Role)
             REFERENCES Role(Role)
@@ -68,10 +68,11 @@ DROP TABLE IF EXISTS Build;
 CREATE TABLE Build (
 	BuildID NVARCHAR(100) COMMENT 'Primary key is the name of build',
 	UserID NVARCHAR(255) NOT NULL,
-	Image BLOB NULL,
+	Image LONGBLOB NULL,
 	WorldID NVARCHAR(255) NULL,
 	BuildType NVARCHAR(255) NULL,
 	DateBuilt DATE NULL,
+	Coordinates NVARCHAR(255) NULL,
 	CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	Description TEXT NULL,
 	CONSTRAINT fk_Build_UserID
@@ -119,7 +120,7 @@ CREATE TABLE VoteOption (
 	OptionID INT,
 	Title NVARCHAR(255) NOT NULL,
 	Description TEXT NOT NULL,
-	Image BLOB,
+	Image LONGBLOB,
 	CONSTRAINT pk_VoteOption PRIMARY KEY(OptionID)
 );
 
@@ -280,17 +281,18 @@ DROP PROCEDURE IF EXISTS sp_insert_build;
 CREATE PROCEDURE sp_insert_build(
     IN p_BuildID NVARCHAR(100),
     IN p_UserID NVARCHAR(255),
-    IN p_Image BLOB,
+    IN p_Image LONGBLOB,
     IN p_WorldID NVARCHAR(255),
     IN p_BuildType NVARCHAR(255),
     IN p_DateBuilt DATE,
+    IN p_Coordinates NVARCHAR(255),
     IN p_Description TEXT
 )
 BEGIN
     INSERT INTO Build
-        (BuildID, UserID, Image, WorldID, BuildType, DateBuilt, Description)
+        (BuildID, UserID, Image, WorldID, BuildType, DateBuilt, Coordinates, Description)
     VALUES
-        (p_BuildID, p_UserID, p_Image, p_WorldID, p_BuildType, p_DateBuilt, p_Description)
+        (p_BuildID, p_UserID, p_Image, p_WorldID, p_BuildType, p_DateBuilt, p_Coordinates, p_Description)
     ;
 END;
 
@@ -298,10 +300,11 @@ END;
 DROP PROCEDURE IF EXISTS sp_update_build;
 CREATE PROCEDURE sp_update_build(
     IN p_BuildID NVARCHAR(100),
-    IN p_Image BLOB,
+    IN p_Image LONGBLOB,
     IN p_WorldID NVARCHAR(255),
     IN p_BuildType NVARCHAR(255),
     IN p_DateBuilt DATE,
+    IN p_Coordinates NVARCHAR(255),
     IN p_Description TEXT
 )
 BEGIN
@@ -310,6 +313,7 @@ BEGIN
         WorldID = p_WorldID,
         BuildType = p_BuildType,
         DateBuilt = p_DateBuilt,
+        Coordinates = p_Coordinates,
         Description = p_Description
     WHERE BuildID = p_BuildID
     ;
@@ -337,7 +341,7 @@ CREATE PROCEDURE sp_get_builds(
     IN p_UserDisplayName NVARCHAR(255)
 )
 BEGIN
-    SELECT BuildID, Image, DateBuilt, b.CreatedAt, b.Description AS 'build_description', u.UserID, u.DisplayName, u.Pfp, w.WorldID, w.DateStarted, w.Description AS 'world_description', bt.BuildType, bt.Description AS 'buildtype_description'
+    SELECT BuildID, Image, DateBuilt, Coordinates, b.CreatedAt, b.Description AS 'build_description', u.UserID, u.DisplayName, u.Pfp, w.WorldID, w.DateStarted, w.Description AS 'world_description', bt.BuildType, bt.Description AS 'buildtype_description'
 	FROM Build AS b
 	INNER JOIN User AS u ON u.UserID = b.UserID
 	INNER JOIN World AS w ON b.WorldID = w.WorldID
@@ -361,7 +365,7 @@ CREATE PROCEDURE sp_get_build(
 	IN p_BuildID NVARCHAR(100)
 )
 BEGIN
-    SELECT BuildID, UserID, Image, WorldID, BuildType, DateBuilt, CreatedAt, Description
+    SELECT BuildID, UserID, Image, WorldID, BuildType, DateBuilt, Coordinates, CreatedAt, Description
     FROM Build
     WHERE BuildID = p_BuildID
     ;

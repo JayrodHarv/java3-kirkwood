@@ -7,19 +7,21 @@ public class BuildVM {
     private String BuildID;
     private byte[] Image;
     private Date DateBuilt;
+    private String Coordinates;
     private Instant CreatedAt;
     private String Description;
-    private User user;
+    private User User;
     private World World;
     private BuildType BuildType;
 
-    public BuildVM(String buildID, byte[] image, Date dateBuilt, Instant createdAt, String description, User user, edu.kirkwood.smp.models.World world, edu.kirkwood.smp.models.BuildType buildType) {
+    public BuildVM(String buildID, byte[] image, Date dateBuilt, String coordinates, Instant createdAt, String description, User user, World world, BuildType buildType) {
         BuildID = buildID;
         Image = image;
         DateBuilt = dateBuilt;
+        Coordinates = coordinates;
         CreatedAt = createdAt;
         Description = description;
-        this.user = user;
+        this.User = user;
         World = world;
         BuildType = buildType;
     }
@@ -48,6 +50,14 @@ public class BuildVM {
         DateBuilt = dateBuilt;
     }
 
+    public String getCoordinates() {
+        return Coordinates;
+    }
+
+    public void setCoordinates(String coordinates) {
+        Coordinates = coordinates;
+    }
+
     public Instant getCreatedAt() {
         return CreatedAt;
     }
@@ -65,26 +75,26 @@ public class BuildVM {
     }
 
     public User getUser() {
-        return user;
+        return User;
     }
 
     public void setUser(User user) {
-        this.user = user;
+        User = user;
     }
 
-    public edu.kirkwood.smp.models.World getWorld() {
+    public World getWorld() {
         return World;
     }
 
-    public void setWorld(edu.kirkwood.smp.models.World world) {
+    public void setWorld(World world) {
         World = world;
     }
 
-    public edu.kirkwood.smp.models.BuildType getBuildType() {
+    public BuildType getBuildType() {
         return BuildType;
     }
 
-    public void setBuildType(edu.kirkwood.smp.models.BuildType buildType) {
+    public void setBuildType(BuildType buildType) {
         BuildType = buildType;
     }
 }

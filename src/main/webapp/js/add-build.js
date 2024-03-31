@@ -14,8 +14,34 @@ $("#builtBySelect").on("change",function(){
     }
 });
 
-function filter(keyword) {
-    let select = $('#builtBySelect');
-    let optionCollection = Array.from(select.options).filter(x => x.text.toLowerCase().startsWith(keyword.toLowerCase()))
+var selDiv = "";
+var storedFiles = [];
+$(document).ready(function () {
+    $("#image").on("change", handleFileSelect);
+    selDiv = $("#imagePreview");
+});
+
+function handleFileSelect(e) {
+    var files = e.target.files;
+    var filesArr = Array.prototype.slice.call(files);
+    filesArr.forEach(function (f) {
+        if (!f.type.match("image.*")) {
+            return;
+        }
+        storedFiles.push(f);
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var html =
+                '<img src="' +
+                e.target.result +
+                "\" data-file='" +
+                f.name +
+                "alt='Category Image' height='200px' width='200px'>";
+            selDiv.html(html);
+        };
+        reader.readAsDataURL(f);
+    });
 }
+
 
