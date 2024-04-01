@@ -35,7 +35,7 @@ public class AddBuild extends HttpServlet {
         User userFromSession = (User)session.getAttribute("activeSMPUser");
         if(userFromSession == null || !userFromSession.getStatus().equals("active")) {
             session.setAttribute("flashMessageWarning", "You must be logged in to add a new building.");
-            resp.sendRedirect("smp-login");
+            resp.sendRedirect("smp-login?redirect=add-build");
             return;
         }
 
@@ -92,10 +92,23 @@ public class AddBuild extends HttpServlet {
             Part imgPart = req.getPart("image");
             imgName = imgPart.getSubmittedFileName();
 
+            if(imgName == null || imgName.isEmpty()) throw new IllegalArgumentException();
+
             InputStream is = imgPart.getInputStream();
             image = new byte[is.available()];
+
+            // temp remove later
+//            FileOutputStream fos = new FileOutputStream("C:/uploaded" + imgName);
+            is.read(image);
+//            fos.write(image);
+//            fos.close();
         } catch (Exception e) {
             results.put("imageError", "Something went wrong when trying to upload this image.");
+//            results.put("imageError", e.getMessage());
+        }
+
+        if(image == null) {
+            results.put("imageError", "You must provide an image of this build.");
         }
 
         // Coordinates
@@ -136,6 +149,10 @@ public class AddBuild extends HttpServlet {
         }
         if(world == null || world.isEmpty()) {
             results.put("worldError", "You must add at least one tag to this new build.");
+        }
+
+        if(buildType == null || buildType.isEmpty() || world == null || world.isEmpty()) {
+            results.put("tagError", "You must set the build type and world tags.");
         }
 
         if (!results.containsKey("buildNameError") && !results.containsKey("descriptionError")

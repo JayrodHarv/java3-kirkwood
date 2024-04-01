@@ -31,6 +31,9 @@
 
                             <!-- Form START -->
                             <form method="post" action="${appURL}/smp-login">
+                                <c:if test="${not empty redirect}">
+                                    <input type="hidden" name="redirect" value="${redirect}"/>
+                                </c:if>
                                 <!-- Email -->
                                 <div class="mb-4">
                                     <label for="inputEmail1" class="form-label">Email address *</label>
@@ -39,6 +42,7 @@
                                         <input type="text" class="form-control border-0 bg-light rounded-end ps-1" placeholder="E-mail" id="inputEmail1" name="inputEmail1" value="${results.email}">
                                     </div>
                                 </div>
+
                                 <!-- Password -->
                                 <div class="mb-4">
                                     <label for="inputPassword1" class="form-label">Password *</label>

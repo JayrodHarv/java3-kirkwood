@@ -72,29 +72,33 @@
 
         <!-- Tags TODO: Make it so user can create new tag if one doesn't exist for their needs -->
         <div class="container-fluid p-0 justify-content-between">
-            <h5 class="form-label">Tags</h5>
+            <h5 class="form-label">Tags *</h5>
             <!-- Server Tag -->
             <div class="input-group mb-4">
                 <label class="input-group-text" for="world">World</label>
-                <select class="form-select <c:if test="${not empty results.worldError}">is-invalid</c:if>" id="world" name="world">
+                <select class="form-select <c:if test="${not empty results.tagError}">is-invalid</c:if>" id="world" name="world">
                     <c:forEach items="${worlds}" var="w">
                         <option value="${w.getWorldID()}" <c:if test="${results.worldTag eq w.getWorldID()}">selected</c:if> data-bs-toggle="tooltip" title="${w.getDescription()}">${w.getWorldID()}</option>
                     </c:forEach>
                 </select>
                 <label class="input-group-text" for="buildType">Build Type</label>
-                <select class="form-select <c:if test="${not empty results.buildTypeError}">is-invalid</c:if>" id="buildType" name="buildType">
+                <select class="form-select <c:if test="${not empty results.tagError}">is-invalid</c:if>" id="buildType" name="buildType">
                     <c:forEach items="${buildTypes}" var="bt">
                         <option value="${bt.getBuildTypeID()}" <c:if test="${results.buildType eq bt.getBuildTypeID()}">selected</c:if> data-bs-toggle="tooltip" title="${bt.getDescription()}">${bt.getBuildTypeID()}</option>
                     </c:forEach>
                 </select>
-                <c:if test="${not empty results.buildTypeError}">
-                    <div class="invalid-feedback">${results.buildTypeError}</div>
+                <c:if test="${not empty results.tagError}">
+                    <div class="invalid-feedback">${results.tagError}</div>
                 </c:if>
             </div>
         </div>
-
-        <a href="${appURL}/server-builds" class="btn btn-secondary">Back</a>
-        <button type="submit" class="btn btn-primary">Save changes</button>
+        <div class="d-flex justify-content-between p-0">
+            <div class="btn btn-group p-0">
+                <a href="${appURL}/server-builds" class="btn btn-secondary">Back</a>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+            <p class="form-text text-end">* Indicates required fields</p>
+        </div>
     </form>
 </main>
 <%@ include file="/WEB-INF/smp/bottom.jsp"%>

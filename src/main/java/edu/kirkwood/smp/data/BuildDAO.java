@@ -3,9 +3,13 @@ package edu.kirkwood.smp.data;
 import edu.kirkwood.smp.models.*;
 
 import javax.sql.rowset.serial.SerialBlob;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import static edu.kirkwood.smp.data.Database.getConnection;
@@ -25,7 +29,24 @@ public class BuildDAO {
                 while (resultSet.next()) {
                     // Build
                     String BuildID = resultSet.getString("BuildID");
-                    byte[] Image = resultSet.getBytes("Image");
+
+                    Blob blob = resultSet.getBlob("Image");
+                    InputStream inputStream = blob.getBinaryStream();
+
+                    // Source: https://www.codejava.net/coding/how-to-display-images-from-database-in-jsp-page-with-java-servlet
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[4096];
+                    int bytesRead = -1;
+
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+
+                    byte[] Image = outputStream.toByteArray();
+                    String base64Image = Base64.getEncoder().encodeToString(Image);
+                    inputStream.close();
+                    outputStream.close();
+
                     Date DateBuilt = resultSet.getDate("DateBuilt");
                     String Coordinates = resultSet.getString("Coordinates");
                     Instant CreatedAt = resultSet.getTimestamp("CreatedAt").toInstant();
@@ -49,8 +70,12 @@ public class BuildDAO {
                     BuildType buildType = new BuildType(BuildTypeID, BuildTypeDescription);
 
                     BuildVM buildVM = new BuildVM(BuildID, Image, DateBuilt, Coordinates, CreatedAt, BuildDescription, user, world, buildType);
+                    buildVM.setBase64Image(base64Image);
                     builds.add(buildVM);
                 }
+            } catch (IOException e) {
+                System.out.println("Error decoding image from database");
+                System.out.println(e.getMessage());
             }
         } catch (SQLException e) {
             System.out.println("Likely bad SQL query");

@@ -37,7 +37,7 @@ function handleFileSelect(e) {
                 e.target.result +
                 "\" data-file='" +
                 f.name +
-                "alt='Category Image' height='200px' width='200px'>";
+                "alt='Category Image' class='w-100'>";
             selDiv.html(html);
         };
         reader.readAsDataURL(f);

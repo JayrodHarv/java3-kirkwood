@@ -13,6 +13,7 @@ public class BuildVM {
     private User User;
     private World World;
     private BuildType BuildType;
+    private String Base64Image;
 
     public BuildVM(String buildID, byte[] image, Date dateBuilt, String coordinates, Instant createdAt, String description, User user, World world, BuildType buildType) {
         BuildID = buildID;
@@ -96,5 +97,13 @@ public class BuildVM {
 
     public void setBuildType(BuildType buildType) {
         BuildType = buildType;
+    }
+
+    public String getBase64Image() {
+        return Base64Image;
+    }
+
+    public void setBase64Image(String base64Image) {
+        Base64Image = base64Image;
     }
 }

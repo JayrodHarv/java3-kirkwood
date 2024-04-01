@@ -26,11 +26,6 @@ public class ServerBuilds extends HttpServlet {
         List<BuildVM> builds = new ArrayList<>();
         try {
             builds = BuildDAO.getAll(limit, offset, worldFilter, buildTypeFilter, userFilter);
-//            for (Build b : builds) {
-//                // TODO: Maybe make each image have it's own url
-//                if(b.getImage() == null) continue;
-//                req.setAttribute(b.getBuildID() + "", "data:image/png;base64," + new String(Base64.getDecoder().decode(b.getImage())));
-//            }
         } catch(Exception e) {
             results.put("getBuildListError", "Failed to retrieve the list of buildings.");
         }
