@@ -6,6 +6,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class BuildDAO {
 
                     Blob blob = resultSet.getBlob("Image");
                     InputStream inputStream = blob.getBinaryStream();
+                    String imageType = URLConnection.guessContentTypeFromStream(inputStream);
 
                     // Source: https://www.codejava.net/coding/how-to-display-images-from-database-in-jsp-page-with-java-servlet
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -43,7 +45,8 @@ public class BuildDAO {
                     }
 
                     byte[] Image = outputStream.toByteArray();
-                    String base64Image = Base64.getEncoder().encodeToString(Image);
+                    String base64Image = "data:" + imageType + ";base64," + Base64.getEncoder().encodeToString(Image);
+
                     inputStream.close();
                     outputStream.close();
 
@@ -84,6 +87,51 @@ public class BuildDAO {
         return builds;
     }
 
+    public static Build get(String buildID) {
+        Build build = null;
+        try(Connection connection = getConnection();
+            CallableStatement statement = connection.prepareCall("{CALL sp_get_build(?)}");
+        ) {
+            statement.setString(1, buildID);
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()) {
+                String BuildID = resultSet.getString("BuildID");
+                String UserID = resultSet.getString("UserID");
+
+                Blob blob = resultSet.getBlob("Image");
+                InputStream inputStream = blob.getBinaryStream();
+                String imageType = URLConnection.guessContentTypeFromStream(inputStream);
+
+                // Source: https://www.codejava.net/coding/how-to-display-images-from-database-in-jsp-page-with-java-servlet
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                byte[] buffer = new byte[4096];
+                int bytesRead = -1;
+
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+
+                byte[] Image = outputStream.toByteArray();
+                String base64Image = "data:" + imageType + ";base64," + Base64.getEncoder().encodeToString(Image);
+
+                String WorldID = resultSet.getString("WorldID");
+                String BuildType = resultSet.getString("BuildType");
+                Date DateBuilt = resultSet.getDate("DateBuilt");
+                String Coordinates = resultSet.getString("Coordinates");
+                Instant CreatedAt = resultSet.getTimestamp("CreatedAt").toInstant();
+                String BuildDescription = resultSet.getString("Description");
+
+                build = new Build(BuildID, UserID, Image, WorldID, BuildType, DateBuilt, Coordinates, CreatedAt, BuildDescription);
+                build.setBase64Image(base64Image);
+            }
+            resultSet.close();
+        } catch (SQLException | IOException e) {
+            System.out.println("Likely bad SQL query");
+            System.out.println(e.getMessage());
+        }
+        return build;
+    }
+
     public static boolean add(Build build) {
         boolean result = false;
         try (Connection connection = getConnection()) {
@@ -101,6 +149,52 @@ public class BuildDAO {
                     }
                     statement.setString(7, build.getCoordinates());
                     statement.setString(8, build.getDescription());
+                    int rowsAffected = statement.executeUpdate();
+                    if(rowsAffected == 1) {
+                        result = true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
+
+    public static boolean edit(Build build) {
+        boolean result = false;
+        try (Connection connection = getConnection()) {
+            if (connection != null) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_build(?,?,?,?,?,?,?)}")) {
+                    statement.setString(1, build.getBuildID());
+                    statement.setBlob(2, new SerialBlob(build.getImage()));
+                    statement.setString(3, build.getWorldID());
+                    statement.setString(4, build.getBuildTypeID());
+                    if(build.getDateBuilt() != null) {
+                        statement.setDate(5, new Date(build.getDateBuilt().getTime()));
+                    } else {
+                        statement.setDate(5, null);
+                    }
+                    statement.setString(6, build.getCoordinates());
+                    statement.setString(7, build.getDescription());
+                    int rowsAffected = statement.executeUpdate();
+                    if(rowsAffected == 1) {
+                        result = true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
+
+    public static boolean delete(String buildID) {
+        boolean result = false;
+        try (Connection connection = getConnection()) {
+            if (connection != null) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_delete_build(?)}")) {
+                    statement.setString(1, buildID);
                     int rowsAffected = statement.executeUpdate();
                     if(rowsAffected == 1) {
                         result = true;

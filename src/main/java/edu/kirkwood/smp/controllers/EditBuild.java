@@ -22,24 +22,48 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.*;
 
-@WebServlet("/add-build")
+@WebServlet("/edit-build")
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024,    // 1 MB
         maxFileSize = 1024 * 1024 * 10,     // 10 MB
         maxRequestSize = 1024 * 1024 * 100 // 100 MB
 )
-public class AddBuild extends HttpServlet {
+public class EditBuild extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         User userFromSession = (User)session.getAttribute("activeSMPUser");
         if(userFromSession == null || !userFromSession.getStatus().equals("active")) {
             session.setAttribute("flashMessageWarning", "You must be logged in to add a new building.");
-            resp.sendRedirect("smp-login?redirect=add-build");
+            resp.sendRedirect("smp-login?redirect=edit-build");
             return;
         }
 
+        String buildName = req.getParameter("build_id");
+
         Map<String, String> results = new HashMap<>();
+
+        try {
+            Build build = BuildDAO.get(buildName);
+            results.put("buildName", build.getBuildID());
+            results.put("description", build.getDescription());
+            results.put("dateBuilt", build.getDateBuiltString());
+
+            results.put("base64Image", build.getBase64Image());
+
+            results.put("world", build.getWorldID());
+            results.put("buildType", build.getBuildTypeID());
+
+            String coordinates = build.getCoordinates();
+            if(coordinates != null && !coordinates.isEmpty()) {
+                String[] coords = coordinates.split(", ");
+                results.put("xCoord", coords[0]);
+                results.put("yCoord", coords[1]);
+                results.put("zCoord", coords[2]);
+            }
+        } catch(Exception e) {
+            results.put("buildEditFail", "Something went wrong. Please try again." + e.getMessage());
+        }
 
         try {
             List<World> worlds = WorldDAO.getAll();
@@ -56,8 +80,8 @@ public class AddBuild extends HttpServlet {
         }
 
         req.setAttribute("results", results);
-        req.setAttribute("pageTitle", "Add Build");
-        req.getRequestDispatcher("WEB-INF/smp/add-build.jsp").forward(req, resp);
+        req.setAttribute("pageTitle", "Edit Build");
+        req.getRequestDispatcher("WEB-INF/smp/edit-build.jsp").forward(req, resp);
     }
 
     @Override
@@ -80,7 +104,7 @@ public class AddBuild extends HttpServlet {
             try {
                 dateBuiltDate = formatter.parse(dateBuilt);
             } catch (ParseException e) {
-                results.put("dateBuiltError", "Date entered was incorrect or in the wrong format.");
+                results.put("dateBuildError", "Date entered was incorrect or in the wrong format.");
             }
         }
 
@@ -92,23 +116,25 @@ public class AddBuild extends HttpServlet {
             Part imgPart = req.getPart("image");
             imgName = imgPart.getSubmittedFileName();
 
-            if(imgName == null || imgName.isEmpty()) throw new IllegalArgumentException();
+            if(imgName != null && !imgName.isEmpty()) {
+                InputStream is = imgPart.getInputStream();
+                image = new byte[is.available()];
 
-            InputStream is = imgPart.getInputStream();
-            image = new byte[is.available()];
-
-            // temp remove later
-//            FileOutputStream fos = new FileOutputStream("C:/uploaded" + imgName);
-            is.read(image);
-//            fos.write(image);
-//            fos.close();
+                is.read(image);
+            }
         } catch (Exception e) {
             results.put("imageError", "Something went wrong when trying to upload this image.");
 //            results.put("imageError", e.getMessage());
         }
 
         if(image == null) {
-            results.put("imageError", "You must provide an image of this build.");
+            try {
+                Build build = BuildDAO.get(buildName);
+                image = build.getImage();
+                results.put("base64Image", build.getBase64Image());
+            } catch(Exception e) {
+                results.put("imageError", "Please select an image");
+            }
         }
 
         // Coordinates
@@ -133,7 +159,6 @@ public class AddBuild extends HttpServlet {
         results.put("buildName", buildName);
         results.put("description", description);
         results.put("dateBuilt", dateBuilt);
-        results.put("image", imgName);
         results.put("world", world);
         results.put("buildType", buildType);
         results.put("xCoord", xCoord);
@@ -156,19 +181,19 @@ public class AddBuild extends HttpServlet {
         }
 
         if (!results.containsKey("buildNameError") && !results.containsKey("descriptionError")
-                && !results.containsKey("tagError") && !results.containsKey("coordError") && !results.containsKey("imageError") && !results.containsKey("dateBuiltError")
+                && !results.containsKey("tagError") && !results.containsKey("coordError") && !results.containsKey("imageError") && !results.containsKey("dateBuildError")
         ) {
             try {
                 Build build = new Build(buildName, userFromSession.getUserID(), image, world, buildType, dateBuiltDate, coordinates, Instant.now(), description);
-                if(BuildDAO.add(build)) {
-                    session.setAttribute("flashMessageSuccess", "Building Successfully Added!");
+                if(BuildDAO.edit(build)) {
+                    session.setAttribute("flashMessageSuccess", "Building Successfully Edited!");
                     resp.sendRedirect("server-builds");
                     return;
                 } else {
-                    results.put("buildAddFail", "Failed to add building");
+                    results.put("buildEditFail", "Failed to edit build");
                 }
             } catch(RuntimeException e) {
-                results.put("buildAddFail", "Failed to add building" + e.getMessage());
+                results.put("buildEditFail", "Failed to edit build" + e.getMessage());
             }
         }
 
@@ -187,7 +212,7 @@ public class AddBuild extends HttpServlet {
         }
 
         req.setAttribute("results", results);
-        req.setAttribute("pageTitle", "Add Build");
-        req.getRequestDispatcher("WEB-INF/smp/add-build.jsp").forward(req, resp);
+        req.setAttribute("pageTitle", "Edit Build");
+        req.getRequestDispatcher("WEB-INF/smp/edit-build.jsp").forward(req, resp);
     }
 }

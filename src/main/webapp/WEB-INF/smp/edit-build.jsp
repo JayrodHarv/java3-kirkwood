@@ -1,10 +1,10 @@
 <%@ include file="/WEB-INF/smp/top.jsp"%>
 <main class="container py-3" style="margin-bottom: 40px">
-    <form action="${appURL}/add-build" method="POST" enctype="multipart/form-data">
+    <form action="${appURL}/edit-build" method="POST" enctype="multipart/form-data">
 
         <%-- Build Add Fail--%>
-        <c:if test="${not empty results.buildAddFail}">
-            <p class="alert alert-danger my-2">${results.buildAddFail}</p>
+        <c:if test="${not empty results.buildEditFail}">
+            <p class="alert alert-danger my-2">${results.buildEditFail}</p>
         </c:if>
 
         <!-- Build Info -->
@@ -32,13 +32,13 @@
             <!-- Date Built -->
             <div class="input-group mb-4">
                 <label for="dateBuilt" class="input-group-text">Date Built</label>
-                <input type="date" class="datepicker form-control rounded-end <c:if test="${not empty results.dateBuiltError}">is-invalid</c:if>" id="dateBuilt" name="dateBuilt" value="${results.dateBuilt}">
+                <input type="date" class="datepicker form-control rounded-end" id="dateBuilt" name="dateBuilt" value="${results.dateBuilt}">
                 <c:if test="${not empty results.dateBuiltError}">
                     <div class="invalid-feedback">${results.dateBuiltError}</div>
                 </c:if>
             </div>
 
-            <!-- Coordinates -->
+            <!-- Tags TODO: Make it so user can create new tag if one doesn't exist for their needs -->
             <div class="container-fluid p-0 justify-content-between">
                 <h5 class="form-label">Coordinates</h5>
                 <div class="input-group mb-4 fit-content">
@@ -60,13 +60,13 @@
             <h5 class="form-label">Image *</h5>
             <div class="input-group">
                 <%-- TODO: It's getting late but do this later for displaying input image https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file --%>
-                <input type="file" accept="image/png, image/jpeg" class="form-control <c:if test="${not empty results.imageError}">is-invalid</c:if>" id="image" name="image" value="${results.image}">
+                <input type="file" accept="image/png, image/jpeg" class="form-control <c:if test="${not empty results.imageError}">is-invalid</c:if>" id="image" name="image">
                 <c:if test="${not empty results.imageError}">
                     <div class="invalid-feedback">${results.imageError}</div>
                 </c:if>
             </div>
             <div id="imagePreview">
-
+                <img src="${results.base64Image}" class="w-100"/>
             </div>
         </div>
 

@@ -1,19 +1,27 @@
 <%@ include file="/WEB-INF/smp/top.jsp"%>
 <main class="container-fluid p-3" style="margin-bottom: 40px">
-
     <!-- Flash Message -->
     <c:choose>
         <c:when test="${not empty flashMessageSuccess}">
-            <div class="alert alert-success my-2">
+            <div class="alert alert-success alert-dismissible my-2" role="alert">
                     ${flashMessageSuccess}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             <c:remove var="flashMessageSuccess" scope="session"></c:remove>
         </c:when>
         <c:when test="${not empty flashMessageWarning}">
-            <div class="alert alert-warning my-2">
+            <div class="alert alert-success alert-dismissible my-2" role="alert">
                     ${flashMessageWarning}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             <c:remove var="flashMessageWarning" scope="session"></c:remove>
+        </c:when>
+        <c:when test="${not empty flashMessageDanger}">
+            <div class="alert alert-success alert-dismissible my-2" role="alert">
+                    ${flashMessageDanger}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <c:remove var="flashMessageDanger" scope="session"></c:remove>
         </c:when>
     </c:choose>
 

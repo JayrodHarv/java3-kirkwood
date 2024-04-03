@@ -1,8 +1,11 @@
 package edu.kirkwood.smp.models;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Build {
     private String BuildID;
@@ -14,6 +17,7 @@ public class Build {
     private String Coordinates;
     private Instant CreatedAt;
     private String Description;
+    private String Base64Image;
 
     public Build() {
 
@@ -78,6 +82,11 @@ public class Build {
     public void setDateBuilt(Date dateBuilt) {
         DateBuilt = dateBuilt;
     }
+    public String getDateBuiltString() {
+        if(DateBuilt == null) return "";
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(DateBuilt);
+    }
 
     public String getCoordinates() {
         return Coordinates;
@@ -101,5 +110,13 @@ public class Build {
 
     public void setDescription(String description) {
         Description = description;
+    }
+
+    public String getBase64Image() {
+        return Base64Image;
+    }
+
+    public void setBase64Image(String base64Image) {
+        Base64Image = base64Image;
     }
 }

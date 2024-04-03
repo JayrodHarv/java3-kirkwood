@@ -4,16 +4,25 @@
   <!-- Flash Message -->
   <c:choose>
     <c:when test="${not empty flashMessageSuccess}">
-      <div class="alert alert-success my-2">
-          ${flashMessageSuccess}
+      <div class="alert alert-success alert-dismissible my-2" role="alert">
+        ${flashMessageSuccess}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
       <c:remove var="flashMessageSuccess" scope="session"></c:remove>
     </c:when>
     <c:when test="${not empty flashMessageWarning}">
-      <div class="alert alert-warning my-2">
+      <div class="alert alert-success alert-dismissible my-2" role="alert">
           ${flashMessageWarning}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
       <c:remove var="flashMessageWarning" scope="session"></c:remove>
+    </c:when>
+    <c:when test="${not empty flashMessageDanger}">
+      <div class="alert alert-success alert-dismissible my-2" role="alert">
+          ${flashMessageDanger}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <c:remove var="flashMessageDanger" scope="session"></c:remove>
     </c:when>
   </c:choose>
 
@@ -32,13 +41,19 @@
         <c:forEach items="${builds}" var="b">
           <div class="col">
             <div class="card">
-              <img class="card-img-top" src="data:image/png;base64,${b.getBase64Image()}"/>
+              <img class="card-img-top" src="${b.getBase64Image()}"/>
               <div class="card-body">
                 <div class="d-flex justify-content-between">
                   <h5>${b.getBuildID()}</h5>
                   <p class="text-end m-0">${b.getDateBuilt()}</p>
                 </div>
                 <p class="card-text">${b.getDescription()}</p>
+                <c:if test="${sessionScope.activeSMPUser.getUserID() == b.getUser().getUserID()}">
+                  <div class="text-end">
+                    <a href="${appURL}/edit-build?build_id=${b.getBuildID()}" class="btn btn-warning">Edit</a>
+                    <button class="btn btn-danger" onclick="Confirm('${b.getBuildID()}')">Delete</button>
+                  </div>
+                </c:if>
               </div>
             </div>
           </div>
@@ -46,5 +61,37 @@
       </c:if>
     </div>
   </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="deleteModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form action="${appURL}/delete-build" method="POST">
+          <input type="hidden" id="buildID" name="buildID"/>
+          <div class="modal-header">
+            <h5 class="modal-title">Delete Build</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete this build?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </main>
+
+<script>
+  function Confirm(id) {
+    $('#buildID').val(id);
+    $('#deleteModal').modal('show');
+  }
+</script>
+
 <%@ include file="/WEB-INF/smp/bottom.jsp"%>

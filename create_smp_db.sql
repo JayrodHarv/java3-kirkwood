@@ -115,29 +115,36 @@ CREATE TABLE Message (
 	CONSTRAINT pk_Message PRIMARY KEY(MessageID)
 );
 
-DROP TABLE IF EXISTS VoteOption;
-CREATE TABLE VoteOption (
-	OptionID INT,
-	Title NVARCHAR(255) NOT NULL,
-	Description TEXT NOT NULL,
-	Image LONGBLOB,
-	CONSTRAINT pk_VoteOption PRIMARY KEY(OptionID)
-);
-
 DROP TABLE IF EXISTS Vote;
 CREATE TABLE Vote (
-	VoteID INT,
-	Title NVARCHAR(255) NOT NULL,
+	VoteID NVARCHAR(255) PRIMARY KEY,
+	UserID NVARCHAR(255) NOT NULL,
 	Description TEXT NOT NULL,
 	StartTime DATETIME NOT NULL,
 	EndTime DATETIME NOT NULL,
-	CONSTRAINT pk_Vote PRIMARY KEY(VoteID)
+    CONSTRAINT fk_Vote_UserID
+        FOREIGN KEY(UserID)
+            REFERENCES User(UserID)
+);
+
+DROP TABLE IF EXISTS VoteOption;
+CREATE TABLE VoteOption (
+    OptionID INT AUTO_INCREMENT PRIMARY KEY,
+    VoteID NVARCHAR(255),
+    Title NVARCHAR(255) NOT NULL,
+    Description TEXT NOT NULL,
+    Image LONGBLOB,
+    CONSTRAINT fk_VoteOption_VoteID
+        FOREIGN KEY(VoteID)
+            REFERENCES Vote(VoteID)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS UserVote;
 CREATE TABLE UserVote (
 	UserID NVARCHAR(255) NOT NULL,
-	VoteID INT NOT NULL,
+	VoteID NVARCHAR(255) NOT NULL,
 	OptionID INT NOT NULL,
 	VoteTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT fk_UserVote_UserID
@@ -145,7 +152,9 @@ CREATE TABLE UserVote (
 		  REFERENCES User(UserID),
 	CONSTRAINT fk_UserVote_VoteID
 	  FOREIGN KEY(VoteID)
-		  REFERENCES Vote(VoteID),
+		  REFERENCES Vote(VoteID)
+          ON UPDATE CASCADE
+          ON DELETE CASCADE,
 	CONSTRAINT pk_UserVote PRIMARY KEY(UserID, VoteID)
 );
 
@@ -153,7 +162,7 @@ CREATE TABLE UserVote (
 					STORED PROCEDURES / CRUD FUNCTIONS
 *****************************************************************************/
 
-/*-----------------------------------User------------------------------------*/
+/*-----------------------------------USER------------------------------------*/
 
 /* INSERT USER */
 DROP PROCEDURE IF EXISTS sp_insert_user;
@@ -243,7 +252,7 @@ BEGIN
     ;
 END;
 
-/*-----------------------------------2faCode------------------------------------*/
+/*-----------------------------------2FACODE------------------------------------*/
 
 /* ADD 2FA CODE */
 DROP PROCEDURE IF EXISTS sp_add_2fa_code;
@@ -274,7 +283,7 @@ BEGIN
     ;
 END;
 
-/*-----------------------------------Build------------------------------------*/
+/*-----------------------------------BUILD------------------------------------*/
 
 /* INSERT Build */
 DROP PROCEDURE IF EXISTS sp_insert_build;
@@ -371,7 +380,7 @@ BEGIN
     ;
 END;
 
-/*-----------------------------------World------------------------------------*/
+/*-----------------------------------WORLD------------------------------------*/
 
 /* INSERT World */
 DROP PROCEDURE IF EXISTS sp_insert_world;
@@ -436,7 +445,7 @@ BEGIN
     ;
 END;
 
-/*-----------------------------------BuildType------------------------------------*/
+/*-----------------------------------BUILDTYPE------------------------------------*/
 
 /* INSERT BuildType */
 DROP PROCEDURE IF EXISTS sp_insert_buildtype;
@@ -446,7 +455,7 @@ CREATE PROCEDURE sp_insert_buildtype(
 )
 BEGIN
     INSERT INTO BuildType
-    (BuildType, Description)
+        (BuildType, Description)
     VALUES
         (p_BuildType, p_Description)
     ;
@@ -497,6 +506,149 @@ BEGIN
     ;
 END;
 
+/*-----------------------------------VOTE------------------------------------*/
+
+/* INSERT Vote */
+DROP PROCEDURE IF EXISTS sp_insert_vote;
+CREATE PROCEDURE sp_insert_vote(
+    IN p_VoteID NVARCHAR(255),
+    IN p_UserID NVARCHAR(255),
+    IN p_Description TEXT,
+    IN p_StartTime DATETIME,
+    IN p_EndTime DATETIME
+)
+BEGIN
+    INSERT INTO Vote
+        (VoteID, UserID, Description, StartTime, EndTime)
+    VALUES
+        (p_VoteID, p_UserID, p_Description, p_StartTime, p_EndTime)
+    ;
+END;
+
+/* UPDATE Vote */
+DROP PROCEDURE IF EXISTS sp_update_vote;
+CREATE PROCEDURE sp_update_vote(
+    IN p_VoteID NVARCHAR(255),
+    IN p_Description TEXT,
+    IN p_StartTime DATETIME,
+    IN p_EndTime DATETIME
+)
+BEGIN
+    UPDATE Vote
+    SET VoteID = p_VoteID,
+        Description = p_Description,
+        StartTime = p_StartTime,
+        EndTime = p_EndTime
+    WHERE VoteID = p_VoteID
+    ;
+END;
+
+/* DELETE Vote */
+DROP PROCEDURE IF EXISTS sp_delete_vote;
+CREATE PROCEDURE sp_delete_vote(
+    IN p_VoteID NVARCHAR(255)
+)
+BEGIN
+    DELETE FROM Vote
+    WHERE VoteID = p_VoteID
+    ;
+END;
+
+/* GET Votes */
+DROP PROCEDURE IF EXISTS sp_get_votes;
+CREATE PROCEDURE sp_get_votes()
+BEGIN
+    SELECT v.VoteID, v.UserID, Description, StartTime, EndTime, COUNT(uv.UserID) AS 'num_of_votes'
+    FROM Vote AS v
+    LEFT JOIN UserVote AS uv ON v.VoteID = uv.VoteID
+    GROUP BY v.VoteID, v.UserID, Description, StartTime, EndTime
+    ;
+END;
+
+/* GET Vote */
+DROP PROCEDURE IF EXISTS sp_get_vote;
+CREATE PROCEDURE sp_get_vote(
+    IN p_VoteID NVARCHAR(255)
+)
+BEGIN
+    SELECT v.VoteID, v.UserID, v.Description, v.StartTime, v.EndTime, COUNT(vo.VoteID) AS 'num_of_options'
+    FROM Vote AS v
+    INNER JOIN VoteOption AS vo ON v.VoteID = vo.VoteID
+    WHERE v.VoteID = p_VoteID
+    GROUP BY vo.VoteID
+    ;
+END;
+
+/*-----------------------------------VOTEOPTION------------------------------------*/
+
+/* INSERT VoteOption */
+DROP PROCEDURE IF EXISTS sp_insert_voteoption;
+CREATE PROCEDURE sp_insert_voteoption(
+    IN p_VoteID NVARCHAR(255),
+    IN p_Title NVARCHAR(255),
+    IN p_Description TEXT,
+    IN p_Image LONGBLOB
+)
+BEGIN
+    INSERT INTO VoteOption
+        (VoteID, Title, Description, Image)
+    VALUES
+        (p_VoteID, p_Title, p_Description, p_Image)
+    ;
+END;
+
+/* UPDATE VoteOption */
+DROP PROCEDURE IF EXISTS sp_update_voteoption;
+CREATE PROCEDURE sp_update_voteoption(
+    IN p_OptionID INT,
+    IN p_Title NVARCHAR(255),
+    IN p_Description TEXT,
+    IN p_Image LONGBLOB
+)
+BEGIN
+    UPDATE VoteOption
+    SET Title = p_Title,
+        Description = p_Description,
+        Image = p_Image
+    WHERE OptionID = p_OptionID
+    ;
+END;
+
+/* DELETE VoteOption */
+DROP PROCEDURE IF EXISTS sp_delete_voteoption;
+CREATE PROCEDURE sp_delete_voteoption(
+    IN p_OptionID INT
+)
+BEGIN
+    DELETE FROM VoteOption
+    WHERE OptionID = p_OptionID
+    ;
+END;
+
+/* GET VoteOptions */
+DROP PROCEDURE IF EXISTS sp_get_voteoptions;
+CREATE PROCEDURE sp_get_voteoptions(
+    IN p_VoteID NVARCHAR(255)
+)
+BEGIN
+    SELECT OptionID, Title, Description, Image
+    FROM VoteOption
+    WHERE VoteID = p_VoteID
+    ;
+END;
+
+/* GET VoteOption */
+DROP PROCEDURE IF EXISTS sp_get_voteoption;
+CREATE PROCEDURE sp_get_voteoption(
+    IN p_OptionID INT
+)
+BEGIN
+    SELECT OptionID, Title, Description, Image
+    FROM VoteOption
+    WHERE OptionID = p_OptionID
+    ;
+END;
+
 /*****************************************************************************
 					            TEST RECORDS
 *****************************************************************************/
@@ -513,5 +665,7 @@ INSERT INTO BuildType (BuildType, Description) VALUES ('Shop', 'Place to buy and
 
 INSERT INTO World (WorldID, DateStarted, Description) VALUES ('No Go Outside', '2020-5-11', 'Built in the No Go Outside world');
 INSERT INTO World (WorldID, DateStarted, Description) VALUES ('SummerSMP2022', '2022-6-18', 'Built in the SummerSMP2022 world');
+
+INSERT INTO User (UserID, DisplayName, Password, Status, Role) VALUES ('jared.harvey10@gmail.com', 'Jared Harvey', '$2a$12$ChtjH38V8VqFtkJNUPK8Y.khnWXhwzyeBDVZlDqwUrR.wnBZhy51e', 'active', 'admin');
 
 INSERT INTO Build (BuildID, UserID, WorldID, BuildType, Description) VALUES ('Test Build', 'jared.harvey10@gmail.com', 'SummerSMP2022', 'Cathedral', 'beansbeansbeansbeansbeans');

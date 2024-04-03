@@ -15,7 +15,7 @@ import java.util.*;
 public class ServerBuilds extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int limit = 5;
+        int limit = 10;
         int offset = 0;
         String worldFilter = "";
         String buildTypeFilter = "";

@@ -1,0 +1,40 @@
+package edu.kirkwood.smp.models;
+
+public class VoteOption {
+    private int OptionID;
+    private String Title;
+    private String Description;
+    private byte[] Image;
+
+    public int getOptionID() {
+        return OptionID;
+    }
+
+    public void setOptionID(int optionID) {
+        OptionID = optionID;
+    }
+
+    public String getTitle() {
+        return Title;
+    }
+
+    public void setTitle(String title) {
+        Title = title;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public byte[] getImage() {
+        return Image;
+    }
+
+    public void setImage(byte[] image) {
+        Image = image;
+    }
+}
