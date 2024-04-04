@@ -12,6 +12,12 @@ public class Vote {
     public Vote() {
     }
 
+    public Vote(String voteID, String userID, String description) {
+        VoteID = voteID;
+        UserID = userID;
+        Description = description;
+    }
+
     public Vote(String voteID, String userID, String description, Instant startTime, Instant endTime) {
         VoteID = voteID;
         UserID = userID;

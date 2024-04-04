@@ -2,9 +2,20 @@ package edu.kirkwood.smp.models;
 
 public class VoteOption {
     private int OptionID;
+    private String VoteID;
     private String Title;
     private String Description;
     private byte[] Image;
+
+    public VoteOption() {
+    }
+
+    public VoteOption(String voteID, String title, String description, byte[] image) {
+        VoteID = voteID;
+        Title = title;
+        Description = description;
+        Image = image;
+    }
 
     public int getOptionID() {
         return OptionID;
@@ -12,6 +23,14 @@ public class VoteOption {
 
     public void setOptionID(int optionID) {
         OptionID = optionID;
+    }
+
+    public String getVoteID() {
+        return VoteID;
+    }
+
+    public void setVoteID(String voteID) {
+        VoteID = voteID;
     }
 
     public String getTitle() {

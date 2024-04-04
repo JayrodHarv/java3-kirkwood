@@ -26,8 +26,10 @@ public class VoteDAO {
                 vote.setVoteID(resultSet.getString("VoteID"));
                 vote.setUserID(resultSet.getString("UserID"));
                 vote.setDescription(resultSet.getString("Description"));
-                vote.setStartTime(resultSet.getTimestamp("StartTime").toInstant());
-                vote.setEndTime(resultSet.getTimestamp("EndTime").toInstant());
+                if(resultSet.getTimestamp("StartTime") != null)
+                    vote.setStartTime(resultSet.getTimestamp("StartTime").toInstant());
+                if(resultSet.getTimestamp("EndTime") != null)
+                    vote.setEndTime(resultSet.getTimestamp("EndTime").toInstant());
                 vote.setNumberOfVotes(resultSet.getInt("num_of_votes"));
                 votes.add(vote);
             }
@@ -50,8 +52,10 @@ public class VoteDAO {
                 vote.setVoteID(resultSet.getString("VoteID"));
                 vote.setUserID(resultSet.getString("UserID"));
                 vote.setDescription(resultSet.getString("Description"));
-                vote.setStartTime(resultSet.getTimestamp("StartTime").toInstant());
-                vote.setEndTime(resultSet.getTimestamp("EndTime").toInstant());
+                if(resultSet.getTimestamp("StartTime") != null)
+                    vote.setStartTime(resultSet.getTimestamp("StartTime").toInstant());
+                if(resultSet.getTimestamp("EndTime") != null)
+                    vote.setEndTime(resultSet.getTimestamp("EndTime").toInstant());
                 vote.setNumberOfOptions(resultSet.getInt("num_of_options"));
                 try(CallableStatement statement2 = connection.prepareCall("{CALL sp_get_voteoptions(?)}")) {
                     statement2.setString(1, voteID);
@@ -63,19 +67,19 @@ public class VoteDAO {
                         option.setTitle(resultSet2.getString("Title"));
                         option.setDescription(resultSet2.getString("Description"));
                         Blob blob = resultSet2.getBlob("Image");
-                        InputStream inputStream = blob.getBinaryStream();
-
-                        // Source: https://www.codejava.net/coding/how-to-display-images-from-database-in-jsp-page-with-java-servlet
-                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                        byte[] buffer = new byte[4096];
-                        int bytesRead;
-                        while ((bytesRead = inputStream.read(buffer)) != -1) {
-                            outputStream.write(buffer, 0, bytesRead);
+                        if(blob != null) {
+                            InputStream inputStream = blob.getBinaryStream();
+                            // Source: https://www.codejava.net/coding/how-to-display-images-from-database-in-jsp-page-with-java-servlet
+                            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                            byte[] buffer = new byte[4096];
+                            int bytesRead;
+                            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                outputStream.write(buffer, 0, bytesRead);
+                            }
+                            option.setImage(outputStream.toByteArray());
+                            inputStream.close();
+                            outputStream.close();
                         }
-                        option.setImage(outputStream.toByteArray());
-                        inputStream.close();
-                        outputStream.close();
-
                         options.add(option);
                     }
                     vote.setOptions(options);
@@ -99,8 +103,8 @@ public class VoteDAO {
                     statement.setString(1, vote.getVoteID());
                     statement.setString(2, vote.getUserID());
                     statement.setString(3, vote.getDescription());
-                    statement.setTimestamp(4, Timestamp.from(vote.getStartTime()));
-                    statement.setTimestamp(5, Timestamp.from(vote.getEndTime()));
+                    statement.setTimestamp(4, vote.getStartTime() == null ? null : Timestamp.from(vote.getStartTime()));
+                    statement.setTimestamp(5, vote.getEndTime() == null ? null : Timestamp.from(vote.getEndTime()));
                     int rowsAffected = statement.executeUpdate();
                     if(rowsAffected == 1) {
                         result = true;

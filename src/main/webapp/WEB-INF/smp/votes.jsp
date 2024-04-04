@@ -18,13 +18,13 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
                                     <h5>${v.getVoteID()}</h5>
-                                    <p class="text-end m-0">${v.getNumberOfVotes()}</p>
+                                    <p class="text-end m-0">Number of votes: ${v.getNumberOfVotes()}</p>
                                 </div>
                                 <p class="card-text">${v.getDescription()}</p>
                                 <c:if test="${sessionScope.activeSMPUser.getUserID() == v.getUserID()}">
                                     <div class="text-end">
-                                        <a href="${appURL}/edit-vote?vote_id=${v.getVoteID()}" class="btn btn-warning">Edit</a>
-                                        <a href="${appURL}/delete-vote?vote_id=${b.getVoteID()}" class="btn btn-danger">Delete</a>
+                                        <a href="${appURL}/edit-vote?voteID=${v.getVoteID()}" class="btn btn-warning">Edit</a>
+                                        <a href="${appURL}/delete-vote?voteID=${v.getVoteID()}" class="btn btn-danger">Delete</a>
                                     </div>
                                 </c:if>
                             </div>

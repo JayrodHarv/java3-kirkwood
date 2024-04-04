@@ -120,8 +120,8 @@ CREATE TABLE Vote (
 	VoteID NVARCHAR(255) PRIMARY KEY,
 	UserID NVARCHAR(255) NOT NULL,
 	Description TEXT NOT NULL,
-	StartTime DATETIME NOT NULL,
-	EndTime DATETIME NOT NULL,
+	StartTime DATETIME NULL,
+	EndTime DATETIME NULL,
     CONSTRAINT fk_Vote_UserID
         FOREIGN KEY(UserID)
             REFERENCES User(UserID)
@@ -571,11 +571,11 @@ CREATE PROCEDURE sp_get_vote(
     IN p_VoteID NVARCHAR(255)
 )
 BEGIN
-    SELECT v.VoteID, v.UserID, v.Description, v.StartTime, v.EndTime, COUNT(vo.VoteID) AS 'num_of_options'
+    SELECT v.VoteID, v.UserID, v.Description, StartTime, EndTime, COUNT(vo.VoteID) AS 'num_of_options'
     FROM Vote AS v
-    INNER JOIN VoteOption AS vo ON v.VoteID = vo.VoteID
+    LEFT JOIN VoteOption AS vo ON v.VoteID = vo.VoteID
     WHERE v.VoteID = p_VoteID
-    GROUP BY vo.VoteID
+    GROUP BY v.VoteID, v.UserID, v.Description, StartTime, EndTime
     ;
 END;
 

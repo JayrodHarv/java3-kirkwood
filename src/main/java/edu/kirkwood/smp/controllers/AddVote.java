@@ -44,23 +44,23 @@ public class AddVote extends HttpServlet {
         User userFromSession = (User)session.getAttribute("activeSMPUser");
         Map<String, String> results = new HashMap<>();
 
-        String voteName = req.getParameter("voteName");
+        String voteID = req.getParameter("voteID");
         String description = req.getParameter("description");
-        String startTime = req.getParameter("startTime");
-        String endTime = req.getParameter("endTime");
+//        String startTime = req.getParameter("startTime");
+//        String endTime = req.getParameter("endTime");
 
-        results.put("voteName", voteName);
+        results.put("voteID", voteID);
         results.put("description", description);
-        results.put("startTime", startTime);
-        results.put("endTime", endTime);
+//        results.put("startTime", startTime);
+//        results.put("endTime", endTime);
 
-        if(voteName == null || voteName.isEmpty()) {
-            results.put("voteNameError", "You must enter a name to give to this vote.");
+        if(voteID == null || voteID.isEmpty()) {
+            results.put("voteIDError", "You must enter a name to give to this vote.");
         } else {
             try {
-                Vote vote = VoteDAO.get(voteName);
+                Vote vote = VoteDAO.get(voteID);
                 if(vote != null) {
-                    results.put("voteNameError", "There already exists a vote with this name. Please enter a different name.");
+                    results.put("voteIDError", "There already exists a vote with this name. Please enter a different name.");
                 }
             } catch(Exception e) {
                 System.out.println(e.getMessage());
@@ -71,27 +71,27 @@ public class AddVote extends HttpServlet {
             results.put("descriptionError", "You must enter a description.");
         }
 
-        Instant startDateTime = null;
-        Instant endDateTime = null;
-        if(startTime != null && !startTime.isEmpty() && endTime != null && !endTime.isEmpty()) {
-            try {
-                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
-                startDateTime = formatter.parse(startTime).toInstant();
-                endDateTime = formatter.parse(endTime).toInstant();
-            } catch(Exception e) {
-                System.out.println(e.getMessage());
-            }
-        } else {
-            results.put("timePeriodError", "You must specify both a start time and an end time for this vote.");
-        }
+//        Instant startDateTime = null;
+//        Instant endDateTime = null;
+//        if(startTime != null && !startTime.isEmpty() && endTime != null && !endTime.isEmpty()) {
+//            try {
+//                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
+//                startDateTime = formatter.parse(startTime).toInstant();
+//                endDateTime = formatter.parse(endTime).toInstant();
+//            } catch(Exception e) {
+//                System.out.println(e.getMessage());
+//            }
+//        } else {
+//            results.put("timePeriodError", "You must specify both a start time and an end time for this vote.");
+//        }
 
-        if (!results.containsKey("voteNameError") && !results.containsKey("descriptionError")
+        if (!results.containsKey("voteIDError") && !results.containsKey("descriptionError")
                 && !results.containsKey("timePeriodError")
         ) {
             try {
-                Vote vote = new Vote(voteName, userFromSession.getUserID(), description, startDateTime, endDateTime);
+                Vote vote = new Vote(voteID, userFromSession.getUserID(), description);
                 if(VoteDAO.add(vote)) {
-                    resp.sendRedirect("edit-vote?voteId=" + voteName);
+                    resp.sendRedirect("edit-vote?voteID=" + voteID);
                     return;
                 } else {
                     results.put("voteAddFail", "Failed to add vote");
