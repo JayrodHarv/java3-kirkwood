@@ -7,6 +7,17 @@
         </div>
     </div>
     <div class="container">
+        <ul class="nav nav-underline mb-4">
+            <li class="nav-item">
+                <a class="nav-link <c:if test="${results.page eq 'active'}">active</c:if>" aria-current="page" href="${appURL}/votes?page=active">Active</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <c:if test="${results.page eq 'myVotes'}">active</c:if>" aria-current="page" href="${appURL}/votes?page=myVotes">My Votes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <c:if test="${results.page eq 'concluded'}">active</c:if>" aria-current="page" href="${appURL}/votes?page=concluded">Concluded</a>
+            </li>
+        </ul>
         <c:if test="${not empty results.getVoteListError}">
             <p class="alert alert-danger my-2">${results.getVoteListError}</p>
         </c:if>
@@ -23,6 +34,9 @@
                                 <p class="card-text">${v.getDescription()}</p>
                                 <c:if test="${sessionScope.activeSMPUser.getUserID() == v.getUserID()}">
                                     <div class="text-end">
+                                        <c:if test="${v.getStartTime() == null}">
+                                            <a href="${appURL}/start-vote?voteID=${v.getVoteID()}" class="btn btn-success">Begin Voting</a>
+                                        </c:if>
                                         <a href="${appURL}/edit-vote?voteID=${v.getVoteID()}" class="btn btn-warning">Edit</a>
                                         <a href="${appURL}/delete-vote?voteID=${v.getVoteID()}" class="btn btn-danger">Delete</a>
                                     </div>

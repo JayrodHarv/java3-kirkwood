@@ -15,12 +15,38 @@ import java.util.List;
 import static edu.kirkwood.smp.data.Database.getConnection;
 
 public class VoteDAO {
-    public static List<VoteListItemVM> getAll() {
+    public static List<VoteListItemVM> getActive() {
         List<VoteListItemVM> votes = new ArrayList<>();
         try(Connection connection = getConnection();
-            CallableStatement statement = connection.prepareCall("{CALL sp_get_votes()}");
+            CallableStatement statement = connection.prepareCall("{CALL sp_get_active_votes()}");
             ResultSet resultSet = statement.executeQuery()
         ) {
+            while(resultSet.next()) {
+                VoteListItemVM vote = new VoteListItemVM();
+                vote.setVoteID(resultSet.getString("VoteID"));
+                vote.setUserID(resultSet.getString("UserID"));
+                vote.setDescription(resultSet.getString("Description"));
+                if(resultSet.getTimestamp("StartTime") != null)
+                    vote.setStartTime(resultSet.getTimestamp("StartTime").toInstant());
+                if(resultSet.getTimestamp("EndTime") != null)
+                    vote.setEndTime(resultSet.getTimestamp("EndTime").toInstant());
+                vote.setNumberOfVotes(resultSet.getInt("num_of_votes"));
+                votes.add(vote);
+            }
+        } catch (SQLException e) {
+            System.out.println("Likely bad SQL query");
+            System.out.println(e.getMessage());
+        }
+        return votes;
+    }
+
+    public static List<VoteListItemVM> getMyVotes(String userID) {
+        List<VoteListItemVM> votes = new ArrayList<>();
+        try(Connection connection = getConnection();
+            CallableStatement statement = connection.prepareCall("{CALL sp_get_myvotes(?)}")
+        ) {
+            statement.setString(1, userID);
+            ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 VoteListItemVM vote = new VoteListItemVM();
                 vote.setVoteID(resultSet.getString("VoteID"));
@@ -117,8 +143,27 @@ public class VoteDAO {
         return result;
     }
 
-    public static boolean edit() {
-        return false;
+    public static boolean edit(Vote vote) {
+        boolean result = false;
+        try (Connection connection = getConnection()) {
+            if (connection != null) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_vote(?,?,?,?)}")) {
+                    statement.setString(1, vote.getVoteID());
+                    statement.setString(2, vote.getDescription());
+                    statement.setTimestamp(3, vote.getStartTime() == null ? null : Timestamp.from(vote.getStartTime()));
+                    statement.setTimestamp(4, vote.getEndTime() == null ? null : Timestamp.from(vote.getEndTime()));
+                    int rowsAffected = statement.executeUpdate();
+                    if(rowsAffected == 1) {
+                        result = true;
+                    }
+                } catch(Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return result;
     }
 
     public static boolean delete() {

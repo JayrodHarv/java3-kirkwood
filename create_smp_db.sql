@@ -554,13 +554,29 @@ BEGIN
     ;
 END;
 
-/* GET Votes */
-DROP PROCEDURE IF EXISTS sp_get_votes;
-CREATE PROCEDURE sp_get_votes()
+/* GET My Votes */
+DROP PROCEDURE IF EXISTS sp_get_myvotes;
+CREATE PROCEDURE sp_get_myvotes(
+    IN p_UserID NVARCHAR(255)
+)
 BEGIN
     SELECT v.VoteID, v.UserID, Description, StartTime, EndTime, COUNT(uv.UserID) AS 'num_of_votes'
     FROM Vote AS v
     LEFT JOIN UserVote AS uv ON v.VoteID = uv.VoteID
+    WHERE v.UserID = p_UserID
+    GROUP BY v.VoteID, v.UserID, Description, StartTime, EndTime
+    ;
+END;
+
+/* GET Active Votes */
+DROP PROCEDURE IF EXISTS sp_get_active_votes;
+CREATE PROCEDURE sp_get_active_votes()
+BEGIN
+    SELECT v.VoteID, v.UserID, Description, StartTime, EndTime, COUNT(uv.UserID) AS 'num_of_votes'
+    FROM Vote AS v
+    LEFT JOIN UserVote AS uv ON v.VoteID = uv.VoteID
+    WHERE v.EndTime IS NOT NULL
+    AND v.EndTime < CURRENT_TIME
     GROUP BY v.VoteID, v.UserID, Description, StartTime, EndTime
     ;
 END;

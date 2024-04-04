@@ -1,12 +1,14 @@
 package edu.kirkwood.smp.controllers;
 
 import edu.kirkwood.smp.data.VoteDAO;
+import edu.kirkwood.smp.models.User;
 import edu.kirkwood.smp.models.VoteListItemVM;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,13 +20,38 @@ import java.util.Map;
 public class Votes extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String page = req.getParameter("page");
         Map<String,String> results = new HashMap<>();
         List<VoteListItemVM> votes = new ArrayList<>();
+
+        if(page == null || page.isEmpty()) {
+            page = "active";
+        }
+
         try {
-            votes = VoteDAO.getAll();
+            switch (page) {
+                case "active":
+                    votes = VoteDAO.getActive();
+                    break;
+                case "myVotes":
+                    HttpSession session = req.getSession();
+                    User userFromSession = (User)session.getAttribute("activeSMPUser");
+                    if(userFromSession == null || !userFromSession.getStatus().equals("active")) {
+                        session.setAttribute("flashMessageWarning", "You must be logged in to view your votes.");
+                        resp.sendRedirect("smp-login?redirect=votes");
+                        return;
+                    }
+                    votes = VoteDAO.getMyVotes(userFromSession.getUserID());
+                    break;
+                case "Concluded":
+//                    votes = VoteDAO.getConcludedVotes();
+                    break;
+            }
         } catch(Exception e) {
             results.put("getVoteListError", "Failed to retrieve votes.");
         }
+
+        results.put("page", page);
 
         req.setAttribute("votes", votes);
         req.setAttribute("results", results);

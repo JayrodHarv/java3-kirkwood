@@ -31,12 +31,6 @@
                                         <h5>Option ${status.index() + 1}) ${o.getTitle()}</h5>
                                     </div>
                                     <p class="card-text">${o.getDescription()}</p>
-                                    <c:if test="${sessionScope.activeSMPUser.getUserID() == results.userID}">
-                                        <div class="text-end">
-                                            <a href="${appURL}/edit-option?optionID=${o.getOptionID()}" class="btn btn-warning">Edit</a>
-                                            <a href="${appURL}/delete-option?optionID=${o.getOptionID()}" class="btn btn-danger">Delete</a>
-                                        </div>
-                                    </c:if>
                                 </div>
                             </div>
                         </div>
@@ -44,25 +38,19 @@
                 </div>
             </div>
 
-            <!-- Start Vote & Duration of vote -->
+            <!-- Radio Select Option -->
             <div class="container-fluid p-0">
-                <div class="input-group mb-4">
-                    <label for="duration" class="input-group-text">End Time</label>
-                    <input type="time" class="form-control" id="duration" name="duration" value="${results.duration}">
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="start" name="start">
-                    <label class="form-check-label" for="start">
-                        Start Vote On Submission
-                    </label>
-                </div>
+                <c:forEach items="${options}" var="o">
+                    <input type="radio" name="selectedOption" id="selectedOption" value="${o.getOptionID()}" <c:if test="${results.selectedOption eq o.getOptionID()}">checked="checked"</c:if>>
+                    <label for="selectedOption">${o.getTitle()}</label>
+                </c:forEach>
             </div>
 
         </div>
         <div class="d-flex justify-content-between p-0">
             <div class="btn btn-group p-0">
                 <a href="${appURL}/votes" class="btn btn-secondary">Back</a>
-                <button type="submit" class="btn btn-primary">Submit Changes</button>
+                <button type="submit" class="btn btn-primary">Submit Vote</button>
             </div>
             <p class="form-text text-end">* Indicates required fields</p>
         </div>
