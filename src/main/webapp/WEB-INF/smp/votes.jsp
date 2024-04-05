@@ -1,12 +1,12 @@
 <%@ include file="/WEB-INF/smp/top.jsp"%>
-<main class="container-fluid py-3" style="margin-bottom: 40px">
+<main class="container py-3" style="margin-bottom: 40px">
     <div class="d-flex justify-content-between mb-4">
         <h2>${pageTitle}</h2>
         <div class="text-end">
-            <a href="${appURL}/add-vote" class="btn btn-primary">Create Vote</a>
+            <a href="${appURL}/add-vote" class="btn btn-success" data-bs-toggle="tooltip" data-bs-title="Add Vote"><i class="bi bi-plus-lg"></i></a>
         </div>
     </div>
-    <div class="container">
+    <div class="container-fluid p-0">
         <ul class="nav nav-underline mb-4">
             <li class="nav-item">
                 <a class="nav-link <c:if test="${results.page eq 'active'}">active</c:if>" aria-current="page" href="${appURL}/votes?page=active">Active</a>
@@ -23,30 +23,51 @@
         </c:if>
         <div class="row row-cols-1 g-4">
             <c:if test="${votes.size() > 0}">
-                <c:forEach items="${votes}" var="v">
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <h5>${v.getVoteID()}</h5>
-                                    <p class="text-end m-0">Number of votes: ${v.getNumberOfVotes()}</p>
-                                </div>
-                                <p class="card-text">${v.getDescription()}</p>
-                                <c:if test="${sessionScope.activeSMPUser.getUserID() == v.getUserID()}">
-                                    <div class="text-end">
-                                        <c:if test="${v.getStartTime() == null}">
-                                            <a href="${appURL}/start-vote?voteID=${v.getVoteID()}" class="btn btn-success">Begin Voting</a>
-                                        </c:if>
-                                        <a href="${appURL}/edit-vote?voteID=${v.getVoteID()}" class="btn btn-warning">Edit</a>
-                                        <a href="${appURL}/delete-vote?voteID=${v.getVoteID()}" class="btn btn-danger">Delete</a>
-                                    </div>
-                                </c:if>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
+                <c:choose>
+                    <c:when test="${results.page == 'active'}">
+                        <%@include file="/WEB-INF/smp/active-vote-list-item.jsp"%>
+                    </c:when>
+                    <c:when test="${results.page == 'myVotes'}">
+                        <%@include file="/WEB-INF/smp/my-votes-list-item.jsp"%>
+                    </c:when>
+                    <c:when test="${results.page == 'Concluded'}">
+
+                    </c:when>
+                </c:choose>
             </c:if>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="${appURL}/delete-vote" method="POST">
+                    <input type="hidden" id="voteID" name="voteID"/>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Vote</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this vote?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </main>
+
+<script>
+    function Confirm(id) {
+        $('#voteID').val(id);
+        $('#deleteModal').modal('show');
+    }
+</script>
+
 <%@ include file="/WEB-INF/smp/bottom.jsp"%>

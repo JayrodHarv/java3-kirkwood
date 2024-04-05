@@ -166,7 +166,21 @@ public class VoteDAO {
         return result;
     }
 
-    public static boolean delete() {
-        return false;
+    public static boolean delete(String voteID) {
+        boolean result = false;
+        try (Connection connection = getConnection()) {
+            if (connection != null) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_delete_vote(?)}")) {
+                    statement.setString(1, voteID);
+                    int rowsAffected = statement.executeUpdate();
+                    if(rowsAffected == 1) {
+                        result = true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
     }
 }

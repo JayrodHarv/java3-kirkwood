@@ -21,15 +21,26 @@
 
         </ul>
 
-        <div class="col-md-3 text-end">
+        <div class="text-end">
             <c:choose>
                 <c:when test="${empty activeSMPUser}">
                     <a href="${appURL}/smp-login" class="btn btn-outline-primary me-2">Login</a>
                     <a href="${appURL}/smp-signup" class="btn btn-primary">Sign Up</a>
                 </c:when>
                 <c:otherwise>
-                    <a href="${appURL}/smp-logout" class="btn btn-outline-primary me-2">Logout</a>
-                    <a href="${appURL}/smp-edit-profile" class="btn btn-primary">Edit Profile</a>
+                    <div class="dropdown text-end" data-bs-theme="dark">
+                        <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="${appURL}/images/smp/server-icon.png" alt="user profile picture" width="45" height="45" class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu text-small">
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><a class="dropdown-item" href="${appURL}/smp-edit-profile">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="${appURL}/smp-logout">Sign out</a></li>
+                        </ul>
+                    </div>
+<%--                    <a href="${appURL}/smp-logout" class="btn btn-outline-primary me-2">Logout</a>--%>
+<%--                    <a href="${appURL}/smp-edit-profile" class="btn btn-primary">Edit Profile</a>--%>
                 </c:otherwise>
             </c:choose>
         </div>

@@ -575,8 +575,8 @@ BEGIN
     SELECT v.VoteID, v.UserID, Description, StartTime, EndTime, COUNT(uv.UserID) AS 'num_of_votes'
     FROM Vote AS v
     LEFT JOIN UserVote AS uv ON v.VoteID = uv.VoteID
-    WHERE v.EndTime IS NOT NULL
-    AND v.EndTime < CURRENT_TIME
+    WHERE StartTime IS NOT NULL AND EndTime IS NOT NULL
+    AND StartTime <= CURRENT_TIMESTAMP AND EndTime > CURRENT_TIMESTAMP
     GROUP BY v.VoteID, v.UserID, Description, StartTime, EndTime
     ;
 END;

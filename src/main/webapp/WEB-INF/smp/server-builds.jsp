@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/smp/top.jsp"%>
-<main class="container-fluid p-3" style="margin-bottom: 40px">
+<main class="container-fluid py-3" style="margin-bottom: 40px;">
 
   <!-- Flash Message -->
   <%@ include file="/WEB-INF/smp/flash-message.jsp"%>
@@ -7,10 +7,10 @@
   <div class="d-flex justify-content-between mb-4">
     <h2>${pageTitle}</h2>
     <div class="text-end">
-      <a href="${appURL}/add-build" class="btn btn-primary">Add New Build</a>
+      <a href="${appURL}/add-build" class="btn btn-success" data-bs-toggle="tooltip" data-bs-title="Add Build"><i class="bi bi-plus-lg"></i></a>
     </div>
   </div>
-  <div class="container-fluid">
+  <div class="container-fluid p-0">
     <c:if test="${not empty results.getBuildListError}">
       <p class="alert alert-danger my-2">${results.getBuildListError}</p>
     </c:if>
@@ -28,8 +28,10 @@
                 <p class="card-text">${b.getDescription()}</p>
                 <c:if test="${sessionScope.activeSMPUser.getUserID() == b.getUser().getUserID()}">
                   <div class="text-end">
-                    <a href="${appURL}/edit-build?build_id=${b.getBuildID()}" class="btn btn-warning">Edit</a>
-                    <button class="btn btn-danger" onclick="Confirm('${b.getBuildID()}')">Delete</button>
+                    <div class="btn-group">
+                      <a href="${appURL}/edit-build?build_id=${b.getBuildID()}" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-title="Edit Build"><i class="bi bi-pencil-fill"></i></a>
+                      <a class="btn btn-outline-danger" onclick="Confirm('${b.getBuildID()}')" data-bs-toggle="tooltip" data-bs-title="Delete Build"><i class="bi bi-trash3-fill"></i></a>
+                    </div>
                   </div>
                 </c:if>
               </div>
