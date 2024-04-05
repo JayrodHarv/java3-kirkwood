@@ -12,13 +12,13 @@
 
             <c:choose>
                 <c:when test="${sessionScope.activeUser.privileges eq 'student'}">
-                    <li><a href="#" class="nav-link px-2 <c:if test="${pageTitle eq 'Student Dashboard'}">link-secondary text-decoration-underline</c:if>">Student Dashboard</a></li>
+                    <li><a href="${appURL}/student" class="nav-link px-2 <c:if test="${pageTitle eq 'Student Dashboard'}">link-secondary text-decoration-underline</c:if>">Student Dashboard</a></li>
                 </c:when>
                 <c:when test="${sessionScope.activeUser.privileges eq 'teacher'}">
-                    <li><a href="#" class="nav-link px-2 <c:if test="${pageTitle eq 'Teacher Dashboard'}">link-secondary text-decoration-underline</c:if>">Teacher Dashboard</a></li>
+                    <li><a href="${appURL}/teacher" class="nav-link px-2 <c:if test="${pageTitle eq 'Teacher Dashboard'}">link-secondary text-decoration-underline</c:if>">Teacher Dashboard</a></li>
                 </c:when>
                 <c:when test="${sessionScope.activeUser.privileges eq 'admin'}">
-                    <li><a href="#" class="nav-link px-2 <c:if test="${pageTitle eq 'Admin Dashboard'}">link-secondary text-decoration-underline</c:if>">Admin Dashboard</a></li>
+                    <li><a href="${appURL}/admin" class="nav-link px-2 <c:if test="${pageTitle eq 'Admin Dashboard'}">link-secondary text-decoration-underline</c:if>">Admin Dashboard</a></li>
                 </c:when>
             </c:choose>
         </ul>

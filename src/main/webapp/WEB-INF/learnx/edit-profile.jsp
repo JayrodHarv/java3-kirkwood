@@ -13,21 +13,7 @@
                     </div>
                     <div class="card-body">
 
-                        <!-- Flash Message -->
-                        <c:choose>
-                            <c:when test="${not empty flashMessageSuccess}">
-                                <div class="alert alert-success my-2">
-                                        ${flashMessageSuccess}
-                                </div>
-                                <c:remove var="flashMessageSuccess" scope="session"></c:remove>
-                            </c:when>
-                            <c:when test="${not empty flashMessageWarning}">
-                                <div class="alert alert-warning my-2">
-                                        ${flashMessageWarning}
-                                </div>
-                                <c:remove var="flashMessageWarning" scope="session"></c:remove>
-                            </c:when>
-                        </c:choose>
+                        <%@include file="/WEB-INF/learnx/flash-message.jsp"%>
 
                         <form action="${appURL}/edit-profile" method="post" class="row">
                             <%-- First Name--%>

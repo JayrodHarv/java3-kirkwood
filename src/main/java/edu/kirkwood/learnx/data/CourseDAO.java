@@ -9,11 +9,6 @@ import java.util.List;
 
 public class CourseDAO extends Database {
 
-    public static void main(String[] args) {
-        List<Course> courses = get(5, 0, "", "");
-        courses.forEach(System.out::println);
-    }
-
     public static List<Course> get(int limit, int offset, String categories, String skillLevel) {
         List<Course> courses = new ArrayList<>();
         try (Connection connection = getConnection()) {
@@ -50,21 +45,34 @@ public class CourseDAO extends Database {
         List<CourseCategory> categories = new ArrayList<>();
         try (Connection connection = getConnection()) {
             if (connection != null) {
-                try(CallableStatement statement = connection.prepareCall("{CALL sp_get_all_course_categories()}")) {
-                    try (ResultSet resultSet = statement.executeQuery()) {
-                        while (resultSet.next()) {
-                            int id = resultSet.getInt("id");
-                            String name = resultSet.getString("name");
-                            int numCourses = resultSet.getInt("num_courses");
-                            categories.add(new CourseCategory(id, name, numCourses));
-                        }
+                try(CallableStatement statement = connection.prepareCall("{CALL sp_get_all_course_categories()}");
+                    ResultSet resultSet = statement.executeQuery()
+                ) {
+                    while (resultSet.next()) {
+                        int id = resultSet.getInt("id");
+                        String name = resultSet.getString("name");
+                        int numCourses = resultSet.getInt("num_courses");
+                        categories.add(new CourseCategory(id, name, numCourses));
                     }
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
         return categories;
     }
 
+    public static boolean enroll(int userId, int courseId) {
+        boolean result = false;
+        try (Connection connection = getConnection();
+             CallableStatement statement = connection.prepareCall("{CALL sp_add_enrollment(?, ?)}")
+        ) {
+            statement.setInt(1, userId);
+            statement.setInt(2, courseId);
+            result = statement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return result;
+    }
 }

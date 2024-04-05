@@ -15,16 +15,28 @@ import java.util.List;
 @WebServlet("/courses")
 public class CourseServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String categoryFilter = "";
-        String skillFilter = "";
-        // TODO: For pagination
         int limit = 5;
         int offset = 0;
-        List<Course> courses = CourseDAO.get(limit, offset, categoryFilter, skillFilter);
-        List<CourseCategory> categories = CourseDAO.getAllCategories();
+        String[] categories = req.getParameterValues("category");
+        String skillLevel = req.getParameter("skill-level");
+        // TODO: For pagination
+
+        String category = "";
+        if(categories != null && categories.length > 0) {
+            category = String.join(",", categories);
+        }
+
+        if(skillLevel == null) {
+            skillLevel = "";
+        }
+
+        List<Course> courses = CourseDAO.get(limit, offset, category, skillLevel);
+        List<CourseCategory> categoriesDB = CourseDAO.getAllCategories();
         req.setAttribute("courses", courses);
-        req.setAttribute("categories", categories);
+        req.setAttribute("categories", categoriesDB);
         req.setAttribute("pageTitle", "Courses");
+        req.setAttribute("categoryFilter", category);
+        req.setAttribute("skillFilter", skillLevel);
         req.getRequestDispatcher("WEB-INF/learnx/all-courses.jsp").forward(req, resp);
     }
 }
