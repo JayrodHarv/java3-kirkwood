@@ -9,14 +9,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/edit-vote")
-public class EditVote extends HttpServlet {
+@WebServlet("/add-uservote")
+public class AddUserVote extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String voteID = req.getParameter("voteID");
@@ -24,22 +21,10 @@ public class EditVote extends HttpServlet {
         try {
             VoteVM vote = VoteDAO.get(voteID);
 
-            // Can't edit a vote after it has already started
-            if(vote.getStartTime() != null) {
-
-            }
-
             if(vote == null) throw new Exception();
             results.put("voteID", vote.getVoteID());
             results.put("userID", vote.getUserID());
             results.put("description", vote.getDescription());
-
-            // Time Period Stuff
-//            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
-//            String startTime = formatter.format(vote.getStartTime());
-//            String endTime = formatter.format(vote.getEndTime());
-//            results.put("startTime", startTime);
-//            results.put("endTime", endTime);
 
             req.setAttribute("options", vote.getOptions());
 
@@ -48,20 +33,12 @@ public class EditVote extends HttpServlet {
         }
 
         req.setAttribute("results", results);
-        req.setAttribute("pageTitle", "Edit Vote");
-        req.getRequestDispatcher("WEB-INF/smp/edit-vote.jsp").forward(req, resp);
+        req.setAttribute("pageTitle", "Vote");
+        req.getRequestDispatcher("WEB-INF/smp/add-uservote.jsp").forward(req, resp);
     }
-
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String voteID = req.getParameter("voteID");
-        Map<String,String> results = new HashMap<>();
-
-        results.put("voteID", voteID);
-
-        req.setAttribute("results", results);
-        req.setAttribute("pageTitle", "Edit Vote");
-        req.getRequestDispatcher("WEB-INF/smp/edit-vote.jsp").forward(req, resp);
+        super.doPost(req, resp);
     }
 }

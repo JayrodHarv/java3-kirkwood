@@ -31,6 +31,7 @@ public class VoteDAO {
                 if(resultSet.getTimestamp("EndTime") != null)
                     vote.setEndTime(resultSet.getTimestamp("EndTime").toInstant());
                 vote.setNumberOfVotes(resultSet.getInt("num_of_votes"));
+                vote.setUserDisplayName(resultSet.getString("DisplayName"));
                 votes.add(vote);
             }
         } catch (SQLException e) {

@@ -572,12 +572,13 @@ END;
 DROP PROCEDURE IF EXISTS sp_get_active_votes;
 CREATE PROCEDURE sp_get_active_votes()
 BEGIN
-    SELECT v.VoteID, v.UserID, Description, StartTime, EndTime, COUNT(uv.UserID) AS 'num_of_votes'
+    SELECT v.VoteID, v.UserID, Description, StartTime, EndTime, COUNT(uv.UserID) AS 'num_of_votes', u.DisplayName
     FROM Vote AS v
     LEFT JOIN UserVote AS uv ON v.VoteID = uv.VoteID
+    INNER JOIN User AS u
     WHERE StartTime IS NOT NULL AND EndTime IS NOT NULL
     AND StartTime <= CURRENT_TIMESTAMP AND EndTime > CURRENT_TIMESTAMP
-    GROUP BY v.VoteID, v.UserID, Description, StartTime, EndTime
+    GROUP BY v.VoteID, v.UserID, Description, StartTime, EndTime, u.DisplayName
     ;
 END;
 
@@ -587,11 +588,12 @@ CREATE PROCEDURE sp_get_vote(
     IN p_VoteID NVARCHAR(255)
 )
 BEGIN
-    SELECT v.VoteID, v.UserID, v.Description, StartTime, EndTime, COUNT(vo.VoteID) AS 'num_of_options'
+    SELECT v.VoteID, v.UserID, v.Description, StartTime, EndTime, COUNT(vo.VoteID) AS 'num_of_options', u.DisplayName
     FROM Vote AS v
     LEFT JOIN VoteOption AS vo ON v.VoteID = vo.VoteID
+    INNER JOIN User AS u
     WHERE v.VoteID = p_VoteID
-    GROUP BY v.VoteID, v.UserID, v.Description, StartTime, EndTime
+    GROUP BY v.VoteID, v.UserID, v.Description, StartTime, EndTime, u.DisplayName
     ;
 END;
 

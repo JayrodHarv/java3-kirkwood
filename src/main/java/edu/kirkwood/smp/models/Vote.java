@@ -1,6 +1,9 @@
 package edu.kirkwood.smp.models;
 
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.temporal.TemporalField;
 
 public class Vote {
     private String VoteID;
@@ -65,4 +68,15 @@ public class Vote {
     public void setEndTime(Instant endTime) {
         EndTime = endTime;
     }
+
+//    public String getEndTimeString() {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a");
+//        return formatter.format(EndTime);
+//    }
+//
+//    public String getStartTimeString() {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a");
+//        return formatter.format();
+//    }
+
 }
