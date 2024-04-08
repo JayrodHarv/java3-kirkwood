@@ -72,8 +72,7 @@ public class AddVoteOption extends HttpServlet {
         results.put("description", description);
         results.put("image", imgName);
 
-        if (!results.containsKey("titleError") && !results.containsKey("descriptionError")
-                && !results.containsKey("imageError")
+        if (!results.containsKey("titleError") && !results.containsKey("descriptionError") && !results.containsKey("imageError")
         ) {
             try {
                 VoteOption option = new VoteOption(voteID, title, description, image);

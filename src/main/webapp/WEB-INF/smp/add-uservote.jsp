@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <div class="card card-body shadow p-4 mb-4">
+        <div class="container p-4 mb-4">
             <!-- Title -->
             <h4 class="mb-3">Select one of the options below:</h4>
             <ol class="list mb-0">

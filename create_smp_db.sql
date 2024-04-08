@@ -138,7 +138,8 @@ CREATE TABLE VoteOption (
         FOREIGN KEY(VoteID)
             REFERENCES Vote(VoteID)
             ON UPDATE CASCADE
-            ON DELETE CASCADE
+            ON DELETE CASCADE,
+    CONSTRAINT ak_VoteOption UNIQUE (VoteID, Title)
 );
 
 DROP TABLE IF EXISTS UserVote;
