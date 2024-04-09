@@ -668,6 +668,76 @@ BEGIN
     ;
 END;
 
+/*-----------------------------------USERVOTE------------------------------------*/
+
+/* INSERT UserVote */
+DROP PROCEDURE IF EXISTS sp_insert_uservote;
+CREATE PROCEDURE sp_insert_uservote(
+    IN p_UserID NVARCHAR(255),
+    IN p_VoteID NVARCHAR(255),
+    IN p_OptionID INT,
+    IN p_VoteTime DATETIME
+)
+BEGIN
+    INSERT INTO UserVote
+        (UserID, VoteID, OptionID, VoteTime)
+    VALUES
+        (p_UserID, p_VoteID, p_OptionID, p_VoteTime)
+    ;
+END;
+
+/* UPDATE VoteOption */
+# DROP PROCEDURE IF EXISTS sp_update_voteoption;
+# CREATE PROCEDURE sp_update_voteoption(
+#     IN p_OptionID INT,
+#     IN p_Title NVARCHAR(255),
+#     IN p_Description TEXT,
+#     IN p_Image LONGBLOB
+# )
+# BEGIN
+#     UPDATE VoteOption
+#     SET Title = p_Title,
+#         Description = p_Description,
+#         Image = p_Image
+#     WHERE OptionID = p_OptionID
+#     ;
+# END;
+#
+# /* DELETE VoteOption */
+# DROP PROCEDURE IF EXISTS sp_delete_voteoption;
+# CREATE PROCEDURE sp_delete_voteoption(
+#     IN p_OptionID INT
+# )
+# BEGIN
+#     DELETE FROM VoteOption
+#     WHERE OptionID = p_OptionID
+#     ;
+# END;
+#
+# /* GET VoteOptions */
+# DROP PROCEDURE IF EXISTS sp_get_voteoptions;
+# CREATE PROCEDURE sp_get_voteoptions(
+#     IN p_VoteID NVARCHAR(255)
+# )
+# BEGIN
+#     SELECT OptionID, Title, Description, Image
+#     FROM VoteOption
+#     WHERE VoteID = p_VoteID
+#     ;
+# END;
+#
+# /* GET VoteOption */
+# DROP PROCEDURE IF EXISTS sp_get_voteoption;
+# CREATE PROCEDURE sp_get_voteoption(
+#     IN p_OptionID INT
+# )
+# BEGIN
+#     SELECT OptionID, Title, Description, Image
+#     FROM VoteOption
+#     WHERE OptionID = p_OptionID
+#     ;
+# END;
+
 /*****************************************************************************
 					            TEST RECORDS
 *****************************************************************************/

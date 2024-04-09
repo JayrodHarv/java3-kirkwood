@@ -6,6 +6,7 @@ public class VoteOption {
     private String Title;
     private String Description;
     private byte[] Image;
+    private String Base64Image;
 
     public VoteOption() {
     }
@@ -55,5 +56,13 @@ public class VoteOption {
 
     public void setImage(byte[] image) {
         Image = image;
+    }
+
+    public String getBase64Image() {
+        return Base64Image;
+    }
+
+    public void setBase64Image(String base64Image) {
+        Base64Image = base64Image;
     }
 }

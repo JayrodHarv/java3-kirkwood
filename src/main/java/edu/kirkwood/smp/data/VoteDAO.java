@@ -1,11 +1,13 @@
 package edu.kirkwood.smp.data;
 
+import edu.kirkwood.shared.ImageHelper;
 import edu.kirkwood.smp.models.*;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -96,16 +98,12 @@ public class VoteDAO {
                         Blob blob = resultSet2.getBlob("Image");
                         if(blob != null) {
                             InputStream inputStream = blob.getBinaryStream();
-                            // Source: https://www.codejava.net/coding/how-to-display-images-from-database-in-jsp-page-with-java-servlet
-                            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                            byte[] buffer = new byte[4096];
-                            int bytesRead;
-                            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                                outputStream.write(buffer, 0, bytesRead);
-                            }
-                            option.setImage(outputStream.toByteArray());
+                            String imageType = URLConnection.guessContentTypeFromStream(inputStream);
+                            byte[] Image = ImageHelper.getImageBytesFromInputStream(inputStream);
+                            String base64Image = ImageHelper.getBase64Image(imageType, Image);
+                            option.setImage(Image);
+                            option.setBase64Image(base64Image);
                             inputStream.close();
-                            outputStream.close();
                         }
                         options.add(option);
                     }
@@ -181,6 +179,25 @@ public class VoteDAO {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+        return result;
+    }
+
+    public static boolean addUserVote(UserVote userVote) throws SQLException {
+        boolean result = false;
+        try (Connection connection = getConnection()) {
+            if (connection != null) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_uservote(?,?,?,?)}")) {
+                    statement.setString(1, userVote.getUserID());
+                    statement.setString(2, userVote.getVoteID());
+                    statement.setInt(3, userVote.getOptionID());
+                    statement.setTimestamp(4, userVote.getVoteTime() == null ? null : Timestamp.from(userVote.getVoteTime()));
+                    int rowsAffected = statement.executeUpdate();
+                    if(rowsAffected == 1) {
+                        result = true;
+                    }
+                }
+            }
         }
         return result;
     }

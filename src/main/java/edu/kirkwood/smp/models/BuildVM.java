@@ -1,7 +1,5 @@
 package edu.kirkwood.smp.models;
 
-import io.netty.handler.codec.base64.Base64;
-
 import java.time.Instant;
 import java.util.Date;
 

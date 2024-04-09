@@ -1,5 +1,9 @@
 <%@ include file="/WEB-INF/smp/top.jsp"%>
 <main class="container py-3" style="margin-bottom: 40px">
+
+    <!-- Flash Message -->
+    <%@ include file="/WEB-INF/smp/flash-message.jsp"%>
+
     <div class="d-flex justify-content-between mb-4">
         <h2>${pageTitle}</h2>
         <div class="text-end">
@@ -38,12 +42,12 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Delete Modal -->
     <div class="modal fade" id="deleteModal" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form action="${appURL}/delete-vote" method="POST">
-                    <input type="hidden" id="voteID" name="voteID"/>
+                    <input type="hidden" id="deleteVoteID" name="voteID"/>
                     <div class="modal-header">
                         <h5 class="modal-title">Delete Vote</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -61,12 +65,40 @@
             </div>
         </div>
     </div>
+
+    <!-- Stop Modal -->
+    <div class="modal fade" id="stopModal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="${appURL}/stop-vote" method="POST">
+                    <input type="hidden" id="stopVoteID" name="voteID"/>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Stop Vote</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to stop voting for this vote?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Stop</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </main>
 
 <script>
-    function Confirm(id) {
-        $('#voteID').val(id);
+    function ConfirmDeletion(id) {
+        $('#deleteVoteID').val(id);
         $('#deleteModal').modal('show');
+    }
+    function ConfirmStop(id) {
+        $('#stopVoteID').val(id);
+        $('#stopModal').modal('show');
     }
 </script>
 

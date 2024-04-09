@@ -1,5 +1,6 @@
 package edu.kirkwood.smp.data;
 
+import edu.kirkwood.shared.ImageHelper;
 import edu.kirkwood.smp.models.*;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -35,20 +36,9 @@ public class BuildDAO {
                     InputStream inputStream = blob.getBinaryStream();
                     String imageType = URLConnection.guessContentTypeFromStream(inputStream);
 
-                    // Source: https://www.codejava.net/coding/how-to-display-images-from-database-in-jsp-page-with-java-servlet
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    byte[] buffer = new byte[4096];
-                    int bytesRead = -1;
+                    byte[] Image = ImageHelper.getImageBytesFromInputStream(inputStream);
 
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        outputStream.write(buffer, 0, bytesRead);
-                    }
-
-                    byte[] Image = outputStream.toByteArray();
-                    String base64Image = "data:" + imageType + ";base64," + Base64.getEncoder().encodeToString(Image);
-
-                    inputStream.close();
-                    outputStream.close();
+                    String base64Image = ImageHelper.getBase64Image(imageType, Image);
 
                     Date DateBuilt = resultSet.getDate("DateBuilt");
                     String Coordinates = resultSet.getString("Coordinates");
@@ -102,17 +92,9 @@ public class BuildDAO {
                 InputStream inputStream = blob.getBinaryStream();
                 String imageType = URLConnection.guessContentTypeFromStream(inputStream);
 
-                // Source: https://www.codejava.net/coding/how-to-display-images-from-database-in-jsp-page-with-java-servlet
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                byte[] buffer = new byte[4096];
-                int bytesRead = -1;
+                byte[] Image = ImageHelper.getImageBytesFromInputStream(inputStream);
 
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
-                }
-
-                byte[] Image = outputStream.toByteArray();
-                String base64Image = "data:" + imageType + ";base64," + Base64.getEncoder().encodeToString(Image);
+                String base64Image = ImageHelper.getBase64Image(imageType, Image);
 
                 String WorldID = resultSet.getString("WorldID");
                 String BuildType = resultSet.getString("BuildType");

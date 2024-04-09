@@ -24,22 +24,10 @@ public class EditVote extends HttpServlet {
         try {
             VoteVM vote = VoteDAO.get(voteID);
 
-            // Can't edit a vote after it has already started
-            if(vote.getStartTime() != null) {
-
-            }
-
             if(vote == null) throw new Exception();
             results.put("voteID", vote.getVoteID());
             results.put("userID", vote.getUserID());
             results.put("description", vote.getDescription());
-
-            // Time Period Stuff
-//            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
-//            String startTime = formatter.format(vote.getStartTime());
-//            String endTime = formatter.format(vote.getEndTime());
-//            results.put("startTime", startTime);
-//            results.put("endTime", endTime);
 
             req.setAttribute("options", vote.getOptions());
 
