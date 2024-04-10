@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/smp/top.jsp"%>
-<main class="container py-3" style="margin-bottom: 40px">
+<main class="container py-3" style="margin-top: 75px; margin-bottom: 40px;">
     <form action="${appURL}/edit-vote" method="POST">
 
         <!-- Flash Message -->

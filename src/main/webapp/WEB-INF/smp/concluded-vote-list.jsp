@@ -10,7 +10,7 @@
             <div class="card-body">
                 <p class="card-text">${v.getDescription()}</p>
                 <p class="card-text">Created By: ${v.getUserDisplayName()}</p>
-                <p class="card-text">Ends at: ${v.getEndTime()}</p>
+                <p class="card-text">Ended at: ${v.getEndTimeString()}</p>
 
                 <c:choose>
                     <c:when test="${v.getNumberOfVotes() == 0}">

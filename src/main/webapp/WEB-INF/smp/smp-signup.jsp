@@ -1,5 +1,5 @@
 <%@include file="/WEB-INF/smp/top.jsp"%>
-<main>
+<main style="margin-top: 75px; margin-bottom: 40px;">
     <section class="p-0 d-flex align-items-center position-relative overflow-hidden">
         <div class="container-fluid">
             <div class="row">

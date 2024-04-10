@@ -1,5 +1,5 @@
 <jsp:include page="/WEB-INF/smp/top.jsp"></jsp:include>
-<main>
+<main style="margin-top: 75px; margin-bottom: 40px;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-6 col-lg-8 col-md-10 col-sm-12">

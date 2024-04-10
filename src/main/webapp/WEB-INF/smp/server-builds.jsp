@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/smp/top.jsp"%>
-<main class="container-fluid py-3" style="margin-bottom: 40px;">
+<main class="container-fluid py-3" style="margin-top: 75px; margin-bottom: 40px;">
 
   <!-- Flash Message -->
   <%@ include file="/WEB-INF/smp/flash-message.jsp"%>
@@ -21,11 +21,23 @@
             <div class="card">
               <img class="card-img-top" src="${b.getBase64Image()}"/>
               <div class="card-body">
-                <div class="d-flex justify-content-between">
-                  <h5>${b.getBuildID()}</h5>
-                  <p class="text-end m-0">${b.getDateBuilt()}</p>
+                <div class="d-flex justify-content-between mb-2">
+                  <div class="d-flex gap-2 align-items-center">
+                    <h5 class="m-0">${b.getBuildID()}</h5>
+                    <span class="badge bg-primary-subtle border border-primary-subtle text-primary-emphasis rounded-pill p-2" data-bs-toggle="tooltip" data-bs-title="${b.getWorld().getDescription()}">${b.getWorld().getWorldID()}</span>
+                    <span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill p-2" data-bs-toggle="tooltip" data-bs-title="${b.getBuildType().getDescription()}">${b.getBuildType().getBuildTypeID()}</span>
+                  </div>
+                  <c:if test="${b.getDateBuilt() != null}">
+                    <p class="text-end m-0">Date Built: ${b.getDateBuilt()}</p>
+                  </c:if>
                 </div>
-                <p class="card-text">${b.getDescription()}</p>
+                <div class="d-flex justify-content-between mb-2">
+                  <p class="card-text">${b.getDescription()}</p>
+                  <c:if test="${b.getCoordinates() != null}">
+                    <p class="text-end m-0">Coords: ${b.getCoordinates()}</p>
+                  </c:if>
+                </div>
+                <p class="text-end mb-2">Posted By: ${b.getUser().getDisplayName()}</p>
                 <c:if test="${sessionScope.activeSMPUser.getUserID() == b.getUser().getUserID()}">
                   <div class="text-end">
                     <div class="btn-group">
