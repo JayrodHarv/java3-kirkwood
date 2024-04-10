@@ -1,17 +1,9 @@
 package edu.kirkwood.smp.data;
 
-import edu.kirkwood.smp.models.Vote;
-import edu.kirkwood.smp.models.VoteListItemVM;
 import edu.kirkwood.smp.models.VoteOption;
-import edu.kirkwood.smp.models.VoteVM;
 
 import javax.sql.rowset.serial.SerialBlob;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import static edu.kirkwood.smp.data.Database.getConnection;
 

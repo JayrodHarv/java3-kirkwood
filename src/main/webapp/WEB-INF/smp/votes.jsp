@@ -29,13 +29,13 @@
             <c:if test="${votes.size() > 0}">
                 <c:choose>
                     <c:when test="${results.page == 'active'}">
-                        <%@include file="/WEB-INF/smp/active-vote-list-item.jsp"%>
+                        <%@include file="/WEB-INF/smp/active-vote-list.jsp"%>
                     </c:when>
                     <c:when test="${results.page == 'myVotes'}">
-                        <%@include file="/WEB-INF/smp/my-votes-list-item.jsp"%>
+                        <%@include file="/WEB-INF/smp/my-votes-list.jsp"%>
                     </c:when>
-                    <c:when test="${results.page == 'Concluded'}">
-
+                    <c:when test="${results.page == 'concluded'}">
+                        <%@include file="/WEB-INF/smp/concluded-vote-list.jsp"%>
                     </c:when>
                 </c:choose>
             </c:if>

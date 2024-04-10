@@ -36,13 +36,13 @@
 
         <div class="container-fluid p-0 mb-4">
             <!-- Title -->
-            <h4 class="mb-3">Select one of the options below: *</h4>
+            <h4 class="mb-3 <c:if test="${not empty results.selectionError}">is-invalid</c:if>">Select one of the options below: *</h4>
             <ol class="list mb-0">
                 <c:forEach items="${options}" var="o" varStatus="status">
                     <!-- Item -->
                     <li class="list-item mb-2">
                         <div class="form-check">
-                            <input class="form-check-input <c:if test="${not empty results.selectionError}">is-invalid</c:if>" type="radio" name="selectedOption" id="option${status.index}" value="${o.getOptionID()}">
+                            <input class="form-check-input" type="radio" name="selectedOption" id="option${status.index}" value="${o.getOptionID()}">
                             <label class="form-check-label" for="option${status.index}">
                                     ${o.getTitle()}
                             </label>

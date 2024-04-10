@@ -2,7 +2,7 @@ package edu.kirkwood.smp.controllers;
 
 import edu.kirkwood.smp.data.VoteDAO;
 import edu.kirkwood.smp.models.User;
-import edu.kirkwood.smp.models.VoteListItemVM;
+import edu.kirkwood.smp.models.VoteVM;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,7 +22,7 @@ public class Votes extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String page = req.getParameter("page");
         Map<String,String> results = new HashMap<>();
-        List<VoteListItemVM> votes = new ArrayList<>();
+        List<VoteVM> votes = new ArrayList<>();
 
         if(page == null || page.isEmpty()) {
             page = "active";
@@ -43,8 +43,8 @@ public class Votes extends HttpServlet {
                     }
                     votes = VoteDAO.getMyVotes(userFromSession.getUserID());
                     break;
-                case "Concluded":
-//                    votes = VoteDAO.getConcludedVotes();
+                case "concluded":
+                    votes = VoteDAO.getConcluded();
                     break;
             }
         } catch(Exception e) {

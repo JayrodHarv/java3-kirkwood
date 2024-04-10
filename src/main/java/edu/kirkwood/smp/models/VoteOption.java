@@ -7,6 +7,7 @@ public class VoteOption {
     private String Description;
     private byte[] Image;
     private String Base64Image;
+    private int NumberOfVotes;
 
     public VoteOption() {
     }
@@ -64,5 +65,13 @@ public class VoteOption {
 
     public void setBase64Image(String base64Image) {
         Base64Image = base64Image;
+    }
+
+    public int getNumberOfVotes() {
+        return NumberOfVotes;
+    }
+
+    public void setNumberOfVotes(int numberOfVotes) {
+        NumberOfVotes = numberOfVotes;
     }
 }

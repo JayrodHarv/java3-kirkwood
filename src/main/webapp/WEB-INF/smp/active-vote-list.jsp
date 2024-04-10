@@ -10,7 +10,7 @@
             <div class="card-body">
                 <p class="card-text">${v.getDescription()}</p>
                 <p class="card-text">Created By: ${v.getUserDisplayName()}</p>
-                <p class="card-text">Ends at: ${v.getStartTime()}</p>
+                <p class="card-text">Ends at: ${v.getEndTime()}</p>
 
                 <div class="d-flex justify-content-between">
                     <a href="${appURL}/add-uservote?voteID=${v.getVoteID()}" class="btn btn-success">Vote</a>

@@ -17,14 +17,14 @@ import java.util.List;
 import static edu.kirkwood.smp.data.Database.getConnection;
 
 public class VoteDAO {
-    public static List<VoteListItemVM> getActive() {
-        List<VoteListItemVM> votes = new ArrayList<>();
+    public static List<VoteVM> getActive() {
+        List<VoteVM> votes = new ArrayList<>();
         try(Connection connection = getConnection();
             CallableStatement statement = connection.prepareCall("{CALL sp_get_active_votes()}");
             ResultSet resultSet = statement.executeQuery()
         ) {
             while(resultSet.next()) {
-                VoteListItemVM vote = new VoteListItemVM();
+                VoteVM vote = new VoteVM();
                 vote.setVoteID(resultSet.getString("VoteID"));
                 vote.setUserID(resultSet.getString("UserID"));
                 vote.setDescription(resultSet.getString("Description"));
@@ -43,15 +43,15 @@ public class VoteDAO {
         return votes;
     }
 
-    public static List<VoteListItemVM> getMyVotes(String userID) {
-        List<VoteListItemVM> votes = new ArrayList<>();
+    public static List<VoteVM> getMyVotes(String userID) {
+        List<VoteVM> votes = new ArrayList<>();
         try(Connection connection = getConnection();
             CallableStatement statement = connection.prepareCall("{CALL sp_get_myvotes(?)}")
         ) {
             statement.setString(1, userID);
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                VoteListItemVM vote = new VoteListItemVM();
+                VoteVM vote = new VoteVM();
                 vote.setVoteID(resultSet.getString("VoteID"));
                 vote.setUserID(resultSet.getString("UserID"));
                 vote.setDescription(resultSet.getString("Description"));
@@ -60,6 +60,59 @@ public class VoteDAO {
                 if(resultSet.getTimestamp("EndTime") != null)
                     vote.setEndTime(resultSet.getTimestamp("EndTime").toInstant());
                 vote.setNumberOfVotes(resultSet.getInt("num_of_votes"));
+                votes.add(vote);
+            }
+        } catch (SQLException e) {
+            System.out.println("Likely bad SQL query");
+            System.out.println(e.getMessage());
+        }
+        return votes;
+    }
+
+    public static List<VoteVM> getConcluded() {
+        List<VoteVM> votes = new ArrayList<>();
+        try(Connection connection = getConnection();
+            CallableStatement statement = connection.prepareCall("{CALL sp_get_concluded_votes()}");
+            ResultSet resultSet = statement.executeQuery()
+        ) {
+            while(resultSet.next()) {
+                VoteVM vote = new VoteVM();
+                String VoteID = resultSet.getString("VoteID");
+                vote.setVoteID(VoteID);
+                vote.setUserID(resultSet.getString("UserID"));
+                vote.setDescription(resultSet.getString("Description"));
+                if(resultSet.getTimestamp("StartTime") != null)
+                    vote.setStartTime(resultSet.getTimestamp("StartTime").toInstant());
+                if(resultSet.getTimestamp("EndTime") != null)
+                    vote.setEndTime(resultSet.getTimestamp("EndTime").toInstant());
+                vote.setNumberOfVotes(resultSet.getInt("num_of_votes"));
+                vote.setUserDisplayName(resultSet.getString("DisplayName"));
+                try(CallableStatement statement2 = connection.prepareCall("{CALL sp_get_voteoptions(?)}")) {
+                    statement2.setString(1, VoteID);
+                    ResultSet resultSet2 = statement2.executeQuery();
+                    List<VoteOption> options = new ArrayList<>();
+                    while (resultSet2.next()) {
+                        VoteOption option = new VoteOption();
+                        option.setOptionID(resultSet2.getInt("OptionID"));
+                        option.setTitle(resultSet2.getString("Title"));
+                        option.setDescription(resultSet2.getString("Description"));
+                        Blob blob = resultSet2.getBlob("Image");
+                        if(blob != null) {
+                            InputStream inputStream = blob.getBinaryStream();
+                            String imageType = URLConnection.guessContentTypeFromStream(inputStream);
+                            byte[] Image = ImageHelper.getImageBytesFromInputStream(inputStream);
+                            String base64Image = ImageHelper.getBase64Image(imageType, Image);
+                            option.setImage(Image);
+                            option.setBase64Image(base64Image);
+                            inputStream.close();
+                        }
+                        option.setNumberOfVotes(resultSet2.getInt("number_of_votes"));
+                        options.add(option);
+                    }
+                    vote.setOptions(options);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 votes.add(vote);
             }
         } catch (SQLException e) {

@@ -576,10 +576,26 @@ BEGIN
     SELECT v.VoteID, v.UserID, Description, StartTime, EndTime, COUNT(uv.UserID) AS 'num_of_votes', u.DisplayName
     FROM Vote AS v
     LEFT JOIN UserVote AS uv ON v.VoteID = uv.VoteID
-    INNER JOIN User AS u
+    INNER JOIN User AS u ON v.UserID = u.UserID
     WHERE StartTime IS NOT NULL AND EndTime IS NOT NULL
     AND StartTime <= CURRENT_TIMESTAMP AND EndTime > CURRENT_TIMESTAMP
     GROUP BY v.VoteID, v.UserID, Description, StartTime, EndTime, u.DisplayName
+    ORDER BY EndTime DESC
+    ;
+END;
+
+/* GET Concluded Votes */
+DROP PROCEDURE IF EXISTS sp_get_concluded_votes;
+CREATE PROCEDURE sp_get_concluded_votes()
+BEGIN
+    SELECT v.VoteID, v.UserID, Description, StartTime, EndTime, COUNT(uv.UserID) AS 'num_of_votes', u.DisplayName
+    FROM Vote AS v
+    LEFT JOIN UserVote AS uv ON v.VoteID = uv.VoteID
+    INNER JOIN User AS u ON v.UserID = u.UserID
+    WHERE StartTime IS NOT NULL AND EndTime IS NOT NULL
+    AND EndTime < CURRENT_TIMESTAMP
+    GROUP BY v.VoteID, v.UserID, Description, StartTime, EndTime, u.DisplayName
+    ORDER BY EndTime DESC
     ;
 END;
 
@@ -591,7 +607,7 @@ CREATE PROCEDURE sp_get_vote(
 BEGIN
     SELECT v.VoteID, v.UserID, v.Description, StartTime, EndTime, COUNT(vo.VoteID) AS 'num_of_options', u.DisplayName
     FROM Vote AS v
-    LEFT JOIN VoteOption AS vo ON v.VoteID = vo.VoteID
+    INNER JOIN VoteOption AS vo ON v.VoteID = vo.VoteID
     INNER JOIN User AS u
     WHERE v.VoteID = p_VoteID
     GROUP BY v.VoteID, v.UserID, v.Description, StartTime, EndTime, u.DisplayName
@@ -650,9 +666,11 @@ CREATE PROCEDURE sp_get_voteoptions(
     IN p_VoteID NVARCHAR(255)
 )
 BEGIN
-    SELECT OptionID, Title, Description, Image
-    FROM VoteOption
-    WHERE VoteID = p_VoteID
+    SELECT vo.OptionID, Title, Description, Image, COUNT(uv.UserID) AS 'number_of_votes'
+    FROM VoteOption AS vo
+    LEFT JOIN UserVote AS uv ON vo.OptionID = uv.OptionID
+    WHERE vo.VoteID = p_VoteID
+    GROUP BY vo.OptionID, Title, Description, Image
     ;
 END;
 
@@ -714,17 +732,17 @@ END;
 #     ;
 # END;
 #
-# /* GET VoteOptions */
-# DROP PROCEDURE IF EXISTS sp_get_voteoptions;
-# CREATE PROCEDURE sp_get_voteoptions(
-#     IN p_VoteID NVARCHAR(255)
-# )
-# BEGIN
-#     SELECT OptionID, Title, Description, Image
-#     FROM VoteOption
-#     WHERE VoteID = p_VoteID
-#     ;
-# END;
+/* GET UserVotes */
+DROP PROCEDURE IF EXISTS sp_get_uservotes;
+CREATE PROCEDURE sp_get_uservotes(
+    IN p_VoteID NVARCHAR(255)
+)
+BEGIN
+    SELECT UserID, VoteID, OptionID, VoteTime
+    FROM UserVote
+    WHERE VoteID = p_VoteID
+    ;
+END;
 #
 # /* GET VoteOption */
 # DROP PROCEDURE IF EXISTS sp_get_voteoption;

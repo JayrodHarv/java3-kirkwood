@@ -79,10 +79,11 @@ public class AddUserVote extends HttpServlet {
             } catch(Exception e) {
                 if(e.getMessage().contains("PRIMARY")) {
                     session.setAttribute("flashMessageWarning", "You can't vote for the same vote twice.");
-                    resp.sendRedirect("votes");
                 } else {
                     session.setAttribute("flashMessageDanger", "Failed to cast vote." + e.getMessage());
                 }
+                resp.sendRedirect("votes");
+                return;
             }
         }
 
