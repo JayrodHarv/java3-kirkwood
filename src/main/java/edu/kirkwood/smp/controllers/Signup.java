@@ -10,6 +10,8 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,7 +133,8 @@ public class Signup extends HttpServlet {
                 if(!twoFactorInfo.isEmpty()) {
                     // Send user and email
                     String code = twoFactorInfo.get(0);
-                    CommunicationService.sendNewSMPUserEmail(code, email);
+                    // CommunicationService.sendNewSMPUserEmail(code, email);
+
                     // Todo: display an error is the email cannot be sent
                     // Gets an existing session; Creates new one if doesn't exist
                     HttpSession session = req.getSession();
@@ -143,7 +146,21 @@ public class Signup extends HttpServlet {
                     session.setAttribute("email", email);
 
                     //redirect to confirmation page
-                    resp.sendRedirect("smp-confirm");
+                    // resp.sendRedirect("smp-confirm");
+
+                    String emailT = (String)session.getAttribute("email");
+                    user = UserDAO.get(email);
+                    user.setStatus("active");
+                    user.setRole("user");
+                    user.setLastLoggedIn(Instant.now().atOffset(ZoneOffset.UTC).toInstant());
+                    UserDAO.update(user);
+                    user.setPassword(null);
+                    session.removeAttribute("code");
+                    session.removeAttribute("email");
+
+                    session.setAttribute("activeSMPUser", user);
+                    session.setAttribute("flashMessageSuccess", "Welcome " + user.getDisplayName());
+                    resp.sendRedirect("smp");
                     return;
                 }
                 results.put("userAddSuccess", "User added");
