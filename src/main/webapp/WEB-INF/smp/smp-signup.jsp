@@ -6,7 +6,7 @@
                 <div class="col-12 col-lg-8 m-auto">
                     <div class="row my-5">
                         <div class="col-sm-10 col-xl-8 m-auto">
-                            <h2>Nice to meet you!</h2>
+                            <h2>Welcome to the official No Go Outside server website!</h2>
                             <p class="lead mb-4">Please sign up for an account.</p>
 
                             <c:if test="${not empty results.userAddSuccess}">
@@ -21,7 +21,7 @@
                             </c:if>
 
                             <!-- Form START -->
-                            <form method="POST" action="${appURL}/smp-signup">
+                            <form method="POST" action="${appURL}/smp-signup" enctype="multipart/form-data">
                                 <!-- Email -->
                                 <div class="mb-4">
                                     <label for="inputEmail1" class="form-label">Email address *</label>
@@ -66,6 +66,21 @@
                                         </c:if>
                                     </div>
                                 </div>
+
+                                <!-- Profile Picture -->
+                                <div class="mb-4">
+                                    <label for="image" class="form-label">Profile Picture *</label>
+                                    <div class="input-group">
+                                        <input type="file" accept="image/png, image/jpeg" class="form-control <c:if test="${not empty results.pfpError}">is-invalid</c:if>" id="image" name="pfp" value="${results.pfp}">
+                                        <c:if test="${not empty results.pfpError}">
+                                            <div class="invalid-feedback">${results.pfpError}</div>
+                                        </c:if>
+                                    </div>
+                                    <div id="imagePreview" class="rounded-circle" style="height: 140px; width: 140px">
+
+                                    </div>
+                                </div>
+
                                 <!-- Check box -->
                                 <div class="mb-4">
                                     <div class="form-check">

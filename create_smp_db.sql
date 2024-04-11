@@ -170,13 +170,14 @@ DROP PROCEDURE IF EXISTS sp_insert_user;
 CREATE PROCEDURE sp_insert_user(
     IN p_UserID NVARCHAR(255),
     IN p_Password NVARCHAR(255),
-    IN p_DisplayName NVARCHAR(100)
+    IN p_DisplayName NVARCHAR(100),
+    IN p_Pfp LONGBLOB
 )
 BEGIN
     INSERT INTO User
-		(UserID, Password, DisplayName)
+		(UserID, Password, DisplayName, Pfp)
     VALUES
-        (p_UserID, p_Password, p_DisplayName)
+        (p_UserID, p_Password, p_DisplayName, p_Pfp)
     ;
     -- Generate a random 6 digit code
     SET @code=LPAD(FLOOR(RAND() * 999999.99), 6, '0');
@@ -773,6 +774,6 @@ INSERT INTO BuildType (BuildType, Description) VALUES ('Shop', 'Place to buy and
 INSERT INTO World (WorldID, DateStarted, Description) VALUES ('No Go Outside', '2020-5-11', 'Built in the No Go Outside world');
 INSERT INTO World (WorldID, DateStarted, Description) VALUES ('SummerSMP2022', '2022-6-18', 'Built in the SummerSMP2022 world');
 
-INSERT INTO User (UserID, DisplayName, Password, Status, Role) VALUES ('jared.harvey10@gmail.com', 'Jared Harvey', '$2a$12$ChtjH38V8VqFtkJNUPK8Y.khnWXhwzyeBDVZlDqwUrR.wnBZhy51e', 'active', 'admin');
-
-INSERT INTO Build (BuildID, UserID, WorldID, BuildType, Description) VALUES ('Test Build', 'jared.harvey10@gmail.com', 'SummerSMP2022', 'Cathedral', 'beansbeansbeansbeansbeans');
+# INSERT INTO User (UserID, DisplayName, Password, Status, Role) VALUES ('jared.harvey10@gmail.com', 'Jared Harvey', '$2a$12$ChtjH38V8VqFtkJNUPK8Y.khnWXhwzyeBDVZlDqwUrR.wnBZhy51e', 'active', 'admin');
+#
+# INSERT INTO Build (BuildID, UserID, WorldID, BuildType, Description) VALUES ('Test Build', 'jared.harvey10@gmail.com', 'SummerSMP2022', 'Cathedral', 'beansbeansbeansbeansbeans');

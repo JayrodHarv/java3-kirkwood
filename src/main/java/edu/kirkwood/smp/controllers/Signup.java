@@ -4,21 +4,33 @@ import edu.kirkwood.smp.data.UserDAO;
 import edu.kirkwood.smp.models.User;
 import edu.kirkwood.shared.CommunicationService;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @WebServlet("/smp-signup")
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024,    // 1 MB
+    maxFileSize = 1024 * 1024 * 10,     // 10 MB
+    maxRequestSize = 1024 * 1024 * 100 // 100 MB
+)
 public class Signup extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        User userFromSession = (User)session.getAttribute("activeSMPUser");
+        if(userFromSession != null) {
+            session.setAttribute("flashMessageWarning", "You are already logged in. Please sign out in order to create another account.");
+            resp.sendRedirect("smp");
+            return;
+        }
+
         req.setAttribute("pageTitle", "Sign up for an account");
         req.getRequestDispatcher("WEB-INF/smp/smp-signup.jsp").forward(req, resp);
     }
@@ -82,13 +94,37 @@ public class Signup extends HttpServlet {
             results.put("displayNameError", "You must enter a display name.");
         }
 
+        // Using image retrieval found in this video
+        // https://www.youtube.com/watch?v=kfDrGriS0vg&list=WL&index=1
+        byte[] image = null;
+        String imgName = null;
+        try {
+            Part imgPart = req.getPart("pfp");
+            imgName = imgPart.getSubmittedFileName();
+
+            if(imgName == null || imgName.isEmpty()) throw new IllegalArgumentException();
+
+            InputStream is = imgPart.getInputStream();
+            image = new byte[is.available()];
+
+            is.read(image);
+        } catch (Exception e) {
+            results.put("pfpError", "Something went wrong when trying to upload this profile picture.");
+        }
+
+        if(image == null) {
+            results.put("pfpError", "You must enter a profile picture.");
+        } else {
+            user.setPfp(image);
+        }
+
         if(terms == null || !terms[0].equals("agree")) {
             results.put("termsOfServiceError", "You must agree to our terms of service");
         }
 
         if (!results.containsKey("emailError") && !results.containsKey("password1Error")
                 && !results.containsKey("password2Error") && !results.containsKey("termsOfServiceError")
-                && !results.containsKey("displayNameError")
+                && !results.containsKey("displayNameError") && !results.containsKey("pfpError")
         ) {
             try {
                 List<String> twoFactorInfo = UserDAO.add(user);

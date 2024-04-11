@@ -37,7 +37,7 @@
 
                 <c:choose>
                     <c:when test="${sessionScope.activeSMPUser.role eq 'admin'}">
-                        <li class="nav-item"><a href="/smp-admin-dashboard" class="nav-link px-2 <c:if test="${pageTitle eq 'Admin Dashboard'}">link-light</c:if>">Admin Dashboard</a></li>
+                        <li class="nav-item"><a href="${appURL}/smp-admin-dashboard" class="nav-link px-2 <c:if test="${pageTitle eq 'Admin Dashboard'}">link-light</c:if>">Admin Dashboard</a></li>
                     </c:when>
                 </c:choose>
             </ul>
@@ -50,13 +50,10 @@
                     <c:otherwise>
                         <div class="dropdown text-end px-2" data-bs-theme="dark">
                             <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="${appURL}/images/smp/server-icon.png" alt="user profile picture" width="45" height="45" class="rounded-circle">
+                                <img src="${activeSMPUser.getBase64Pfp()}" alt="pfp" width="45" height="45" class="rounded-circle">
                                 ${activeSMPUser.getDisplayName()}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end text-small">
-                                <li><a class="dropdown-item disabled">Logged in as: ${activeSMPUser.getDisplayName()}</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Settings</a></li>
                                 <li><a class="dropdown-item" href="${appURL}/smp-edit-profile">Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="${appURL}/smp-logout">Sign out</a></li>

@@ -1,8 +1,13 @@
 package edu.kirkwood.smp.data;
 
+import edu.kirkwood.shared.ImageHelper;
 import edu.kirkwood.smp.models.User;
 import org.mindrot.jbcrypt.BCrypt;
 
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,35 +16,6 @@ import java.util.List;
 import static edu.kirkwood.smp.data.Database.getConnection;
 
 public class UserDAO {
-//    public static List<User> getAll(){
-//        List<User> users = new ArrayList<>();
-//        try(Connection connection = getConnection();
-//            CallableStatement statement = connection.prepareCall("{CALL sp_get_all_users()}");
-//            ResultSet resultSet = statement.executeQuery()
-//        ) {
-//            while(resultSet.next()) {
-//                int id = resultSet.getInt("id");
-//                String firstName = resultSet.getString("first_name");
-//                String lastName = resultSet.getString("last_name");
-//                String email = resultSet.getString("email");
-//                String phone = resultSet.getString("phone");
-//                char[] password = resultSet.getString("password").toCharArray();
-//                String language = resultSet.getString("language");
-//                String status = resultSet.getString("status");
-//                String privileges = resultSet.getString("privileges");
-//                Instant created_at = resultSet.getTimestamp("created_at").toInstant();
-//                Instant last_logged_in = resultSet.getTimestamp("last_logged_in").toInstant();
-//                Instant updated_at = resultSet.getTimestamp("updated_at").toInstant();
-//                User user = new User(id, firstName, lastName, email, phone, password, language, status, privileges, created_at, last_logged_in, updated_at);
-//                users.add(user);
-//            }
-//        } catch (SQLException e) {
-//            System.out.println("Likely bad SQL query");
-//            System.out.println(e.getMessage());
-//        }
-//        return users;
-//    }
-
     public static List<User> getAll() {
         List<User> users = new ArrayList<>();
         try(Connection connection = getConnection();
@@ -56,14 +32,23 @@ public class UserDAO {
                 Instant CreatedAt = resultSet.getTimestamp("CreatedAt").toInstant();
                 Instant LastLoggedIn = resultSet.getTimestamp("LastLoggedIn").toInstant();
                 Instant UpdatedAt = resultSet.getTimestamp("UpdatedAt").toInstant();
-                byte[] Pfp = resultSet.getBytes("Pfp");
+
+                Blob blob = resultSet.getBlob("Pfp");
+                InputStream inputStream = blob.getBinaryStream();
+                String imageType = URLConnection.guessContentTypeFromStream(inputStream);
+
+                byte[] Pfp = ImageHelper.getImageBytesFromInputStream(inputStream);
+
+                String base64Image = ImageHelper.getBase64Image(imageType, Pfp);
                 User user = new User(UserID, Password, DisplayName, Language, Status, Role, CreatedAt, LastLoggedIn, UpdatedAt, Pfp);
+                user.setBase64Pfp(base64Image);
                 users.add(user);
             }
-            resultSet.close();
         } catch (SQLException e) {
             System.out.println("Likely bad SQL query");
             System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return users;
     }
@@ -85,13 +70,23 @@ public class UserDAO {
                 Instant CreatedAt = resultSet.getTimestamp("CreatedAt").toInstant();
                 Instant LastLoggedIn = resultSet.getTimestamp("LastLoggedIn").toInstant();
                 Instant UpdatedAt = resultSet.getTimestamp("UpdatedAt").toInstant();
-                byte[] Pfp = resultSet.getBytes("Pfp");
+
+                Blob blob = resultSet.getBlob("Pfp");
+                InputStream inputStream = blob.getBinaryStream();
+                String imageType = URLConnection.guessContentTypeFromStream(inputStream);
+
+                byte[] Pfp = ImageHelper.getImageBytesFromInputStream(inputStream);
+
+                String base64Image = ImageHelper.getBase64Image(imageType, Pfp);
                 user = new User(UserID, Password, DisplayName, Language, Status, Role, CreatedAt, LastLoggedIn, UpdatedAt, Pfp);
+                user.setBase64Pfp(base64Image);
             }
             resultSet.close();
         } catch (SQLException e) {
             System.out.println("Likely bad SQL query");
             System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return user;
     }
@@ -100,11 +95,12 @@ public class UserDAO {
         List<String> results = new ArrayList<>();
         try (Connection connection = getConnection()) {
             if (connection != null) {
-                try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_user(?, ?, ?)}")) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_user(?,?,?,?)}")) {
                     statement.setString(1, user.getUserID());
                     String encryptedPassword = BCrypt.hashpw(new String(user.getPassword()), BCrypt.gensalt(12));
                     statement.setString(2, encryptedPassword);
                     statement.setString(3, user.getDisplayName());
+                    statement.setBlob(4, new SerialBlob(user.getPfp()));
                     int rowsAffected = statement.executeUpdate();
                     if(rowsAffected == 1) {
                         try (CallableStatement statement2 = connection.prepareCall("{CALL sp_get_2fa_code(?)}")) {

@@ -59,7 +59,6 @@
         <div class="container-fluid p-0 mb-4">
             <h5 class="form-label">Image *</h5>
             <div class="input-group">
-                <%-- TODO: It's getting late but do this later for displaying input image https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file --%>
                 <input type="file" accept="image/png, image/jpeg" class="form-control <c:if test="${not empty results.imageError}">is-invalid</c:if>" id="image" name="image" value="${results.image}">
                 <c:if test="${not empty results.imageError}">
                     <div class="invalid-feedback">${results.imageError}</div>

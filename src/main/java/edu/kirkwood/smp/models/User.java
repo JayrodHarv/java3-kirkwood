@@ -16,6 +16,7 @@ public class User {
     private Instant LastLoggedIn;
     private Instant UpdatedAt;
     private byte[] Pfp;
+    private String Base64Pfp;
 
     public User() {
 
@@ -128,4 +129,12 @@ public class User {
     public byte[] getPfp() { return Pfp; }
 
     public void setPfp(byte[] pfp) { Pfp = pfp; }
+
+    public String getBase64Pfp() {
+        return Base64Pfp;
+    }
+
+    public void setBase64Pfp(String base64Pfp) {
+        Base64Pfp = base64Pfp;
+    }
 }
