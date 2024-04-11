@@ -608,8 +608,8 @@ CREATE PROCEDURE sp_get_vote(
 BEGIN
     SELECT v.VoteID, v.UserID, v.Description, StartTime, EndTime, COUNT(vo.VoteID) AS 'num_of_options', u.DisplayName
     FROM Vote AS v
-    INNER JOIN VoteOption AS vo ON v.VoteID = vo.VoteID
-    INNER JOIN User AS u
+    LEFT JOIN VoteOption AS vo ON v.VoteID = vo.VoteID
+    INNER JOIN User AS u ON v.UserID = u.UserID
     WHERE v.VoteID = p_VoteID
     GROUP BY v.VoteID, v.UserID, v.Description, StartTime, EndTime, u.DisplayName
     ;

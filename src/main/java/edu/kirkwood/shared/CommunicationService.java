@@ -28,7 +28,8 @@ public class CommunicationService {
     private static EmailClient createEmailClient() {
         Dotenv dotenv = Dotenv.load();
         String connectionString = dotenv.get("EMAIL_CONN");
-        return new EmailClientBuilder().connectionString(connectionString).buildClient();
+        EmailClient emailClient = new EmailClientBuilder().connectionString(connectionString).buildClient();
+        return emailClient;
     }
     public static boolean sendEmail(String toAddr, String subject, String message) {
         try {

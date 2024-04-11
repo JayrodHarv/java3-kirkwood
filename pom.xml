@@ -75,6 +75,7 @@
             <version>3.0.0-beta1</version>
             <scope>test</scope>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
         <dependency>
             <groupId>com.mysql</groupId>
