@@ -10,6 +10,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
+                                    <th scope="col"></th>
                                     <th scope="col">ID</th>
                                     <th scope="col">First name</th>
                                     <th scope="col">Last name</th>
@@ -18,14 +19,12 @@
                                     <th scope="col">Language</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Privileges</th>
-                                    <th scope="col">Created At</th>
-                                    <th scope="col">Last Logged In</th>
-                                    <th scope="col">Updated At</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <c:forEach items="${users}" var="user">
                                     <tr>
+                                        <td><a href="${appURL}/edit-user?id=${user.id}" class="btn btn-dark">Edit</a></td>
                                         <td>${user.id}</td>
                                         <td>${user.firstName}</td>
                                         <td>${user.lastName}</td>
@@ -34,9 +33,6 @@
                                         <td>${user.language}</td>
                                         <td>${user.status}</td>
                                         <td>${user.privileges}</td>
-                                        <td>${user.created_at}</td>
-                                        <td>${user.last_logged_in}</td>
-                                        <td>${user.updated_at}</td>
                                     </tr>
                                 </c:forEach>
                             </tbody>

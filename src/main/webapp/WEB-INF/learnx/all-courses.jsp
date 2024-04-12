@@ -50,10 +50,14 @@ Page content START -->
                                                     <p class="mb-0 ms-2">${course.teacherFirstName}&nbsp;${course.teacherLastName}</p>
                                                 </div>
                                                 <c:if test="${activeUser.privileges eq 'student'}">
-                                                    <!-- Enroll -->
-                                                    <div class="mt-3 mt-sm-0">
-                                                        <a href="${appURL}/enroll?course=${course.id}" class="btn btn-dark">Enroll</a>
-                                                    </div>
+                                                    <c:choose>
+                                                        <c:when test="${enrollments.containsKey(course)}">
+                                                            <button type="button" class="btn btn-secondary" disabled>Enrolled</button>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <a href="${appURL}/enroll?course=${course.id}" class="btn btn-primary">Enroll</a>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </c:if>
                                             </div>
                                         </div>
@@ -74,7 +78,14 @@ Page content START -->
                                         </div>
                                         <div class="modal-footer">
                                             <c:if test="${activeUser.privileges eq 'student'}">
-                                                <a href="${appURL}/enroll?course=${course.id}" class="btn btn-primary">Enroll</a>
+                                                <c:choose>
+                                                    <c:when test="${enrollments.containsKey(course)}">
+                                                        <button type="button" class="btn btn-secondary" disabled>Enrolled</button>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="${appURL}/enroll?course=${course.id}" class="btn btn-primary">Enroll</a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </c:if>
                                         </div>
                                     </div>

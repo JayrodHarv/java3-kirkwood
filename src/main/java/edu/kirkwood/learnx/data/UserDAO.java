@@ -13,9 +13,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class UserDAO extends Database {
-    public static void main(String[] args) {
-        getAll().forEach(System.out::println);
-    }
 
     public static List<User> getAll(){
         List<User> users = new ArrayList<>();
@@ -84,6 +81,36 @@ public class UserDAO extends Database {
         } catch (SQLException e) {
             System.out.println("Likely bad SQL query");
             System.out.println(e.getMessage());
+        }
+        return user;
+    }
+
+    public static User get(int id) {
+        User user = null;
+        try (Connection connection = getConnection()) {
+            if (connection != null) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_get_user_by_id(?)}")) {
+                    statement.setInt(1, id);
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            String firstName = resultSet.getString("first_name");
+                            String lastName = resultSet.getString("last_name");
+                            String email = resultSet.getString("email");
+                            String phone = resultSet.getString("phone");
+                            char[] password = resultSet.getString("password").toCharArray();
+                            String language = resultSet.getString("language");
+                            String status = resultSet.getString("status");
+                            String privileges = resultSet.getString("privileges");
+                            Instant created_at = resultSet.getTimestamp("created_at").toInstant();
+                            Instant last_logged_in = resultSet.getTimestamp("last_logged_in").toInstant();
+                            Instant updated_at = resultSet.getTimestamp("updated_at").toInstant();
+                            user = new User(id, firstName, lastName, email, phone, password, language, status, privileges, created_at, last_logged_in, updated_at);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return user;
     }

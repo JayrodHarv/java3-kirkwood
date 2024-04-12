@@ -11,14 +11,20 @@
             <li><a href="${appURL}/courses" class="nav-link px-2 <c:if test="${pageTitle eq 'Courses'}">link-secondary text-decoration-underline</c:if>">Courses</a></li>
 
             <c:choose>
-                <c:when test="${sessionScope.activeUser.privileges eq 'student'}">
-                    <li><a href="${appURL}/student" class="nav-link px-2 <c:if test="${pageTitle eq 'Student Dashboard'}">link-secondary text-decoration-underline</c:if>">Student Dashboard</a></li>
-                </c:when>
-                <c:when test="${sessionScope.activeUser.privileges eq 'teacher'}">
-                    <li><a href="${appURL}/teacher" class="nav-link px-2 <c:if test="${pageTitle eq 'Teacher Dashboard'}">link-secondary text-decoration-underline</c:if>">Teacher Dashboard</a></li>
-                </c:when>
                 <c:when test="${sessionScope.activeUser.privileges eq 'admin'}">
-                    <li><a href="${appURL}/admin" class="nav-link px-2 <c:if test="${pageTitle eq 'Admin Dashboard'}">link-secondary text-decoration-underline</c:if>">Admin Dashboard</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link ${pageTitle == "Admin Dashboard" ? "active" : ""}" href="${appURL}/admin"><i class="fas fa-user-cog fa-fw me-1"></i>Admin</a>
+                    </li>
+                </c:when>
+                <c:when test="${sessionScope.activeUser.privileges eq 'teach'}">
+                    <li class="nav-item">
+                        <a class="nav-link ${pageTitle == "Teacher Dashboard" ? "active" : ""}" href="${appURL}/teacher"><i class="fas fa-user-tie fa-fw me-1"></i>Teacher</a>
+                    </li>
+                </c:when>
+                <c:when test="${sessionScope.activeUser.privileges eq 'student'}">
+                    <li class="nav-item">
+                        <a class="nav-link ${pageTitle == "Student Dashboard" ? "active" : ""}" href="${appURL}/student"><i class="fas fa-user-graduate fa-fw me-1"></i>Student</a>
+                    </li>
                 </c:when>
             </c:choose>
         </ul>

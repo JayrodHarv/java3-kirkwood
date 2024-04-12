@@ -7,7 +7,7 @@
         </div>
         <!-- Offcanvas body -->
         <div class="offcanvas-body p-3 p-xl-0">
-            <div class="bg-dark border rounded-3 pb-0 p-3 w-100">
+            <div class="bg-dark border rounded-3 p-3 w-100">
                 <!-- Dashboard menu -->
                 <div class="list-group list-group-dark list-group-borderless">
                     <a class="list-group-item" href="${appURL}/edit-profile"><i class="fas fa-user-pen me-2"></i>Edit Profile</a>
