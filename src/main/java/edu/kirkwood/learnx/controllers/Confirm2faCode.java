@@ -28,7 +28,7 @@ public class Confirm2faCode extends HttpServlet {
             if(code != null && email != null) {
                 boolean sent = CommunicationService.sendNewUserEmail(code, email);
                 if(sent) {
-                    req.setAttribute("codeResent", "The code was resent");
+                    req.setAttribute("flashMessageWarning", "The code was resent");
                 }
             }
         }
@@ -48,7 +48,7 @@ public class Confirm2faCode extends HttpServlet {
         // TODO: Check if the code is expired
         if(!code.equals(codeFromSession)) {
             //error
-            results.put("codeError", "That code is incorrect");
+            session.setAttribute("flashMessageDanger", "That code is incorrect");
         } else {
             String email = (String)session.getAttribute("email");
             User user = UserDAO.get(email);

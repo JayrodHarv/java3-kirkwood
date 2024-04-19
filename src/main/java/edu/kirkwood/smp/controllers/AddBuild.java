@@ -98,13 +98,13 @@ public class AddBuild extends HttpServlet {
             image = new byte[is.available()];
 
             // temp remove later
-//            FileOutputStream fos = new FileOutputStream("C:/uploaded" + imgName);
+            FileOutputStream fos = new FileOutputStream("webapp/images/" + imgName);
             is.read(image);
-//            fos.write(image);
-//            fos.close();
+            fos.write(image);
+            fos.close();
         } catch (Exception e) {
-            results.put("imageError", "Something went wrong when trying to upload this image.");
-//            results.put("imageError", e.getMessage());
+//            results.put("imageError", "Something went wrong when trying to upload this image.");
+            results.put("imageError", e.getMessage());
         }
 
         if(image == null) {

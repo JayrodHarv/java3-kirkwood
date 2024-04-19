@@ -2,6 +2,7 @@ package edu.kirkwood.learnx.controllers;
 
 import edu.kirkwood.learnx.data.CourseDAO;
 import edu.kirkwood.learnx.models.User;
+import edu.kirkwood.shared.Helpers;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,8 +17,8 @@ public class Enrollment extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User activeUser = (User)session.getAttribute("activeUser");
-        if(activeUser == null || !activeUser.getPrivileges().equals("student")) {
+        User userFromSession = Helpers.getLearnXUserFromSession(session);
+        if(userFromSession == null || !Helpers.isStudent(userFromSession)) {
             resp.sendRedirect("courses");
             return;
         }
@@ -29,7 +30,7 @@ public class Enrollment extends HttpServlet {
             resp.sendRedirect("courses");
             return;
         }
-        if(CourseDAO.enroll(activeUser.getId(), courseId)) {
+        if(CourseDAO.enroll(userFromSession.getId(), courseId)) {
             session.setAttribute("flashMessageSuccess", "You're enrolled");
         } else {
             session.setAttribute("flashMessageDanger", "Enrollment Failed");

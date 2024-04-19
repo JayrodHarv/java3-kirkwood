@@ -49,6 +49,10 @@ Page content START -->
                                                 <div class="d-flex align-items-center">
                                                     <p class="mb-0 ms-2">${course.teacherFirstName}&nbsp;${course.teacherLastName}</p>
                                                 </div>
+
+                                                <!-- Price -->
+                                                <div><fmt:formatNumber value="${course.price}" type="currency"></fmt:formatNumber></div>
+
                                                 <c:if test="${activeUser.privileges eq 'student'}">
                                                     <c:choose>
                                                         <c:when test="${enrollments.containsKey(course)}">

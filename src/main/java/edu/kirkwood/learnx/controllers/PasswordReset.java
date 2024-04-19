@@ -26,13 +26,14 @@ public class PasswordReset extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
         String email = req.getParameter("inputEmail1");
         Map<String, String> results = new HashMap<>();
         results.put("email", email);
 
         //TODO: write and if statement if the email was sent
         UserDAO.passwordReset(email, req);
-        results.put("passwordResetMsg", "If there is an account found, we will send an email");
+        session.setAttribute("flashMessageWarning", "If there is an account found, we will send an email");
 
         req.setAttribute("results", results);
         req.setAttribute("pageTitle", "Reset your password");

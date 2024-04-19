@@ -9,9 +9,8 @@
                             <h2>${pageTitle}</h2>
                             <p class="lead mb-4">Enter your email address to reset your password</p>
 
-                            <c:if test="${not empty results.passwordResetMsg}">
-                                <p class="alert alert-warning my-2">${results.passwordResetMsg}</p>
-                            </c:if>
+                            <!-- Flash Message -->
+                            <%@include file="flash-message.jsp"%>
 
                             <!-- Form START -->
                             <form method="post" action="${appURL}/password-reset">

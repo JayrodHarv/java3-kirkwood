@@ -9,16 +9,8 @@
                             <h2>Nice to meet you!</h2>
                             <p class="lead mb-4">Please sign up for an account.</p>
 
-                            <c:if test="${not empty results.userAddSuccess}">
-                                <div class="alert alert-success mb-2" role="alert">
-                                        ${results.userAddSuccess}
-                                </div>
-                            </c:if>
-                            <c:if test="${not empty results.userAddFail}">
-                                <div class="alert alert-danger mb-2" role="alert">
-                                        ${results.userAddFail}
-                                </div>
-                            </c:if>
+                            <!-- Flash Message -->
+                            <%@include file="flash-message.jsp"%>
 
                             <!-- Form START -->
                             <form method="POST" action="${appURL}/signup">

@@ -3,6 +3,8 @@ package edu.kirkwood.learnx.models;
 import edu.kirkwood.shared.Validators;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.regex.Matcher;
 
 public class User {
@@ -18,6 +20,7 @@ public class User {
     private Instant created_at;
     private Instant last_logged_in;
     private Instant updated_at;
+    private static LocalDate birthday = LocalDate.of(1999, 2, 14);
 
     public User() {
 
@@ -69,7 +72,7 @@ public class User {
     public void setEmail(String email) {
         Matcher matcher = Validators.emailPattern.matcher(email);
         if(!matcher.matches()) {
-            throw new IllegalArgumentException("Invalid Email Address");
+            throw new IllegalArgumentException("Invalid email address");
         }
         this.email = email;
     }
@@ -79,6 +82,7 @@ public class User {
     }
 
     public void setPhone(String phone) {
+        // todo: validate phone
         this.phone = phone;
     }
 
@@ -92,8 +96,8 @@ public class User {
             this.password = password;
             return;
         }
-        String pass = password.toString();
-        Matcher matcher = Validators.passwordPattern.matcher(pass);
+        String passwordStr = String.valueOf(password);
+        Matcher matcher = Validators.passwordPattern.matcher(passwordStr);
         if(!matcher.matches()) {
             throw new IllegalArgumentException("Password must be 8 characters, with 3 of 4 (lowercase, uppercase, number, symbol)");
         }
@@ -107,7 +111,7 @@ public class User {
     public void setLanguage(String language) {
         Matcher matcher = Validators.languagePattern.matcher(language);
         if(!matcher.matches()) {
-            throw new IllegalArgumentException("Invalid language");
+            throw new IllegalArgumentException("Invalid Language");
         }
         this.language = language;
     }
@@ -117,6 +121,7 @@ public class User {
     }
 
     public void setStatus(String status) {
+        // todo: validate status
         this.status = status;
     }
 
@@ -125,11 +130,16 @@ public class User {
     }
 
     public void setPrivileges(String privileges) {
+        // todo: validate privileges
         this.privileges = privileges;
     }
 
     public Instant getCreated_at() {
         return created_at;
+    }
+
+    public Date getCreated_Date() {
+        return Date.from(created_at);
     }
 
     public void setCreated_at(Instant created_at) {
@@ -140,6 +150,10 @@ public class User {
         return last_logged_in;
     }
 
+    public Date getLast_logged_Date() {
+        return Date.from(last_logged_in);
+    }
+
     public void setLast_logged_in(Instant last_logged_in) {
         this.last_logged_in = last_logged_in;
     }
@@ -148,8 +162,20 @@ public class User {
         return updated_at;
     }
 
+    public Date getUpdated_Date() {
+        return Date.from(updated_at);
+    }
+
     public void setUpdated_at(Instant updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public static LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public Date getBirthday_Date() {
+        return java.sql.Date.valueOf(birthday);
     }
 
     @Override

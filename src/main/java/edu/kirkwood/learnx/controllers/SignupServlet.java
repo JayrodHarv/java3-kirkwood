@@ -28,6 +28,7 @@ public class SignupServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
         String email = req.getParameter("inputEmail1");
         String password1 = req.getParameter("inputPassword1");
         String password2 = req.getParameter("inputPassword2");
@@ -96,7 +97,7 @@ public class SignupServlet extends HttpServlet {
                     CommunicationService.sendNewUserEmail(code, email);
                     // Todo: display an error is the email cannot be sent
                     // Gets an existing session; Creates new one if doesn't exist
-                    HttpSession session = req.getSession();
+
                     // Removes all existing session data if it exists
                     session.invalidate();
                     // Gets new session
@@ -108,9 +109,9 @@ public class SignupServlet extends HttpServlet {
                     resp.sendRedirect("confirm");
                     return;
                 }
-                results.put("userAddSuccess", "User added");
+                session.setAttribute("flashMessageSuccess", "User added");
             } catch (RuntimeException e) {
-                results.put("userAddFail", "User not added");
+                session.setAttribute("flashMessageDanger", "User not added. \n" + e.getMessage());
             }
         }
 

@@ -4,6 +4,7 @@ import edu.kirkwood.learnx.data.CourseDAO;
 import edu.kirkwood.learnx.models.Course;
 import edu.kirkwood.learnx.models.CourseCategory;
 import edu.kirkwood.learnx.models.User;
+import edu.kirkwood.shared.Helpers;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,7 +23,7 @@ import java.util.TreeMap;
 public class CourseServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User userFromSession = (User)session.getAttribute("activeUser");
+        User userFromSession = Helpers.getLearnXUserFromSession(session);
         int limit = 5;
         int offset = 0;
         String[] categories = req.getParameterValues("category");

@@ -2,6 +2,7 @@ package edu.kirkwood.learnx.controllers;
 
 import edu.kirkwood.learnx.data.UserDAO;
 import edu.kirkwood.learnx.models.User;
+import edu.kirkwood.shared.Helpers;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,8 +19,8 @@ public class DeleteAccount extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User user = (User)session.getAttribute("activeUser");
-        if(user == null) {
+        User userFromSession = Helpers.getLearnXUserFromSession(session);
+        if(userFromSession == null) {
             resp.sendRedirect("signin?redirect=delete-account");
             return;
         }

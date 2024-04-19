@@ -3,6 +3,7 @@ package edu.kirkwood.learnx.controllers;
 import edu.kirkwood.learnx.data.CourseDAO;
 import edu.kirkwood.learnx.models.Course;
 import edu.kirkwood.learnx.models.User;
+import edu.kirkwood.shared.Helpers;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,8 +20,8 @@ public class Student extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User activeUser = (User)session.getAttribute("activeUser");
-        if(activeUser == null || !activeUser.getPrivileges().equals("student")) {
+        User userFromSession = Helpers.getLearnXUserFromSession(session);
+        if(userFromSession == null || !Helpers.isStudent(userFromSession)) {
             session.setAttribute("flashMessageWarning", "You must be a student to view this content.");
             resp.sendRedirect("signin?redirect=student");
             return;
@@ -28,7 +29,7 @@ public class Student extends HttpServlet {
 
         int limit = 5;
         int offset = 0;
-        Map<Course, Instant> enrollments = CourseDAO.getCourseEnrollments(limit, offset, activeUser.getId());
+        Map<Course, Instant> enrollments = CourseDAO.getCourseEnrollments(limit, offset, userFromSession.getId());
 
         req.setAttribute("enrollments", enrollments);
         req.setAttribute("pageTitle", "Student Dashboard");

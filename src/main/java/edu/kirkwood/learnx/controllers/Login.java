@@ -31,6 +31,7 @@ public class Login extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
         String email = req.getParameter("inputEmail1");
         String password = req.getParameter("inputPassword1");
         String[] rememberMe = req.getParameterValues("checkbox-1");
@@ -45,7 +46,7 @@ public class Login extends HttpServlet {
         User userFromDatabase = UserDAO.get(email);
         if(userFromDatabase == null) {
             // no user found with that email
-            results.put("loginFail", "That email and password combination is not correct.");
+            session.setAttribute("flashMessageDanger", "That email and password combination is not correct.");
         } else {
             if(!BCrypt.checkpw(password, String.valueOf(userFromDatabase.getPassword()))) {
                 // Passwords don't match, incorrect password
@@ -53,14 +54,13 @@ public class Login extends HttpServlet {
             } else {
                 if(!userFromDatabase.getStatus().equals("active")) {
                     // user is inactive or locked
-                    results.put("loginFail", "Cannot log in. Account status: " + userFromDatabase.getStatus());
+                    session.setAttribute("flashMessageDanger", "Cannot log in. Account status: " + userFromDatabase.getStatus());
                     //TODO: please reset password or contact help
                 } else {
                     // SUCCESS!
                     userFromDatabase.setLast_logged_in(Instant.now().atOffset(ZoneOffset.UTC).toInstant());
                     UserDAO.update(userFromDatabase);
                     userFromDatabase.setPassword(null);
-                    HttpSession session = req.getSession();
                     session.invalidate();
                     session = req.getSession();
 

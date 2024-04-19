@@ -17,16 +17,9 @@
             </div>
             <!-- Card body START -->
             <div class="card-body">
-              <c:if test="${not empty results.editUserSuccess}">
-                <div class="alert alert-success mb-2" role="alert">
-                    ${results.editUserSuccess}
-                </div>
-              </c:if>
-              <c:if test="${not empty results.editUserWarning}">
-                <div class="alert alert-warning mb-2" role="alert">
-                    ${results.editUserWarning}
-                </div>
-              </c:if>
+
+              <!-- Flash Message -->
+              <%@include file="flash-message.jsp"%>
 
               <!-- Form -->
               <form class="row g-4" method="POST" action="${appURL}/edit-user?id=${user.id}">

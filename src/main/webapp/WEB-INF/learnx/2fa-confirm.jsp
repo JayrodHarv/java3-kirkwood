@@ -5,12 +5,10 @@
             <div class="col-xl-6 col-lg-8 col-md-10 col-sm-12">
                 <h2>${pageTitle}</h2>
                 <p>Please enter the code that was sent to your email.</p>
-                <c:if test="${not empty results.codeError}">
-                    <p class="alert alert-danger my-2">${results.codeError}</p>
-                </c:if>
-                <c:if test="${not empty codeResent}">
-                    <p class="alert alert-success my-2">${codeResent}</p>
-                </c:if>
+
+                <!-- Flash Message -->
+                <%@include file="flash-message.jsp"%>
+
                 <form action="${appURL}/confirm" method="POST">
                     <!-- Email -->
                     <div class="mb-4">

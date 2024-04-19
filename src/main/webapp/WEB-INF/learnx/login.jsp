@@ -9,22 +9,8 @@
                             <h2>${pageTitle}</h2>
                             <p class="lead mb-4">Please log in to your account.</p>
 
-                            <c:if test="${not empty results.loginFail}">
-                                <p class="alert alert-danger my-2">${results.loginFail}</p>
-                            </c:if>
-                            <c:if test="${not empty flashMessageSuccess}">
-                                <div class="alert alert-success mb-2" role="alert">
-                                        ${flashMessageSuccess}
-                                </div>
-                                <c:remove var="flashMessageSuccess" scope="session" />
-                            </c:if>
-
-                            <c:if test="${not empty flashMessageWarning}">
-                                <div class="alert alert-warning mb-2" role="alert">
-                                        ${flashMessageWarning}
-                                </div>
-                                <c:remove var="flashMessageWarning" scope="session" />
-                            </c:if>
+                            <!-- Flash Message -->
+                            <%@include file="flash-message.jsp"%>
 
                             <!-- Form START -->
                             <form method="post" action="${appURL}/login">

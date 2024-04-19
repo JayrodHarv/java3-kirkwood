@@ -55,16 +55,23 @@ public class NewPassword extends HttpServlet {
         if (!results.containsKey("password1Error")
                 && !results.containsKey("password2Error")
         ) {
-            HttpSession session = req.getSession();
-            boolean resetComplete = UserDAO.resetPassword((String)session.getAttribute("tempEmail"), password1);
-            // Send user an email
-            // To do: Display error if the email could not be sent
-            session.setAttribute("flashMessageSuccess", "Your password has been reset. Please login");
-            resp.sendRedirect("login");
-            return;
+            try {
+                HttpSession session = req.getSession();
+                boolean resetComplete = UserDAO.resetPassword((String)session.getAttribute("tempEmail"), password1);
+                // Send user an email
 
-            // To do: Display error saying "Could not add user" if twoFactorInfo is empty
+                if(resetComplete) {
+                    session.setAttribute("flashMessageSuccess", "Your password has been reset. Please login");
+                    resp.sendRedirect("login");
+                    return;
+                } else {
+                    req.setAttribute("flashMessageDanger", "Failed to change password.");
+                }
 
+            } catch (Exception ex) {
+                req.setAttribute("flashMessageDanger", "Failed to change password.\n" + ex.getMessage());
+            }
+            // Todo: Display error saying "Could not add user" if twoFactorInfo is empty
         }
 
         req.setAttribute("results", results);

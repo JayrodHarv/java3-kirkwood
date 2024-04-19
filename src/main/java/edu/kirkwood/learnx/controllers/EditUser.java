@@ -2,6 +2,7 @@ package edu.kirkwood.learnx.controllers;
 
 import edu.kirkwood.learnx.data.UserDAO;
 import edu.kirkwood.learnx.models.User;
+import edu.kirkwood.shared.Helpers;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,11 +19,11 @@ public class EditUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-//        User userFromSession = (User)session.getAttribute("activeUser");
-//        if(userFromSession == null || !userFromSession.getStatus().equals("active") || !userFromSession.getPrivileges().equals("admin")) {
-//            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-//            return;
-//        }
+        User userFromSession = (User)session.getAttribute("activeUser");
+        if(userFromSession == null || !Helpers.isActive(userFromSession) || !Helpers.isAdmin(userFromSession)) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
         int userId = 0;
         try {
             userId = Integer.parseInt(req.getParameter("id"));

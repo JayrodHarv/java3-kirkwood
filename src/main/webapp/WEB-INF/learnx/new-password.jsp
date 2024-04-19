@@ -9,11 +9,8 @@
               <h2>New password</h2>
               <p class="lead mb-4">Please enter your new password.</p>
 
-              <c:if test="${not empty results.newPasswordFail}">
-                <div class="alert alert-danger mb-2" role="alert">
-                    ${results.newPasswordFail}
-                </div>
-              </c:if>
+              <!-- Flash Message -->
+              <%@include file="flash-message.jsp"%>
 
               <!-- Form START -->
               <form method="post" action="new-password">
