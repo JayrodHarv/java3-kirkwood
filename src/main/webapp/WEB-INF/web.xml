@@ -19,7 +19,7 @@
     </context-param>
     <context-param>
         <param-name>appURLCloud</param-name>
-        <param-value>https://jared-kw.azurewebsites.net</param-value>
+        <param-value>https://jared-kw-java3.azurewebsites.net</param-value>
     </context-param>
     <error-page>
         <error-code>404</error-code>

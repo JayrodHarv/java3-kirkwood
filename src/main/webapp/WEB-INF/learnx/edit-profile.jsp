@@ -35,6 +35,7 @@
                                     <option value="en" <c:if test="${activeUser.language eq 'en'}">selected</c:if>>English</option>
                                     <option value="fr" <c:if test="${activeUser.language eq 'fr'}">selected</c:if>>French</option>
                                     <option value="ar" <c:if test="${activeUser.language eq 'ar'}">selected</c:if>>Arabic</option>
+                                    <option value="de" <c:if test="${activeUser.language eq 'de'}">selected</c:if>>German</option>
                                 </select>
                                 <c:if test="${not empty results.languageError}">
                                     <div class="invalid-feedback">${results.languageError}</div>

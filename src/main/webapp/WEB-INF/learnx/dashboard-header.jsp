@@ -11,8 +11,8 @@
                     </c:otherwise>
                 </c:choose>
                 <ul class="list-inline">
-                    <li class="list-item"><i class="fas fa-star text-warning"></i> Member since <fmt:formatDate value="${activeUser.created_Date}" type="date" dateStyle="long" timeStyle="long"></fmt:formatDate></li>
-                    <li class="list-item"><i class="fas fa-cake text-success"></i> Born on <fmt:formatDate value="${activeUser.birthday_Date}" type="date" dateStyle="medium"  /></li>
+                    <li class="list-item"><i class="fas fa-star text-warning"></i> <fmt:message key="editProfile.memberSince"></fmt:message>&nbsp;<fmt:formatDate value="${activeUser.created_Date}" type="date" dateStyle="long" timeStyle="long"></fmt:formatDate></li>
+                    <li class="list-item"><i class="fas fa-cake text-success"></i> <fmt:message key="editProfile.bornOn"></fmt:message>&nbsp;<fmt:formatDate value="${activeUser.birthday_Date}" type="date" dateStyle="medium"  /></li>
 
                 </ul>
 
