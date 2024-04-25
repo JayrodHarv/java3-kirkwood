@@ -34,7 +34,7 @@
                                 <select class="form-select <c:if test="${not empty results.languageError}">is-invalid</c:if>" name="languageInput" id="languageInput">
                                     <option value="en" <c:if test="${activeUser.language eq 'en'}">selected</c:if>>English</option>
                                     <option value="fr" <c:if test="${activeUser.language eq 'fr'}">selected</c:if>>French</option>
-                                    <option value="es" <c:if test="${activeUser.language eq 'de'}">selected</c:if>>German</option>
+                                    <option value="ar" <c:if test="${activeUser.language eq 'ar'}">selected</c:if>>Arabic</option>
                                 </select>
                                 <c:if test="${not empty results.languageError}">
                                     <div class="invalid-feedback">${results.languageError}</div>

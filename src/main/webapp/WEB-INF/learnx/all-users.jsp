@@ -4,7 +4,11 @@
         <div class="row">
             <div class="col-12">
                 <h1>All LearnX Users</h1>
-                <p>There ${users.size() == 1 ? "is" : "are"}&nbsp;${users.size()} user${users.size() != 1 ? "s" : ""}</p>
+                <p><fmt:message key="allUsers.userCount">
+                    <fmt:param value="${fn:length(users) == 1 ? 'is' : 'are'}"></fmt:param>
+                    <fmt:param value="${fn:length(users)}"></fmt:param>
+                    <fmt:param value="${fn:length(users) != 1 ? 's' : ''}" />
+                </fmt:message></p>
                 <c:if test="${users.size() > 0}">
                     <div class="table-responsive">
                         <table class="table table-bordered">

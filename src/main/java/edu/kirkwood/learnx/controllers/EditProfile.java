@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jdk.jshell.tool.JavaShellToolBuilder;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -39,7 +40,7 @@ public class EditProfile extends HttpServlet {
         Map<String, String> results = new HashMap<>();
 
         HttpSession session = req.getSession();
-        User userFromSession = (User)session.getAttribute("activeUser");
+        User userFromSession = Helpers.getLearnXUserFromSession(session);
         if(userFromSession != null) {
             userFromSession.setFirstName(firstName);
             userFromSession.setLastName(lastName);
@@ -50,6 +51,7 @@ public class EditProfile extends HttpServlet {
             }
             if(!results.containsKey("languageError")) {
                 UserDAO.update(userFromSession);
+                session.setAttribute("language", userFromSession.getLanguage());
                 session.setAttribute("activeUser", userFromSession);
                 session.setAttribute("flashMessageSuccess", "Your profile has been updated.");
             } else {

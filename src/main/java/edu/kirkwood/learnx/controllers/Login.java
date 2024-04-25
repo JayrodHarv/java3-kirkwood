@@ -50,7 +50,7 @@ public class Login extends HttpServlet {
         } else {
             if(!BCrypt.checkpw(password, String.valueOf(userFromDatabase.getPassword()))) {
                 // Passwords don't match, incorrect password
-                results.put("loginFail", "That email and password combination is not correct.");
+                session.setAttribute("flashMessageDanger", "That email and password combination is not correct.");
             } else {
                 if(!userFromDatabase.getStatus().equals("active")) {
                     // user is inactive or locked
@@ -63,6 +63,7 @@ public class Login extends HttpServlet {
                     userFromDatabase.setPassword(null);
                     session.invalidate();
                     session = req.getSession();
+                    session.setAttribute("language", userFromDatabase.getLanguage());
 
                     // did user check the remember me box
                     if(rememberMe != null && rememberMe[0].equals("remember")) {
