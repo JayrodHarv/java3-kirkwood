@@ -13,7 +13,7 @@
             <c:choose>
                 <c:when test="${sessionScope.activeUser.privileges eq 'admin'}">
                     <li class="nav-item">
-                        <a class="nav-link ${pageTitle == "Admin Dashboard" ? "active" : ""}" href="${appURL}/all-users"><i class="fas fa-user-cog fa-fw me-1"></i><fmt:message key="topNav.admin"></fmt:message></a>
+                        <a class="nav-link ${pageTitle == "Admin Dashboard" ? "active" : ""}" href="${appURL}/admin-dashboard"><i class="fas fa-user-cog fa-fw me-1"></i><fmt:message key="topNav.admin"></fmt:message></a>
                     </li>
                 </c:when>
                 <c:when test="${sessionScope.activeUser.privileges eq 'teach'}">

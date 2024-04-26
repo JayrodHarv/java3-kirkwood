@@ -7,5 +7,8 @@
 <script>
     new PureCounter();
 </script>
+<c:if test="${pageTitle eq 'Group Chat'}">
+  <script src="${appURL}/js/group-chat.js"></script>
+</c:if>
 <%@ include file="/WEB-INF/shared/bottom.jsp"%>
 
