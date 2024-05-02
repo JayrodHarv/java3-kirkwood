@@ -29,7 +29,8 @@ public class AllCoursesAdmin extends HttpServlet {
 
         List<Course> courses = CourseDAO.get(limit, offset, "", "");
         req.setAttribute("courses", courses);
-        req.setAttribute("pageTitle", "Courses");
+        req.setAttribute("pageTitle", "Admin Dashboard");
+        req.setAttribute("sideBarTab", "all-courses-admin");
         req.getRequestDispatcher("WEB-INF/learnx/all-courses-admin.jsp").forward(req, resp);
     }
 }

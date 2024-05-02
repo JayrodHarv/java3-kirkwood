@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="@jared-kw-db.mysql.database.azure.com [2]" uuid="884e9ac4-c015-41f4-807b-9a8fa3febbe3">
+    <data-source source="LOCAL" name="@jared-kw-db.mysql.database.azure.com" uuid="9e393349-d39e-43d1-a9ff-bded93edd067">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>

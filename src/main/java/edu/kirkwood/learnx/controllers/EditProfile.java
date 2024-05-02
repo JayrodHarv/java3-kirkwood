@@ -28,6 +28,7 @@ public class EditProfile extends HttpServlet {
             return;
         }
         req.setAttribute("pageTitle", "Edit Profile");
+        req.setAttribute("sideBarTab", "edit-profile");
         req.getRequestDispatcher("WEB-INF/learnx/edit-profile.jsp").forward(req, resp);
     }
 
@@ -60,6 +61,7 @@ public class EditProfile extends HttpServlet {
         }
         req.setAttribute("results", results);
         req.setAttribute("pageTitle", "Edit Profile");
+        req.setAttribute("sideBarTab", "edit-profile");
         req.getRequestDispatcher("WEB-INF/learnx/edit-profile.jsp").forward(req, resp);
 
     }

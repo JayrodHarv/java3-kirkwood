@@ -2,7 +2,8 @@
 <main>
     <div class="container">
         <div class="row">
-            <div class="col-12">
+            <%@include file="/WEB-INF/learnx/dashboard-sidebar.jsp" %>
+            <div class="col-8">
                 <h1>${pageTitle}</h1>
                 <p>There ${courses.size() eq 1 ? "is" : "are"}&nbsp;${courses.size()} course${courses.size() ne 1 ? "s" : ""}</p>
                 <c:if test="${courses.size() > 0}">

@@ -26,6 +26,7 @@ public class AllUsersServlet extends HttpServlet {
         List<User> users = UserDAO.getAll();
         req.setAttribute("users", users);
         req.setAttribute("pageTitle", "All Users");
+        req.setAttribute("sideBarTab", "all-users");
         req.getRequestDispatcher("WEB-INF/learnx/all-users.jsp").forward(req,resp);
 
     }

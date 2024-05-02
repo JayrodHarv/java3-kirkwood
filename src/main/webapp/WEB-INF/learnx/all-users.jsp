@@ -2,7 +2,8 @@
 <main>
     <div class="container">
         <div class="row">
-            <div class="col-12">
+            <%@include file="/WEB-INF/learnx/dashboard-sidebar.jsp" %>
+            <div class="col-8">
                 <h1>All LearnX Users</h1>
                 <p><fmt:message key="allUsers.userCount">
                     <fmt:param value="${fn:length(users) == 1 ? 'is' : 'are'}"></fmt:param>

@@ -25,6 +25,7 @@ public class DeleteAccount extends HttpServlet {
             return;
         }
         req.setAttribute("pageTitle", "Delete Account");
+        req.setAttribute("sideBarTab", "delete-account");
         req.getRequestDispatcher("WEB-INF/learnx/delete-account.jsp").forward(req, resp);
     }
 
@@ -53,6 +54,7 @@ public class DeleteAccount extends HttpServlet {
 
         req.setAttribute("results", results);
         req.setAttribute("pageTitle", "Delete Account");
+        req.setAttribute("sideBarTab", "delete-account");
         req.getRequestDispatcher("WEB-INF/learnx/delete-account.jsp").forward(req, resp);
     }
 }

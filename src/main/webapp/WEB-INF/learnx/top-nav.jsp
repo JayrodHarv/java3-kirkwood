@@ -13,17 +13,17 @@
             <c:choose>
                 <c:when test="${sessionScope.activeUser.privileges eq 'admin'}">
                     <li class="nav-item">
-                        <a class="nav-link ${pageTitle == "Admin Dashboard" ? "active" : ""}" href="${appURL}/admin-dashboard"><i class="fas fa-user-cog fa-fw me-1"></i><fmt:message key="topNav.admin"></fmt:message></a>
+                        <a class="nav-link ${pageTitle eq "Admin Dashboard" ? "link-secondary text-decoration-underline" : ""}" href="${appURL}/admin-dashboard"><i class="fas fa-user-cog fa-fw me-1"></i><fmt:message key="topNav.admin"></fmt:message></a>
                     </li>
                 </c:when>
                 <c:when test="${sessionScope.activeUser.privileges eq 'teach'}">
                     <li class="nav-item">
-                        <a class="nav-link ${pageTitle == "Teacher Dashboard" ? "active" : ""}" href="${appURL}/teacher"><i class="fas fa-user-tie fa-fw me-1"></i><fmt:message key="topNav.teacher"></fmt:message></a>
+                        <a class="nav-link ${pageTitle == "Teacher Dashboard" ? "link-secondary text-decoration-underline" : ""}" href="${appURL}/teacher"><i class="fas fa-user-tie fa-fw me-1"></i><fmt:message key="topNav.teacher"></fmt:message></a>
                     </li>
                 </c:when>
                 <c:when test="${sessionScope.activeUser.privileges eq 'student'}">
                     <li class="nav-item">
-                        <a class="nav-link ${pageTitle == "Student Dashboard" ? "active" : ""}" href="${appURL}/student"><i class="fas fa-user-graduate fa-fw me-1"></i><fmt:message key="topNav.student"></fmt:message></a>
+                        <a class="nav-link ${pageTitle == "Student Dashboard" ? "link-secondary text-decoration-underline" : ""}" href="${appURL}/student"><i class="fas fa-user-graduate fa-fw me-1"></i><fmt:message key="topNav.student"></fmt:message></a>
                     </li>
                 </c:when>
             </c:choose>
