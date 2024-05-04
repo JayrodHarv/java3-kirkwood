@@ -4,10 +4,7 @@ import edu.kirkwood.smp.data.BuildTypeDAO;
 import edu.kirkwood.smp.data.UserDAO;
 import edu.kirkwood.smp.data.VoteDAO;
 import edu.kirkwood.smp.data.WorldDAO;
-import edu.kirkwood.smp.models.BuildType;
-import edu.kirkwood.smp.models.User;
-import edu.kirkwood.smp.models.VoteVM;
-import edu.kirkwood.smp.models.World;
+import edu.kirkwood.smp.models.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,10 +23,16 @@ public class AdminDashboard extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User userFromSession = (User)session.getAttribute("activeSMPUser");
-        if(userFromSession == null || !userFromSession.getStatus().equals("active") || !userFromSession.getRole().equals("admin")) {
-            session.setAttribute("flashMessageWarning", "You must be logged in as an admin to view this page.");
+        UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
+        if(userFromSession == null || !userFromSession.getStatus().equals("active")) {
+            session.setAttribute("flashMessageWarning", "You must be logged in to view this page.");
             resp.sendRedirect("smp-login?redirect=smp-admin-dashboard");
+            return;
+        }
+        Role userRole = userFromSession.getRole();
+        if(!userRole.canViewUsers()) {
+            session.setAttribute("flashMessageWarning", "You are not allowed to view this page. Contact website owner to gain this power.");
+            resp.sendRedirect("smp");
             return;
         }
 

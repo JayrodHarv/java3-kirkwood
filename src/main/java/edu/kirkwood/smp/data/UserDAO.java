@@ -2,7 +2,9 @@ package edu.kirkwood.smp.data;
 
 import edu.kirkwood.shared.CommunicationService;
 import edu.kirkwood.shared.ImageHelper;
+import edu.kirkwood.smp.models.Role;
 import edu.kirkwood.smp.models.User;
+import edu.kirkwood.smp.models.UserVM;
 import jakarta.servlet.http.HttpServletRequest;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -70,7 +72,7 @@ public class UserDAO {
                 char[] Password = resultSet.getString("Password").toCharArray();
                 String Language = resultSet.getString("Language");
                 String Status = resultSet.getString("Status");
-                String Role = resultSet.getString("RoleID");
+                String RoleID = resultSet.getString("RoleID");
                 Instant CreatedAt = resultSet.getTimestamp("CreatedAt").toInstant();
                 Instant LastLoggedIn = resultSet.getTimestamp("LastLoggedIn").toInstant();
                 Instant UpdatedAt = resultSet.getTimestamp("UpdatedAt").toInstant();
@@ -78,11 +80,77 @@ public class UserDAO {
                 Blob blob = resultSet.getBlob("Pfp");
                 InputStream inputStream = blob.getBinaryStream();
                 String imageType = URLConnection.guessContentTypeFromStream(inputStream);
-
                 byte[] Pfp = ImageHelper.getImageBytesFromInputStream(inputStream);
-
                 String base64Image = ImageHelper.getBase64Image(imageType, Pfp);
-                user = new User(UserID, Password, DisplayName, Language, Status, Role, CreatedAt, LastLoggedIn, UpdatedAt, Pfp);
+                user = new User(UserID, Password, DisplayName, Language, Status, RoleID, CreatedAt, LastLoggedIn, UpdatedAt, Pfp);
+                user.setBase64Pfp(base64Image);
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            System.out.println("Likely bad SQL query");
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return user;
+    }
+
+    public static UserVM getVM(String email) {
+        UserVM user = null;
+        try(Connection connection = getConnection();
+            CallableStatement statement = connection.prepareCall("{CALL sp_get_userVM(?)}");
+        ) {
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()) {
+                String UserID = resultSet.getString("UserID");
+                String DisplayName = resultSet.getString("DisplayName");
+                String Language = resultSet.getString("Language");
+                String Status = resultSet.getString("Status");
+                Instant CreatedAt = resultSet.getTimestamp("CreatedAt").toInstant();
+                Instant LastLoggedIn = resultSet.getTimestamp("LastLoggedIn").toInstant();
+                Instant UpdatedAt = resultSet.getTimestamp("UpdatedAt").toInstant();
+
+                Blob blob = resultSet.getBlob("Pfp");
+                InputStream inputStream = blob.getBinaryStream();
+                String imageType = URLConnection.guessContentTypeFromStream(inputStream);
+                byte[] Pfp = ImageHelper.getImageBytesFromInputStream(inputStream);
+                String base64Image = ImageHelper.getBase64Image(imageType, Pfp);
+
+                // Role
+                Role role = new Role();
+                role.setRoleID(resultSet.getString("RoleID"));
+                // Build Permissions
+                role.setCanAddBuilds(resultSet.getBoolean("CanAddBuilds"));
+                role.setCanEditAllBuilds(resultSet.getBoolean("CanEditAllBuilds"));
+                role.setCanDeleteAllBuilds(resultSet.getBoolean("CanDeleteAllBuilds"));
+                // Build Type Permissions
+                role.setCanViewBuildTypes(resultSet.getBoolean("CanViewBuildTypes"));
+                role.setCanAddBuildTypes(resultSet.getBoolean("CanAddBuildTypes"));
+                role.setCanEditBuildTypes(resultSet.getBoolean("CanEditBuildTypes"));
+                role.setCanDeleteBuildTypes(resultSet.getBoolean("CanDeleteBuildTypes"));
+                // World Permissions
+                role.setCanViewWorlds(resultSet.getBoolean("CanViewWorlds"));
+                role.setCanAddWorlds(resultSet.getBoolean("CanAddWorlds"));
+                role.setCanEditWorlds(resultSet.getBoolean("CanEditWorlds"));
+                role.setCanDeleteWorlds(resultSet.getBoolean("CanDeleteWorlds"));
+                // Vote Permissions
+                role.setCanViewAllVotes(resultSet.getBoolean("CanViewAllVotes"));
+                role.setCanAddVotes(resultSet.getBoolean("CanAddVotes"));
+                role.setCanEditAllVotes(resultSet.getBoolean("CanEditAllVotes"));
+                role.setCanDeleteAllVotes(resultSet.getBoolean("CanDeleteAllVotes"));
+                // Role Permissions
+                role.setCanViewRoles(resultSet.getBoolean("CanViewRoles"));
+                role.setCanAddRoles(resultSet.getBoolean("CanAddRoles"));
+                role.setCanEditRoles(resultSet.getBoolean("CanEditRoles"));
+                role.setCanDeleteRoles(resultSet.getBoolean("CanDeleteRoles"));
+                // User Permissions
+                role.setCanViewUsers(resultSet.getBoolean("CanViewUsers"));
+                role.setCanAddUsers(resultSet.getBoolean("CanAddUsers"));
+                role.setCanEditUsers(resultSet.getBoolean("CanEditUsers"));
+                role.setCanBanUsers(resultSet.getBoolean("CanBanUsers"));
+
+                user = new UserVM(UserID, DisplayName, Language, Status, role, CreatedAt, LastLoggedIn, UpdatedAt, Pfp);
                 user.setBase64Pfp(base64Image);
             }
             resultSet.close();

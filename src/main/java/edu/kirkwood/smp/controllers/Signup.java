@@ -3,6 +3,7 @@ package edu.kirkwood.smp.controllers;
 import edu.kirkwood.smp.data.UserDAO;
 import edu.kirkwood.smp.models.User;
 import edu.kirkwood.shared.CommunicationService;
+import edu.kirkwood.smp.models.UserVM;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;

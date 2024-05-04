@@ -1,41 +1,29 @@
 package edu.kirkwood.smp.models;
 
-import edu.kirkwood.shared.Validators;
-
 import java.time.Instant;
 import java.util.Date;
-import java.util.regex.Matcher;
 
-public class User {
+public class UserVM {
     private String UserID;
-    private char[] Password;
     private String DisplayName;
     private String Language;
     private String Status;
-    private String RoleID;
+    private Role Role;
     private Instant CreatedAt;
     private Instant LastLoggedIn;
     private Instant UpdatedAt;
     private byte[] Pfp;
     private String Base64Pfp;
 
-    public User() {
-
+    public UserVM() {
     }
 
-    public User(String userID, String displayName, byte[] pfp) {
+    public UserVM(String userID, String displayName, String language, String status, edu.kirkwood.smp.models.Role role, Instant createdAt, Instant lastLoggedIn, Instant updatedAt, byte[] pfp) {
         UserID = userID;
-        DisplayName = displayName;
-        Pfp = pfp;
-    }
-
-    public User(String userID, char[] password, String displayName, String language, String status, String role, Instant createdAt, Instant lastLoggedIn, Instant updatedAt, byte[] pfp) {
-        UserID = userID;
-        Password = password;
         DisplayName = displayName;
         Language = language;
         Status = status;
-        RoleID = role;
+        Role = role;
         CreatedAt = createdAt;
         LastLoggedIn = lastLoggedIn;
         UpdatedAt = updatedAt;
@@ -47,29 +35,7 @@ public class User {
     }
 
     public void setUserID(String userID) {
-        Matcher matcher = Validators.emailPattern.matcher(userID);
-        if(!matcher.matches()) {
-            throw new IllegalArgumentException("Invalid Email Address");
-        }
-        this.UserID = userID;
-    }
-
-    public char[] getPassword() {
-        return Password;
-    }
-
-    public void setPassword(char[] password) {
-        // The only time the password should be null is when I set the activeUser session attribute
-        if(password == null) {
-            this.Password = password;
-            return;
-        }
-        String pass = password.toString();
-        Matcher matcher = Validators.passwordPattern.matcher(pass);
-        if(!matcher.matches()) {
-            throw new IllegalArgumentException("Password must be 8 characters, with 3 of 4 (lowercase, uppercase, number, symbol)");
-        }
-        this.Password = password;
+        UserID = userID;
     }
 
     public String getDisplayName() {
@@ -96,12 +62,12 @@ public class User {
         Status = status;
     }
 
-    public String getRole() {
-        return RoleID;
+    public edu.kirkwood.smp.models.Role getRole() {
+        return Role;
     }
 
-    public void setRole(String role) {
-        RoleID = role;
+    public void setRole(edu.kirkwood.smp.models.Role role) {
+        Role = role;
     }
 
     public Instant getCreatedAt() {
@@ -127,9 +93,14 @@ public class User {
     public void setUpdatedAt(Instant updatedAt) {
         UpdatedAt = updatedAt;
     }
-    public byte[] getPfp() { return Pfp; }
 
-    public void setPfp(byte[] pfp) { Pfp = pfp; }
+    public byte[] getPfp() {
+        return Pfp;
+    }
+
+    public void setPfp(byte[] pfp) {
+        Pfp = pfp;
+    }
 
     public String getBase64Pfp() {
         return Base64Pfp;
@@ -150,5 +121,4 @@ public class User {
     public Date getUpdatedAtDate() {
         return Date.from(UpdatedAt);
     }
-
 }

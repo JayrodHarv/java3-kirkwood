@@ -20,7 +20,7 @@
                 <%@ include file="/WEB-INF/smp/smp-worlds.jsp"%>
             </c:when>
             <c:when test="${results.page eq 'build-types'}">
-                <%@ include file="/WEB-INF/smp/build-types.jsp"%>
+                <%@ include file="/WEB-INF/smp/smp-build-types.jsp"%>
             </c:when>
         </c:choose>
 

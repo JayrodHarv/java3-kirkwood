@@ -30,16 +30,30 @@
         <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a href="${appURL}/smp" class="nav-link px-2 <c:if test="${pageTitle eq 'Home'}">link-light</c:if>">Home</a></li>
-                <li class="nav-item"><a href="${appURL}/world-map" class="nav-link px-2 <c:if test="${pageTitle eq 'World Map'}">link-light</c:if>">World Map</a></li>
+<%--                <li class="nav-item"><a href="${appURL}/world-map" class="nav-link px-2 <c:if test="${pageTitle eq 'World Map'}">link-light</c:if>">World Map</a></li>--%>
                 <li class="nav-item"><a href="${appURL}/server-builds" class="nav-link px-2 <c:if test="${pageTitle eq 'Server Builds'}">link-light</c:if>">Server Builds</a></li>
-                <li class="nav-item"><a href="${appURL}/discussion-forms" class="nav-link px-2 <c:if test="${pageTitle eq 'Discussion Forms'}">link-light</c:if>">Discussion Forms</a></li>
+<%--                <li class="nav-item"><a href="${appURL}/discussion-forms" class="nav-link px-2 <c:if test="${pageTitle eq 'Discussion Forms'}">link-light</c:if>">Discussion Forms</a></li>--%>
                 <li class="nav-item"><a href="${appURL}/votes" class="nav-link px-2 <c:if test="${pageTitle eq 'Votes'}">link-light</c:if>">Votes</a></li>
 
-                <c:choose>
-                    <c:when test="${sessionScope.activeSMPUser.role eq 'admin'}">
-                        <li class="nav-item"><a href="${appURL}/smp-admin-dashboard" class="nav-link px-2 <c:if test="${pageTitle eq 'Admin Dashboard'}">link-light</c:if>">Admin Dashboard</a></li>
-                    </c:when>
-                </c:choose>
+                <c:if test="${sessionScope.activeSMPUser.getRole().canViewUsers()
+                                or sessionScope.activeSMPUser.getRole().canViewWorlds()
+                                or sessionScope.activeSMPUser.getRole().canViewBuildTypes()}">
+<%--                        <li class="nav-item"><a href="${appURL}/smp-admin-dashboard" class="nav-link px-2 <c:if test="${pageTitle eq 'Admin Dashboard'}">link-light</c:if>">Admin Dashboard</a></li>--%>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link nav-link px-2 dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Manage</a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <c:if test="${sessionScope.activeSMPUser.getRole().canViewUsers()}">
+                                <li><a class="dropdown-item" href="${appURL}/smp-users">Users</a></li>
+                            </c:if>
+                            <c:if test="${sessionScope.activeSMPUser.getRole().canViewWorlds()}">
+                                <li><a class="dropdown-item" href="${appURL}/smp-worlds">Worlds</a></li>
+                            </c:if>
+                            <c:if test="${sessionScope.activeSMPUser.getRole().canViewBuildTypes()}">
+                                <li><a class="dropdown-item" href="${appURL}/smp-build-types">Build Types</a></li>
+                            </c:if>
+                        </ul>
+                    </li>
+                </c:if>
             </ul>
             <div class="text-end">
                 <c:choose>
@@ -54,7 +68,7 @@
                                 ${activeSMPUser.getDisplayName()}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end text-small">
-                                <li><a class="dropdown-item" href="${appURL}/smp-edit-profile">Profile</a></li>
+                                <li><a class="dropdown-item" href="${appURL}/smp-edit-profile?userID=${activeSMPUser.getUserID()}">Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="${appURL}/smp-logout">Sign out</a></li>
                             </ul>

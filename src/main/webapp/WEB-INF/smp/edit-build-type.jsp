@@ -6,7 +6,7 @@
         <%@ include file="/WEB-INF/smp/flash-message.jsp"%>
 
         <div class="container-fluid p-0">
-            <h5 class="form-label">${pageTitle}</h5>
+            <h2 class="mb-4">${pageTitle}</h2>
 
             <!-- Build Type -->
             <div class="input-group mb-4">
@@ -28,7 +28,7 @@
         </div>
         <div class="d-flex justify-content-between p-0">
             <div class="btn btn-group p-0">
-                <a href="${appURL}/smp-admin-dashboard?page=build-types" class="btn btn-secondary">Back</a>
+                <a href="${appURL}/smp-build-types" class="btn btn-secondary">Back</a>
                 <button type="submit" class="btn btn-primary">Save Changes</button>
             </div>
             <p class="form-text text-end">* Indicates required field</p>

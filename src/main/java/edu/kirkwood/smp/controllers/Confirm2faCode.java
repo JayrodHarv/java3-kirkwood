@@ -3,6 +3,7 @@ package edu.kirkwood.smp.controllers;
 import edu.kirkwood.smp.data.UserDAO;
 import edu.kirkwood.smp.models.User;
 import edu.kirkwood.shared.CommunicationService;
+import edu.kirkwood.smp.models.UserVM;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -53,13 +54,14 @@ public class Confirm2faCode extends HttpServlet {
             String email = (String)session.getAttribute("email");
             User user = UserDAO.get(email);
             user.setStatus("active");
-            user.setRole("user");
             user.setLastLoggedIn(Instant.now().atOffset(ZoneOffset.UTC).toInstant());
             UserDAO.update(user);
-            user.setPassword(null);
+
+            UserVM userVM = UserDAO.getVM(email);
+
             session.removeAttribute("code");
             session.removeAttribute("email");
-            session.setAttribute("activeSMPUser", user);
+            session.setAttribute("activeSMPUser", userVM);
             session.setAttribute("flashMessageSuccess", "Welcome new user");
             // add easter egg
             resp.sendRedirect("smp");

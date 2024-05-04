@@ -24,6 +24,6 @@ public class DeleteBuildType extends HttpServlet {
                 session.setAttribute("flashMessageDanger", "Failed to delete build type. Please try again.");
             }
         }
-        resp.sendRedirect("smp-admin-dashboard?page=build-types");
+        resp.sendRedirect("smp-build-types");
     }
 }

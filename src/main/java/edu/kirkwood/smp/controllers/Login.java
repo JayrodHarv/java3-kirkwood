@@ -2,6 +2,7 @@ package edu.kirkwood.smp.controllers;
 
 import edu.kirkwood.smp.data.UserDAO;
 import edu.kirkwood.smp.models.User;
+import edu.kirkwood.smp.models.UserVM;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -59,7 +60,9 @@ public class Login extends HttpServlet {
                     // SUCCESS!
                     userFromDatabase.setLastLoggedIn(Instant.now().atOffset(ZoneOffset.UTC).toInstant());
                     UserDAO.update(userFromDatabase);
-                    userFromDatabase.setPassword(null);
+
+                    UserVM userVM = UserDAO.getVM(email);
+
                     HttpSession session = req.getSession();
                     session.invalidate();
                     session = req.getSession();
@@ -69,7 +72,7 @@ public class Login extends HttpServlet {
                         session.setMaxInactiveInterval(30 * 24 * 60 * 60);
                     }
 
-                    session.setAttribute("activeSMPUser", userFromDatabase);
+                    session.setAttribute("activeSMPUser", userVM);
                     session.setAttribute("flashMessageSuccess", "Welcome back!");
                     if(redirect != null) {
                         resp.sendRedirect(redirect);

@@ -18,13 +18,13 @@ public class EditBuildType extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        String buildTypeID = req.getParameter("buildTypeId");
+        String buildTypeID = req.getParameter("buildTypeID");
 
         Map<String, String> results = new HashMap<>();
 
         try {
             BuildType buildType = BuildTypeDAO.get(buildTypeID);
-            results.put("buildType", buildType.getBuildTypeID());
+            results.put("buildTypeID", buildType.getBuildTypeID());
             results.put("description", buildType.getDescription());
         } catch(Exception e) {
             session.setAttribute("flashMessageError", "Something went wrong while retrieving build type data: " + e.getMessage());
@@ -59,7 +59,7 @@ public class EditBuildType extends HttpServlet {
                 BuildType buildType = new BuildType(buildTypeID, description);
                 if(BuildTypeDAO.edit(buildType)) {
                     session.setAttribute("flashMessageSuccess", "Successfully made changes on build type: " + buildTypeID);
-                    resp.sendRedirect("smp-admin-dashboard?page=buildTypes");
+                    resp.sendRedirect("smp-build-types");
                     return;
                 } else {
                     session.setAttribute("flashMessageWarning", "Something went wrong while updating build type. Please try again.");

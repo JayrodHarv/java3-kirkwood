@@ -20,7 +20,37 @@ USE smp_db;
 
 DROP TABLE IF EXISTS Role;
 CREATE TABLE Role (
+    # Use bootstrap accordion for these
     RoleID NVARCHAR(255) NOT NULL,
+    # Builds
+    CanAddBuilds BIT NOT NULL DEFAULT 0,
+    CanEditAllBuilds BIT NOT NULL DEFAULT 0,
+    CanDeleteAllBuilds BIT NOT NULL DEFAULT 0,
+    # BuildTypes
+    CanViewBuildTypes BIT NOT NULL DEFAULT 0,
+    CanAddBuildTypes BIT NOT NULL DEFAULT 0,
+    CanEditBuildTypes BIT NOT NULL DEFAULT 0,
+    CanDeleteBuildTypes BIT NOT NULL DEFAULT 0,
+    # Worlds
+    CanViewWorlds BIT NOT NULL DEFAULT 0,
+    CanAddWorlds BIT NOT NULL DEFAULT 0,
+    CanEditWorlds BIT NOT NULL DEFAULT 0,
+    CanDeleteWorlds BIT NOT NULL DEFAULT 0,
+    # Votes
+    CanViewAllVotes BIT NOT NULL DEFAULT 0,
+    CanAddVotes BIT NOT NULL DEFAULT 0,
+    CanEditAllVotes BIT NOT NULL DEFAULT 0,
+    CanDeleteAllVotes BIT NOT NULL DEFAULT 0,
+    # Roles
+    CanViewRoles BIT NOT NULL DEFAULT 0,
+    CanAddRoles BIT NOT NULL DEFAULT 0,
+    CanEditRoles BIT NOT NULL DEFAULT 0,
+    CanDeleteRoles BIT NOT NULL DEFAULT 0,
+    # Users
+    CanViewUsers BIT NOT NULL DEFAULT 0,
+    CanAddUsers BIT NOT NULL DEFAULT 0,
+    CanEditUsers BIT NOT NULL DEFAULT 0,
+    CanBanUsers BIT NOT NULL DEFAULT 0,
     CONSTRAINT PRIMARY KEY(RoleID)
 );
 
@@ -31,7 +61,7 @@ CREATE TABLE User (
 	Password NVARCHAR(255) NOT NULL,
 	Language NVARCHAR(255) NOT NULL DEFAULT 'en-US',
 	Status ENUM('inactive', 'active', 'locked') NOT NULL,
-    RoleID NVARCHAR(255) NULL DEFAULT 'user',
+    RoleID NVARCHAR(255) NULL DEFAULT 'User',
 	CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	LastLoggedIn DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	UpdatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -189,6 +219,72 @@ CREATE TABLE UserVote (
 
 /*-----------------------------------USER------------------------------------*/
 
+/* GET ALL USER */
+DROP PROCEDURE IF EXISTS sp_get_all_users;
+CREATE PROCEDURE sp_get_all_users()
+BEGIN
+    SELECT UserID, DisplayName, Password, Language, Status, RoleID, CreatedAt, LastLoggedIn, UpdatedAt, Pfp
+    FROM User
+    ;
+END;
+
+/* GET USER */
+DROP PROCEDURE IF EXISTS sp_get_userVM;
+CREATE PROCEDURE sp_get_userVM(
+    IN p_UserID NVARCHAR(255)
+)
+BEGIN
+    SELECT 	u.UserID, u.DisplayName, u.Language, u.Status,
+            u.RoleID, u.CreatedAt, u.LastLoggedIn, u.UpdatedAt, u.Pfp,
+            # Builds
+            r.CanAddBuilds,
+            r.CanEditAllBuilds,
+            r.CanDeleteAllBuilds,
+            # BuildTypes
+            r.CanViewBuildTypes,
+            r.CanAddBuildTypes,
+            r.CanEditBuildTypes,
+            r.CanDeleteBuildTypes,
+            # Worlds
+            r.CanViewWorlds,
+            r.CanAddWorlds,
+            r.CanEditWorlds,
+            r.CanDeleteWorlds,
+            # Votes
+            r.CanViewAllVotes,
+            r.CanAddVotes,
+            r.CanEditAllVotes,
+            r.CanDeleteAllVotes,
+            # Roles
+            r.CanViewRoles,
+            r.CanAddRoles,
+            r.CanEditRoles,
+            r.CanDeleteRoles,
+            # Users
+            r.CanViewUsers,
+            r.CanAddUsers,
+            r.CanEditUsers,
+            r.CanBanUsers
+    FROM User AS u
+    INNER JOIN Role AS r
+    ON u.RoleID = r.RoleID
+    WHERE UserID = p_UserID
+    ;
+END;
+
+/* GET USER */
+DROP PROCEDURE IF EXISTS sp_get_user;
+CREATE PROCEDURE sp_get_user(
+    IN p_UserID NVARCHAR(255)
+)
+BEGIN
+    SELECT 	u.UserID, u.Password, u.DisplayName, u.Language, u.Status,
+            u.RoleID, u.CreatedAt, u.LastLoggedIn, u.UpdatedAt, u.Pfp
+    FROM User AS u
+    WHERE UserID = p_UserID
+    ;
+END;
+
 /* INSERT USER */
 DROP PROCEDURE IF EXISTS sp_insert_user;
 CREATE PROCEDURE sp_insert_user(
@@ -199,7 +295,7 @@ CREATE PROCEDURE sp_insert_user(
 )
 BEGIN
     INSERT INTO User
-		(UserID, Password, DisplayName, Pfp)
+    (UserID, Password, DisplayName, Pfp)
     VALUES
         (p_UserID, p_Password, p_DisplayName, p_Pfp)
     ;
@@ -207,15 +303,6 @@ BEGIN
     SET @code=LPAD(FLOOR(RAND() * 999999.99), 6, '0');
     -- Create new 2 Factor Authentication Code
     INSERT INTO 2fa_code (UserID, Code, Method) VALUES (p_UserID, @code, 'email')
-    ;
-END;
-
-/* GET ALL USER */
-DROP PROCEDURE IF EXISTS sp_get_all_users;
-CREATE PROCEDURE sp_get_all_users()
-BEGIN
-    SELECT UserID, DisplayName, Password, Language, Status, RoleID, CreatedAt, LastLoggedIn, UpdatedAt, Pfp
-    FROM User
     ;
 END;
 
@@ -231,12 +318,24 @@ CREATE PROCEDURE sp_update_user(
 )
 BEGIN
     UPDATE User
-    SET
-        DisplayName =  p_DisplayName,
+    SET DisplayName =  p_DisplayName,
         Language =  p_Language,
         Status = p_Status,
         RoleID = p_RoleID,
         LastLoggedIn = p_LastLoggedIn
+    WHERE UserID = p_UserID
+    ;
+END;
+
+/* UPDATE USER ROLE */
+DROP PROCEDURE IF EXISTS sp_update_user_role;
+CREATE PROCEDURE sp_update_user_role(
+    IN p_UserID NVARCHAR(255),
+    IN p_RoleID NVARCHAR(255)
+)
+BEGIN
+    UPDATE User
+    SET RoleID = p_RoleID
     WHERE UserID = p_UserID
     ;
 END;
@@ -262,32 +361,6 @@ CREATE PROCEDURE sp_delete_user(
 BEGIN
     DELETE FROM User
     WHERE UserID = p_UserID
-    ;
-END;
-
-/* GET USER */
-DROP PROCEDURE IF EXISTS sp_get_user;
-CREATE PROCEDURE sp_get_user(
-    IN p_UserID NVARCHAR(255)
-)
-BEGIN
-    SELECT 	UserID, Password, DisplayName, Language, Status,
-			RoleID, CreatedAt, LastLoggedIn, UpdatedAt, Pfp
-	FROM User
-	WHERE UserID = p_UserID
-    ;
-END;
-
-/* GET user by displayname */
-DROP PROCEDURE IF EXISTS sp_get_user_by_displayname;
-CREATE PROCEDURE sp_get_user_by_displayname(
-    IN p_DisplayName NVARCHAR(255)
-)
-BEGIN
-    SELECT 	UserID, Password, DisplayName, Language, Status,
-              RoleID, CreatedAt, LastLoggedIn, UpdatedAt, Pfp
-    FROM User
-    WHERE DisplayName = p_DisplayName
     ;
 END;
 
@@ -833,9 +906,89 @@ END;
 					            TEST RECORDS
 *****************************************************************************/
 
-INSERT INTO Role (RoleID) VALUE ('user');
-INSERT INTO Role (RoleID) VALUE ('moderator');
-INSERT INTO Role (RoleID) VALUE ('admin');
+INSERT INTO Role (
+    RoleID,
+    # Builds
+    CanAddBuilds,
+    CanEditAllBuilds,
+    CanDeleteAllBuilds,
+    # BuildTypes
+    CanViewBuildTypes,
+    CanAddBuildTypes,
+    CanEditBuildTypes,
+    CanDeleteBuildTypes,
+    # Worlds
+    CanViewWorlds,
+    CanAddWorlds,
+    CanEditWorlds,
+    CanDeleteWorlds,
+    # Votes
+    CanViewAllVotes,
+    CanAddVotes,
+    CanEditAllVotes,
+    CanDeleteAllVotes,
+    # Roles
+    CanViewRoles,
+    CanAddRoles,
+    CanEditRoles,
+    CanDeleteRoles,
+    # Users
+    CanViewUsers,
+    CanAddUsers,
+    CanEditUsers,
+    CanBanUsers
+)
+VALUES (
+    'User',
+    1, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+);
+
+INSERT INTO Role (
+    RoleID,
+    # Builds
+    CanAddBuilds,
+    CanEditAllBuilds,
+    CanDeleteAllBuilds,
+    # BuildTypes
+    CanViewBuildTypes,
+    CanAddBuildTypes,
+    CanEditBuildTypes,
+    CanDeleteBuildTypes,
+    # Worlds
+    CanViewWorlds,
+    CanAddWorlds,
+    CanEditWorlds,
+    CanDeleteWorlds,
+    # Votes
+    CanViewAllVotes,
+    CanAddVotes,
+    CanEditAllVotes,
+    CanDeleteAllVotes,
+    # Roles
+    CanViewRoles,
+    CanAddRoles,
+    CanEditRoles,
+    CanDeleteRoles,
+    # Users
+    CanViewUsers,
+    CanAddUsers,
+    CanEditUsers,
+    CanBanUsers
+)
+VALUES (
+    'Admin',
+    1, 1, 1,
+    1, 1, 1, 1,
+    1, 1, 1, 1,
+    1, 1, 1, 1,
+    1, 1, 1, 1,
+    1, 1, 1, 1
+);
 
 INSERT INTO BuildType (BuildTypeID, Description) VALUES ('Sky Scraper', 'Very tall Build.');
 INSERT INTO BuildType (BuildTypeID, Description) VALUES ('Capitol', 'An elegant government Build where congressional hearings are sometimes held.');
