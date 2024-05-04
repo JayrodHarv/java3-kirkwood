@@ -8,8 +8,13 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.HashMap;
@@ -111,11 +116,25 @@ public class Signup extends HttpServlet {
 
             is.read(image);
         } catch (Exception e) {
-            results.put("pfpError", "Something went wrong when trying to upload this profile picture.");
+//            results.put("pfpError", "Something went wrong when trying to upload this profile picture.");
         }
 
         if(image == null) {
-            results.put("pfpError", "You must enter a profile picture.");
+//            results.put("pfpError", "You must enter a profile picture.");
+            try {
+                // Java sucks
+                String applicationPath = getServletContext().getRealPath("/");
+                File f1 = new File(applicationPath);
+                File f2 = new File(f1, "images");
+                File f3 = new File(f2, "smp");
+                File f4 = new File(f3, "Sample_User_Icon.png");
+                String sampleImagePath = f4.getPath();
+                System.out.println(sampleImagePath);
+                image = Files.readAllBytes(f4.toPath());
+                user.setPfp(image);
+            } catch(Exception ex) {
+                results.put("pfpError", "My code don't work." + ex.getMessage());
+            }
         } else {
             user.setPfp(image);
         }
@@ -133,7 +152,7 @@ public class Signup extends HttpServlet {
                 if(!twoFactorInfo.isEmpty()) {
                     // Send user and email
                     String code = twoFactorInfo.get(0);
-                    // CommunicationService.sendNewSMPUserEmail(code, email);
+                    CommunicationService.sendNewSMPUserEmail(code, email);
 
                     // Todo: display an error is the email cannot be sent
                     // Gets an existing session; Creates new one if doesn't exist
@@ -146,21 +165,22 @@ public class Signup extends HttpServlet {
                     session.setAttribute("email", email);
 
                     //redirect to confirmation page
-                    // resp.sendRedirect("smp-confirm");
+                    resp.sendRedirect("smp-confirm");
 
-                    String emailT = (String)session.getAttribute("email");
-                    user = UserDAO.get(email);
-                    user.setStatus("active");
-                    user.setRole("user");
-                    user.setLastLoggedIn(Instant.now().atOffset(ZoneOffset.UTC).toInstant());
-                    UserDAO.update(user);
-                    user.setPassword(null);
-                    session.removeAttribute("code");
-                    session.removeAttribute("email");
-
-                    session.setAttribute("activeSMPUser", user);
-                    session.setAttribute("flashMessageSuccess", "Welcome " + user.getDisplayName());
-                    resp.sendRedirect("smp");
+                    // Temp 2fa bypass
+//                    String emailT = (String)session.getAttribute("email");
+//                    user = UserDAO.get(email);
+//                    user.setStatus("active");
+//                    user.setRole("user");
+//                    user.setLastLoggedIn(Instant.now().atOffset(ZoneOffset.UTC).toInstant());
+//                    UserDAO.update(user);
+//                    user.setPassword(null);
+//                    session.removeAttribute("code");
+//                    session.removeAttribute("email");
+//
+//                    session.setAttribute("activeSMPUser", user);
+//                    session.setAttribute("flashMessageSuccess", "Welcome " + user.getDisplayName());
+//                    resp.sendRedirect("smp");
                     return;
                 }
                 results.put("userAddSuccess", "User added");

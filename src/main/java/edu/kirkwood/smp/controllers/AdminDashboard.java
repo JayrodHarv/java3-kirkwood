@@ -36,6 +36,7 @@ public class AdminDashboard extends HttpServlet {
         String page = req.getParameter("page");
         Map<String,String> results = new HashMap<>();
 
+        // Defaults to smp-users page
         if(page == null || page.isEmpty()) {
             page = "smp-users";
         }

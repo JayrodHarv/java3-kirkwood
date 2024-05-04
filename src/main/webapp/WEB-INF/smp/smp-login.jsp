@@ -55,6 +55,11 @@
                             </form>
                             <!-- Form END -->
 
+                            <!-- Password reset link -->
+                            <div class="mt-4 text-center">
+                                <span><a href="${appURL}/smp-password-reset">Forgot password?</a></span>
+                            </div>
+
                             <!-- Sign in link -->
                             <div class="mt-4 text-center">
                                 <span>Don't have an account? <a href="${appURL}/smp-signup">Sign up here</a></span>

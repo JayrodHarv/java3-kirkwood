@@ -20,24 +20,27 @@ USE smp_db;
 
 DROP TABLE IF EXISTS Role;
 CREATE TABLE Role (
-    Role NVARCHAR(50) PRIMARY KEY NOT NULL
+    RoleID NVARCHAR(255) NOT NULL,
+    CONSTRAINT PRIMARY KEY(RoleID)
 );
 
 DROP TABLE IF EXISTS User;
 CREATE TABLE User (
-	UserID NVARCHAR(255) PRIMARY KEY COMMENT 'Primary key of user is their email',
-	DisplayName NVARCHAR(255) NOT NULL UNIQUE COMMENT 'NOT THE PRIMARY KEY BECAUSE USER CAN CHANGE IT',
+	UserID NVARCHAR(255) NOT NULL COMMENT 'Primary key of user is their email',
+	DisplayName NVARCHAR(255) NOT NULL UNIQUE,
 	Password NVARCHAR(255) NOT NULL,
 	Language NVARCHAR(255) NOT NULL DEFAULT 'en-US',
 	Status ENUM('inactive', 'active', 'locked') NOT NULL,
-    Role NVARCHAR(50) NOT NULL DEFAULT 'user',
+    RoleID NVARCHAR(255) NULL DEFAULT 'user',
 	CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	LastLoggedIn DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	UpdatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	Pfp LONGBLOB,
-    CONSTRAINT fk_User_Role
-        FOREIGN KEY(Role)
-            REFERENCES Role(Role)
+    CONSTRAINT fk_User_Role FOREIGN KEY(RoleID)
+        REFERENCES Role(RoleID)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL,
+    CONSTRAINT pk_User PRIMARY KEY(UserID)
 );
 
 CREATE TABLE 2fa_code (
@@ -46,48 +49,65 @@ CREATE TABLE 2fa_code (
 	Code VARCHAR(6) NOT NULL,
 	Method ENUM ('email', 'sms', 'phone') NOT NULL,
 	CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (UserID) REFERENCES User(UserID) ON DELETE CASCADE
+	CONSTRAINT fk_2fa_code_UserID FOREIGN KEY (UserID)
+	    REFERENCES User(UserID)
+	        ON UPDATE CASCADE
+	        ON DELETE CASCADE
 );
+
+CREATE TABLE PasswordReset (
+    ResetID    INT AUTO_INCREMENT PRIMARY KEY,
+    UserID     NVARCHAR(255)                       NOT NULL,
+    Token      NVARCHAR(255)                       NOT NULL,
+    CreatedAt  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_PasswordReset_UserID FOREIGN KEY (UserID)
+        REFERENCES User (UserID)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+);
+
+CREATE INDEX UserID ON PasswordReset (UserID);
 
 DROP TABLE IF EXISTS World;
 CREATE TABLE World (
-    WorldID NVARCHAR(255) COMMENT 'Name of world is primary key',
-    DateStarted DATE,
-    Description TEXT,
+    WorldID NVARCHAR(255) NOT NULL COMMENT 'Name of world is primary key',
+    DateStarted DATE NOT NULL,
+    Description TEXT NOT NULL,
     CONSTRAINT pk_World PRIMARY KEY(WorldID)
 );
 
 DROP TABLE IF EXISTS BuildType;
 CREATE TABLE BuildType (
-    BuildType NVARCHAR(255),
-    Description TEXT,
-    CONSTRAINT pk_BuildType PRIMARY KEY(BuildType)
+    BuildTypeID NVARCHAR(255) NOT NULL,
+    #TODO: Add color field. Use input type="color" for color picker. Could do with world too.
+    # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color
+    Description TEXT NOT NULL,
+    CONSTRAINT pk_BuildType PRIMARY KEY(BuildTypeID)
 );
 
 DROP TABLE IF EXISTS Build;
 CREATE TABLE Build (
-	BuildID NVARCHAR(100) COMMENT 'Primary key is the name of build',
-	UserID NVARCHAR(255) NOT NULL,
+	BuildID NVARCHAR(100) NOT NULL COMMENT 'Primary key is the name of build',
+	UserID NVARCHAR(255) NULL,
 	Image LONGBLOB NULL,
 	WorldID NVARCHAR(255) NULL,
-	BuildType NVARCHAR(255) NULL,
+	BuildTypeID NVARCHAR(255) NULL,
 	DateBuilt DATE NULL,
 	Coordinates NVARCHAR(255) NULL,
 	CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	Description TEXT NULL,
-	CONSTRAINT fk_Build_UserID
-	    FOREIGN KEY(UserID)
-		  REFERENCES User(UserID),
-    CONSTRAINT fk_Build_WorldID
-        FOREIGN KEY(WorldID)
-            REFERENCES World(WorldID)
-            ON DELETE SET NULL
-            ON UPDATE CASCADE,
-    CONSTRAINT fk_Build_BuildType
-        FOREIGN KEY(BuildType)
-            REFERENCES BuildType(BuildType)
-            ON DELETE SET NULL
-            ON UPDATE CASCADE,
+	Description TEXT NOT NULL,
+	CONSTRAINT fk_Build_UserID FOREIGN KEY(UserID)
+	    REFERENCES User(UserID)
+	        ON UPDATE CASCADE
+            ON DELETE SET NULL,
+    CONSTRAINT fk_Build_WorldID FOREIGN KEY(WorldID)
+        REFERENCES World(WorldID)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL,
+    CONSTRAINT fk_Build_BuildType FOREIGN KEY(BuildTypeID)
+        REFERENCES BuildType(BuildTypeID)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL,
 	CONSTRAINT pk_Build PRIMARY KEY(BuildID)
 );
 
@@ -101,62 +121,66 @@ CREATE TABLE DiscussionForm (
 
 DROP TABLE IF EXISTS Message;
 CREATE TABLE Message (
-	MessageID INT,
-	UserID NVARCHAR(255) NOT NULL,
+	MessageID INT NOT NULL,
+	UserID NVARCHAR(255) NULL,
 	DiscussionID NVARCHAR(100) NOT NULL,
 	Text TEXT NOT NULL,
 	SentAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	CONSTRAINT fk_Message_UserID
-	 FOREIGN KEY(UserID)
-		 REFERENCES User(UserID),
-	CONSTRAINT fk_Message_DiscussionID
-	 FOREIGN KEY(DiscussionID)
-		 REFERENCES DiscussionForm(DiscussionID),
+	CONSTRAINT fk_Message_UserID FOREIGN KEY(UserID)
+	    REFERENCES User(UserID)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL,
+	CONSTRAINT fk_Message_DiscussionID FOREIGN KEY(DiscussionID)
+		 REFERENCES DiscussionForm(DiscussionID)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE,
 	CONSTRAINT pk_Message PRIMARY KEY(MessageID)
 );
 
 DROP TABLE IF EXISTS Vote;
 CREATE TABLE Vote (
-	VoteID NVARCHAR(255) PRIMARY KEY,
-	UserID NVARCHAR(255) NOT NULL,
+	VoteID NVARCHAR(255) NOT NULL,
+	UserID NVARCHAR(255) NULL,
 	Description TEXT NOT NULL,
 	StartTime DATETIME NULL,
 	EndTime DATETIME NULL,
-    CONSTRAINT fk_Vote_UserID
-        FOREIGN KEY(UserID)
-            REFERENCES User(UserID)
+    CONSTRAINT fk_Vote_UserID FOREIGN KEY(UserID)
+        REFERENCES User(UserID)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL,
+    CONSTRAINT pk_Vote PRIMARY KEY(VoteID)
 );
 
 DROP TABLE IF EXISTS VoteOption;
 CREATE TABLE VoteOption (
-    OptionID INT AUTO_INCREMENT PRIMARY KEY,
-    VoteID NVARCHAR(255),
+    OptionID INT AUTO_INCREMENT,
+    VoteID NVARCHAR(255) NOT NULL,
     Title NVARCHAR(255) NOT NULL,
     Description TEXT NOT NULL,
     Image LONGBLOB,
-    CONSTRAINT fk_VoteOption_VoteID
-        FOREIGN KEY(VoteID)
-            REFERENCES Vote(VoteID)
+    CONSTRAINT fk_VoteOption_VoteID FOREIGN KEY(VoteID)
+        REFERENCES Vote(VoteID)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-    CONSTRAINT ak_VoteOption UNIQUE (VoteID, Title)
+    CONSTRAINT ak_VoteOption UNIQUE (VoteID, Title),
+    CONSTRAINT pk_VoteOption PRIMARY KEY(OptionID)
 );
 
 DROP TABLE IF EXISTS UserVote;
 CREATE TABLE UserVote (
-	UserID NVARCHAR(255) NOT NULL,
+	UserID NVARCHAR(255) NULL,
 	VoteID NVARCHAR(255) NOT NULL,
 	OptionID INT NOT NULL,
 	VoteTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	CONSTRAINT fk_UserVote_UserID
-	  FOREIGN KEY(UserID)
-		  REFERENCES User(UserID),
-	CONSTRAINT fk_UserVote_VoteID
-	  FOREIGN KEY(VoteID)
-		  REFERENCES Vote(VoteID)
+	CONSTRAINT fk_UserVote_UserID FOREIGN KEY(UserID)
+	    REFERENCES User(UserID)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL,
+	CONSTRAINT fk_UserVote_VoteID FOREIGN KEY(VoteID)
+	    REFERENCES Vote(VoteID)
           ON UPDATE CASCADE
           ON DELETE CASCADE,
-	CONSTRAINT pk_UserVote PRIMARY KEY(UserID, VoteID)
+	CONSTRAINT pk_UserVote UNIQUE (UserID, VoteID)
 );
 
 /*****************************************************************************
@@ -190,7 +214,7 @@ END;
 DROP PROCEDURE IF EXISTS sp_get_all_users;
 CREATE PROCEDURE sp_get_all_users()
 BEGIN
-    SELECT UserID, DisplayName, Password, Language, Status, Role, CreatedAt, LastLoggedIn, UpdatedAt, Pfp
+    SELECT UserID, DisplayName, Password, Language, Status, RoleID, CreatedAt, LastLoggedIn, UpdatedAt, Pfp
     FROM User
     ;
 END;
@@ -202,7 +226,7 @@ CREATE PROCEDURE sp_update_user(
     IN p_DisplayName NVARCHAR(100),
     IN p_Language NVARCHAR(255),
     IN p_Status NVARCHAR(255),
-    IN p_Role NVARCHAR(255),
+    IN p_RoleID NVARCHAR(255),
     IN p_LastLoggedIn DATETIME
 )
 BEGIN
@@ -211,8 +235,21 @@ BEGIN
         DisplayName =  p_DisplayName,
         Language =  p_Language,
         Status = p_Status,
-        Role = p_Role,
+        RoleID = p_RoleID,
         LastLoggedIn = p_LastLoggedIn
+    WHERE UserID = p_UserID
+    ;
+END;
+
+/* UPDATE USER PASSWORD */
+DROP PROCEDURE IF EXISTS sp_update_user_password;
+CREATE PROCEDURE sp_update_user_password(
+    IN p_UserID NVARCHAR(255),
+    IN p_Password NVARCHAR(255)
+)
+BEGIN
+    UPDATE User
+    SET Password = p_Password
     WHERE UserID = p_UserID
     ;
 END;
@@ -235,7 +272,7 @@ CREATE PROCEDURE sp_get_user(
 )
 BEGIN
     SELECT 	UserID, Password, DisplayName, Language, Status,
-			Role, CreatedAt, LastLoggedIn, UpdatedAt, Pfp
+			RoleID, CreatedAt, LastLoggedIn, UpdatedAt, Pfp
 	FROM User
 	WHERE UserID = p_UserID
     ;
@@ -248,11 +285,45 @@ CREATE PROCEDURE sp_get_user_by_displayname(
 )
 BEGIN
     SELECT 	UserID, Password, DisplayName, Language, Status,
-              Role, CreatedAt, LastLoggedIn, UpdatedAt, Pfp
+              RoleID, CreatedAt, LastLoggedIn, UpdatedAt, Pfp
     FROM User
     WHERE DisplayName = p_DisplayName
     ;
 END;
+
+/*-----------------------------------PASSWORDRESET------------------------------------*/
+DROP PROCEDURE IF EXISTS sp_get_password_reset;
+CREATE PROCEDURE sp_get_password_reset(
+    IN p_token NVARCHAR(255)
+)
+BEGIN
+    SELECT ResetID, UserID, CreatedAt
+    FROM PasswordReset
+    WHERE token = p_token
+    ;
+END;
+
+DROP PROCEDURE IF EXISTS sp_add_password_reset;
+CREATE PROCEDURE sp_add_password_reset(
+    IN p_email nvarchar(255), IN p_token nvarchar(255)
+)
+BEGIN
+    -- Delete any previous password_reset
+    DELETE FROM PasswordReset WHERE UserID = p_email;
+    -- Create a new password_reset
+    INSERT INTO PasswordReset (UserID, Token) VALUES (p_email, p_token)
+    ;
+END;
+
+DROP PROCEDURE IF EXISTS sp_delete_password_reset;
+CREATE PROCEDURE sp_delete_password_reset(
+    IN p_email nvarchar(255)
+)
+BEGIN
+    DELETE FROM PasswordReset WHERE UserID = p_email
+    ;
+END;
+
 
 /*-----------------------------------2FACODE------------------------------------*/
 
@@ -301,7 +372,7 @@ CREATE PROCEDURE sp_insert_build(
 )
 BEGIN
     INSERT INTO Build
-        (BuildID, UserID, Image, WorldID, BuildType, DateBuilt, Coordinates, Description)
+        (BuildID, UserID, Image, WorldID, BuildTypeID, DateBuilt, Coordinates, Description)
     VALUES
         (p_BuildID, p_UserID, p_Image, p_WorldID, p_BuildType, p_DateBuilt, p_Coordinates, p_Description)
     ;
@@ -322,7 +393,7 @@ BEGIN
     UPDATE Build
     SET Image = p_Image,
         WorldID = p_WorldID,
-        BuildType = p_BuildType,
+        BuildTypeID = p_BuildType,
         DateBuilt = p_DateBuilt,
         Coordinates = p_Coordinates,
         Description = p_Description
@@ -352,16 +423,16 @@ CREATE PROCEDURE sp_get_builds(
     IN p_UserDisplayName NVARCHAR(255)
 )
 BEGIN
-    SELECT BuildID, Image, DateBuilt, Coordinates, b.CreatedAt, b.Description AS 'build_description', u.UserID, u.DisplayName, u.Pfp, w.WorldID, w.DateStarted, w.Description AS 'world_description', bt.BuildType, bt.Description AS 'buildtype_description'
+    SELECT BuildID, Image, DateBuilt, Coordinates, b.CreatedAt, b.Description AS 'build_description', u.UserID, u.DisplayName, u.Pfp, w.WorldID, w.DateStarted, w.Description AS 'world_description', bt.BuildTypeID, bt.Description AS 'buildtype_description'
 	FROM Build AS b
 	INNER JOIN User AS u ON u.UserID = b.UserID
 	INNER JOIN World AS w ON b.WorldID = w.WorldID
-	INNER JOIN BuildType AS bt ON b.BuildType = bt.BuildType
+	INNER JOIN BuildType AS bt ON b.BuildTypeID = bt.BuildTypeID
     WHERE (
         IF(p_WorldID <> '', p_WorldID LIKE CONCAT('%', b.WorldID, '%'), TRUE)
     )
     AND (
-        IF(p_BuildType <> '', p_BuildType LIKE CONCAT('%', b.BuildType, '%'), TRUE)
+        IF(p_BuildType <> '', p_BuildType LIKE CONCAT('%', b.BuildTypeID, '%'), TRUE)
     )
     AND (
         IF(p_UserDisplayName <> '', p_UserDisplayName LIKE CONCAT('%', u.DisplayName, '%'), TRUE)
@@ -376,7 +447,7 @@ CREATE PROCEDURE sp_get_build(
 	IN p_BuildID NVARCHAR(100)
 )
 BEGIN
-    SELECT BuildID, UserID, Image, WorldID, BuildType, DateBuilt, Coordinates, CreatedAt, Description
+    SELECT BuildID, UserID, Image, WorldID, BuildTypeID, DateBuilt, Coordinates, CreatedAt, Description
     FROM Build
     WHERE BuildID = p_BuildID
     ;
@@ -452,38 +523,39 @@ END;
 /* INSERT BuildType */
 DROP PROCEDURE IF EXISTS sp_insert_buildtype;
 CREATE PROCEDURE sp_insert_buildtype(
-    IN p_BuildType NVARCHAR(255),
+    IN p_BuildTypeID NVARCHAR(255),
     IN p_Description TEXT
 )
 BEGIN
     INSERT INTO BuildType
-        (BuildType, Description)
+        (BuildTypeID, Description)
     VALUES
-        (p_BuildType, p_Description)
+        (p_BuildTypeID, p_Description)
     ;
 END;
 
 /* UPDATE BuildType */
 DROP PROCEDURE IF EXISTS sp_update_buildtype;
 CREATE PROCEDURE sp_update_buildtype(
-    IN p_BuildType NVARCHAR(255),
+    IN p_BuildTypeID NVARCHAR(255),
     IN p_Description TEXT
 )
 BEGIN
     UPDATE BuildType
-    SET Description = p_Description
-    WHERE BuildType = p_BuildType
+    SET BuildTypeID = p_BuildTypeID,
+        Description = p_Description
+    WHERE BuildTypeID = p_BuildTypeID
     ;
 END;
 
 /* DELETE BuildType */
 DROP PROCEDURE IF EXISTS sp_delete_buildtype;
 CREATE PROCEDURE sp_delete_buildtype(
-    IN p_BuildType NVARCHAR(255)
+    IN p_BuildTypeID NVARCHAR(255)
 )
 BEGIN
     DELETE FROM BuildType
-    WHERE BuildType = p_BuildType
+    WHERE BuildTypeID = p_BuildTypeID
     ;
 END;
 
@@ -491,7 +563,7 @@ END;
 DROP PROCEDURE IF EXISTS sp_get_buildtypes;
 CREATE PROCEDURE sp_get_buildtypes()
 BEGIN
-    SELECT BuildType, Description
+    SELECT BuildTypeID, Description
     FROM BuildType
     ;
 END;
@@ -499,12 +571,12 @@ END;
 /* GET BuildType */
 DROP PROCEDURE IF EXISTS sp_get_buildtype;
 CREATE PROCEDURE sp_get_buildtype(
-    IN p_BuildType NVARCHAR(255)
+    IN p_BuildTypeID NVARCHAR(255)
 )
 BEGIN
-    SELECT BuildType, Description
+    SELECT BuildTypeID, Description
     FROM BuildType
-    WHERE BuildType = p_BuildType
+    WHERE BuildTypeID = p_BuildTypeID
     ;
 END;
 
@@ -761,19 +833,19 @@ END;
 					            TEST RECORDS
 *****************************************************************************/
 
-INSERT INTO Role (Role) VALUE ('user');
-INSERT INTO Role (Role) VALUE ('moderator');
-INSERT INTO Role (Role) VALUE ('admin');
+INSERT INTO Role (RoleID) VALUE ('user');
+INSERT INTO Role (RoleID) VALUE ('moderator');
+INSERT INTO Role (RoleID) VALUE ('admin');
 
-INSERT INTO BuildType (BuildType, Description) VALUES ('Sky Scraper', 'Very tall Build.');
-INSERT INTO BuildType (BuildType, Description) VALUES ('Capitol', 'An elegant government Build where congressional hearings are sometimes held.');
-INSERT INTO BuildType (BuildType, Description) VALUES ('Cathedral', 'Religious Build of great stature');
-INSERT INTO BuildType (BuildType, Description) VALUES ('Mega-build', 'Huge Builds that take forever to build.');
-INSERT INTO BuildType (BuildType, Description) VALUES ('Shop', 'Place to buy and/or sell goods.');
+INSERT INTO BuildType (BuildTypeID, Description) VALUES ('Sky Scraper', 'Very tall Build.');
+INSERT INTO BuildType (BuildTypeID, Description) VALUES ('Capitol', 'An elegant government Build where congressional hearings are sometimes held.');
+INSERT INTO BuildType (BuildTypeID, Description) VALUES ('Cathedral', 'Religious Build of great stature');
+INSERT INTO BuildType (BuildTypeID, Description) VALUES ('Mega-build', 'Huge Builds that take forever to build.');
+INSERT INTO BuildType (BuildTypeID, Description) VALUES ('Shop', 'Place to buy and/or sell goods.');
 
 INSERT INTO World (WorldID, DateStarted, Description) VALUES ('No Go Outside', '2020-5-11', 'Built in the No Go Outside world');
 INSERT INTO World (WorldID, DateStarted, Description) VALUES ('SummerSMP2022', '2022-6-18', 'Built in the SummerSMP2022 world');
 
-# INSERT INTO User (UserID, DisplayName, Password, Status, Role) VALUES ('jared.harvey10@gmail.com', 'Jared Harvey', '$2a$12$ChtjH38V8VqFtkJNUPK8Y.khnWXhwzyeBDVZlDqwUrR.wnBZhy51e', 'active', 'admin');
+INSERT INTO User (UserID, DisplayName, Password, Status, RoleID) VALUES ('jared.harvey10@gmail.com', 'Jared Harvey', '$2a$12$ChtjH38V8VqFtkJNUPK8Y.khnWXhwzyeBDVZlDqwUrR.wnBZhy51e', 'active', 'admin');
 #
 # INSERT INTO Build (BuildID, UserID, WorldID, BuildType, Description) VALUES ('Test Build', 'jared.harvey10@gmail.com', 'SummerSMP2022', 'Cathedral', 'beansbeansbeansbeansbeans');

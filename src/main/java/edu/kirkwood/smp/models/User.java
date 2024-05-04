@@ -3,6 +3,7 @@ package edu.kirkwood.smp.models;
 import edu.kirkwood.shared.Validators;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.regex.Matcher;
 
 public class User {
@@ -137,4 +138,17 @@ public class User {
     public void setBase64Pfp(String base64Pfp) {
         Base64Pfp = base64Pfp;
     }
+
+    public Date getCreatedAtDate() {
+        return Date.from(CreatedAt);
+    }
+
+    public Date getLastLoggedInDate() {
+        return Date.from(LastLoggedIn);
+    }
+
+    public Date getUpdatedAtDate() {
+        return Date.from(UpdatedAt);
+    }
+
 }

@@ -1,5 +1,5 @@
-<%@include file="/WEB-INF/learnx/top.jsp"%>
-<main>
+<%@include file="/WEB-INF/smp/top.jsp"%>
+<main style="margin-top: 75px;">
     <section class="p-0 d-flex align-items-center position-relative overflow-hidden">
         <div class="container-fluid">
             <div class="row">
@@ -10,10 +10,10 @@
                             <p class="lead mb-4">Enter your email address to reset your password</p>
 
                             <!-- Flash Message -->
-                            <%@ include file="/WEB-INF/learnx/flash-message.jsp"%>
+                            <%@ include file="/WEB-INF/smp/flash-message.jsp"%>
 
                             <!-- Form START -->
-                            <form method="post" action="${appURL}/password-reset">
+                            <form method="post" action="${appURL}/smp-password-reset">
                                 <!-- Email -->
                                 <div class="mb-4">
                                     <label for="inputEmail1" class="form-label">Email address *</label>
@@ -25,7 +25,7 @@
                                 <!-- Button -->
                                 <div class="align-items-center mt-0">
                                     <div class="d-grid">
-                                        <button class="btn btn-orange mb-0" type="submit">Submit</button>
+                                        <button class="btn btn-primary mb-0" type="submit">Submit</button>
                                     </div>
                                 </div>
                             </form>
@@ -33,7 +33,7 @@
 
                             <!-- Sign in link -->
                             <div class="mt-4 text-center">
-                                <span><a href="${appURL}/login">Back to login</a></span>
+                                <span><a href="${appURL}/smp-login">Back to login</a></span>
                             </div>
                         </div>
                     </div>
@@ -42,4 +42,4 @@
         </div>
     </section>
 </main>
-<%@include file="/WEB-INF/learnx/bottom.jsp"%>
+<%@include file="/WEB-INF/smp/bottom.jsp"%>

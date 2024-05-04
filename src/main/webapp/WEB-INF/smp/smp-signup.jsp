@@ -69,7 +69,7 @@
 
                                 <!-- Profile Picture -->
                                 <div class="mb-4">
-                                    <label for="image" class="form-label">Profile Picture *</label>
+                                    <label for="image" class="form-label">Profile Picture</label>
                                     <div class="input-group">
                                         <input type="file" accept="image/png, image/jpeg" class="form-control <c:if test="${not empty results.pfpError}">is-invalid</c:if>" id="image" name="pfp" value="${results.pfp}">
                                         <c:if test="${not empty results.pfpError}">

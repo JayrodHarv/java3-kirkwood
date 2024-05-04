@@ -10,10 +10,10 @@
               <p class="lead mb-4">Please enter your new password.</p>
 
               <!-- Flash Message -->
-              <%@include file="flash-message.jsp"%>
+              <%@ include file="/WEB-INF/learnx/flash-message.jsp"%>
 
               <!-- Form START -->
-              <form method="post" action="new-password">
+              <form method="post" action="${appURL}/new-password">
                 <!-- Password -->
                 <div class="mb-4">
                   <label for="inputPassword1" class="form-label">Password *</label>

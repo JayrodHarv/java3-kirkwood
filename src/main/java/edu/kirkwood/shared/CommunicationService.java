@@ -70,5 +70,22 @@ public class CommunicationService {
         return sendEmail(email, subject, message);
     }
 
+    public static boolean sendPasswordResetEmailSMP(String email, String token, HttpServletRequest req) {
+        // Send user and email
+        String subject = "No Go Outside Password Reset";
+        String message = "<h2>Reset Your Password</h2>";
+        message += "<p>Please use this link to securely reset your password. This link will expire in 30 minutes.</p>";
+        String appURL = "";
+        if(req.isSecure()) {
+            appURL = req.getServletContext().getInitParameter("appURLCloud");
+        } else {
+            appURL = req.getServletContext().getInitParameter("appURLLocal");
+        }
+        String fullURL = String.format("%s/smp-new-password?token=%s", appURL, token);
+        message += String.format("<p><a href=\"%s\" target=\"_blank\">%s</a></p>", fullURL, fullURL);
+        message += "<p>If you did not request to reset your password, you can ignore this message. Your password will not be changed.</p>";
+        return sendEmail(email, subject, message);
+    }
+
 }
 

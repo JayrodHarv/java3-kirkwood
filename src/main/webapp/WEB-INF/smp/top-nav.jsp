@@ -44,7 +44,7 @@
             <div class="text-end">
                 <c:choose>
                     <c:when test="${empty activeSMPUser}">
-                        <a href="${appURL}/smp-login" class="btn btn-outline-primary me-2">Login</a>
+                        <a href="${appURL}/smp-login" class="btn btn-outline-primary me-2">Sign In</a>
                         <a href="${appURL}/smp-signup" class="btn btn-primary">Sign Up</a>
                     </c:when>
                     <c:otherwise>
