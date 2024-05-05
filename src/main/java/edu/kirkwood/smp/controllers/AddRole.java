@@ -15,44 +15,32 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/edit-build-type")
-public class EditBuildType extends HttpServlet {
+@WebServlet("/add-role")
+public class AddRole extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
         if(userFromSession == null || !userFromSession.getStatus().equals("active")) {
             session.setAttribute("flashMessageWarning", "You must be logged in to view this page.");
-            resp.sendRedirect("smp-login?redirect=edit-build-type");
+            resp.sendRedirect("smp-login?redirect=add-roles");
             return;
         }
         Role userRole = userFromSession.getRole();
-        if(!userRole.canEditBuildTypes()) {
+        if(!userRole.canAddRoles()) {
             session.setAttribute("flashMessageWarning", "You are not allowed to view this page. Contact website owner to gain this power.");
             resp.sendRedirect("smp");
             return;
         }
-        String buildTypeID = req.getParameter("buildTypeID");
 
-        Map<String, String> results = new HashMap<>();
-
-        try {
-            BuildType buildType = BuildTypeDAO.get(buildTypeID);
-            results.put("buildTypeID", buildType.getBuildTypeID());
-            results.put("description", buildType.getDescription());
-        } catch(Exception e) {
-            session.setAttribute("flashMessageError", "Something went wrong while retrieving build type data: " + e.getMessage());
-        }
-
-        req.setAttribute("results", results);
-        req.setAttribute("pageTitle", "Edit Build Type");
-        req.getRequestDispatcher("WEB-INF/smp/edit-build-type.jsp").forward(req, resp);
+        req.setAttribute("pageTitle", "Add Role");
+        req.getRequestDispatcher("WEB-INF/smp/add-role.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        String buildTypeID = req.getParameter("buildTypeID");
+        String buildTypeID = req.getParameter("roleID");
         String description = req.getParameter("description");
 
         Map<String, String> results = new HashMap<>();
@@ -71,12 +59,12 @@ public class EditBuildType extends HttpServlet {
         if(!results.containsKey("buildTypeError") && !results.containsKey("descriptionError")) {
             try {
                 BuildType buildType = new BuildType(buildTypeID, description);
-                if(BuildTypeDAO.edit(buildType)) {
-                    session.setAttribute("flashMessageSuccess", "Successfully made changes on build type: " + buildTypeID);
+                if(BuildTypeDAO.add(buildType)) {
+                    session.setAttribute("flashMessageSuccess", "Successfully added new build type: " + buildTypeID);
                     resp.sendRedirect("smp-build-types");
                     return;
                 } else {
-                    session.setAttribute("flashMessageWarning", "Something went wrong while updating build type. Please try again.");
+                    session.setAttribute("flashMessageWarning", "Something went wrong while adding build type. Please try again.");
                 }
             } catch (Exception ex) {
                 session.setAttribute("flashMessageError", ex.getMessage());
@@ -84,7 +72,7 @@ public class EditBuildType extends HttpServlet {
         }
 
         req.setAttribute("results", results);
-        req.setAttribute("pageTitle", "Edit Build Type");
-        req.getRequestDispatcher("WEB-INF/smp/edit-build-type.jsp").forward(req, resp);
+        req.setAttribute("pageTitle", "Add Build Type");
+        req.getRequestDispatcher("WEB-INF/smp/add-build-type.jsp").forward(req, resp);
     }
 }

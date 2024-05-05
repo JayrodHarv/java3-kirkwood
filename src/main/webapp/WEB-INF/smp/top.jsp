@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <%--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">--%>
 <link rel="stylesheet" type="text/css" href="${appURL}/css/smp/site.css">
-<link rel="stylesheet" type="text/css" href="${appURL}/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${appURL}/css/bootstrap.css">
 <%--<link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet"/>--%>
 <%--<link rel="stylesheet" href="${appURL}/css/loading.css">--%>
 </head>

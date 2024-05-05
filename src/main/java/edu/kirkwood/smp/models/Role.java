@@ -32,10 +32,12 @@ public class Role {
     private boolean CanEditUsers;
     private boolean CanBanUsers;
 
+    private String Description;
+
     public Role() {
     }
 
-    public Role(String roleID, boolean canAddBuilds, boolean canEditAllBuilds, boolean canDeleteAllBuilds, boolean canViewBuildTypes, boolean canAddBuildTypes, boolean canEditBuildTypes, boolean canDeleteBuildTypes, boolean canViewWorlds, boolean canAddWorlds, boolean canEditWorlds, boolean canDeleteWorlds, boolean canViewAllVotes, boolean canAddVotes, boolean canEditAllVotes, boolean canDeleteAllVotes, boolean canViewRoles, boolean canAddRoles, boolean canEditRoles, boolean canDeleteRoles, boolean canViewUsers, boolean canAddUsers, boolean canEditUsers, boolean canBanUsers) {
+    public Role(String roleID, boolean canAddBuilds, boolean canEditAllBuilds, boolean canDeleteAllBuilds, boolean canViewBuildTypes, boolean canAddBuildTypes, boolean canEditBuildTypes, boolean canDeleteBuildTypes, boolean canViewWorlds, boolean canAddWorlds, boolean canEditWorlds, boolean canDeleteWorlds, boolean canViewAllVotes, boolean canAddVotes, boolean canEditAllVotes, boolean canDeleteAllVotes, boolean canViewRoles, boolean canAddRoles, boolean canEditRoles, boolean canDeleteRoles, boolean canViewUsers, boolean canAddUsers, boolean canEditUsers, boolean canBanUsers, String description) {
         RoleID = roleID;
         CanAddBuilds = canAddBuilds;
         CanEditAllBuilds = canEditAllBuilds;
@@ -60,6 +62,7 @@ public class Role {
         CanAddUsers = canAddUsers;
         CanEditUsers = canEditUsers;
         CanBanUsers = canBanUsers;
+        Description = description;
     }
 
     public String getRoleID() {
@@ -252,5 +255,13 @@ public class Role {
 
     public void setCanBanUsers(boolean canBanUsers) {
         CanBanUsers = canBanUsers;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
     }
 }

@@ -28,7 +28,7 @@
                     <td>${world.getDescription()}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="${appURL}/edit-world?worldId=${user.getWorldID()}" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-title="Edit World"><i class="bi bi-pencil-fill"></i></a>
+                            <a href="${appURL}/edit-world?worldID=${world.getWorldID()}" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-title="Edit World"><i class="bi bi-pencil-fill"></i></a>
                             <a class="btn btn-outline-danger" onclick="Confirm('${user.getWorldID()}')" data-bs-toggle="tooltip" data-bs-title="Delete World"><i class="bi bi-trash3-fill"></i></a>
                         </div>
                     </td>

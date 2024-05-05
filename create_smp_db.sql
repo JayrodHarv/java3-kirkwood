@@ -51,6 +51,8 @@ CREATE TABLE Role (
     CanAddUsers BIT NOT NULL DEFAULT 0,
     CanEditUsers BIT NOT NULL DEFAULT 0,
     CanBanUsers BIT NOT NULL DEFAULT 0,
+
+    Description NVARCHAR(255) NOT NULL,
     CONSTRAINT PRIMARY KEY(RoleID)
 );
 
@@ -216,10 +218,230 @@ CREATE TABLE UserVote (
 /*****************************************************************************
 					STORED PROCEDURES / CRUD FUNCTIONS
 *****************************************************************************/
+/*-----------------------------------ROLE------------------------------------*/
+
+/* GET ALL ROLES */
+DROP PROCEDURE IF EXISTS sp_get_all_roles;
+CREATE PROCEDURE sp_get_all_roles()
+BEGIN
+    SELECT RoleID,
+           # Builds
+           CanAddBuilds,
+           CanEditAllBuilds,
+           CanDeleteAllBuilds,
+           # BuildTypes
+           CanViewBuildTypes,
+           CanAddBuildTypes,
+           CanEditBuildTypes,
+           CanDeleteBuildTypes,
+           # Worlds
+           CanViewWorlds,
+           CanAddWorlds,
+           CanEditWorlds,
+           CanDeleteWorlds,
+           # Votes
+           CanViewAllVotes,
+           CanAddVotes,
+           CanEditAllVotes,
+           CanDeleteAllVotes,
+           # Roles
+           CanViewRoles,
+           CanAddRoles,
+           CanEditRoles,
+           CanDeleteRoles,
+           # Users
+           CanViewUsers,
+           CanAddUsers,
+           CanEditUsers,
+           CanBanUsers,
+           Description
+    FROM Role
+    ;
+END;
+
+/* INSERT ROLE */
+DROP PROCEDURE IF EXISTS sp_insert_role;
+CREATE PROCEDURE sp_insert_role(
+    IN p_RoleID NVARCHAR(255),
+    # Builds
+    IN p_CanAddBuilds BIT,
+    IN p_CanEditAllBuilds BIT,
+    IN p_CanDeleteAllBuilds BIT,
+    # BuildTypes
+    IN p_CanViewBuildTypes BIT,
+    IN p_CanAddBuildTypes BIT,
+    IN p_CanEditBuildTypes BIT,
+    IN p_CanDeleteBuildTypes BIT,
+    # Worlds
+    IN p_CanViewWorlds BIT,
+    IN p_CanAddWorlds BIT,
+    IN p_CanEditWorlds BIT,
+    IN p_CanDeleteWorlds BIT,
+    # Votes
+    IN p_CanViewAllVotes BIT,
+    IN p_CanAddVotes BIT,
+    IN p_CanEditAllVotes BIT,
+    IN p_CanDeleteAllVotes BIT,
+    # Roles
+    IN p_CanViewRoles BIT,
+    IN p_CanAddRoles BIT,
+    IN p_CanEditRoles BIT,
+    IN p_CanDeleteRoles BIT,
+    # Users
+    IN p_CanViewUsers BIT,
+    IN p_CanAddUsers BIT,
+    IN p_CanEditUsers BIT,
+    IN p_CanBanUsers BIT,
+    IN p_Description NVARCHAR(255)
+)
+BEGIN
+    INSERT INTO Role (
+        RoleID,
+        # Builds
+        CanAddBuilds,
+        CanEditAllBuilds,
+        CanDeleteAllBuilds,
+        # BuildTypes
+        CanViewBuildTypes,
+        CanAddBuildTypes,
+        CanEditBuildTypes,
+        CanDeleteBuildTypes,
+        # Worlds
+        CanViewWorlds,
+        CanAddWorlds,
+        CanEditWorlds,
+        CanDeleteWorlds,
+        # Votes
+        CanViewAllVotes,
+        CanAddVotes,
+        CanEditAllVotes,
+        CanDeleteAllVotes,
+        # Roles
+        CanViewRoles,
+        CanAddRoles,
+        CanEditRoles,
+        CanDeleteRoles,
+        # Users
+        CanViewUsers,
+        CanAddUsers,
+        CanEditUsers,
+        CanBanUsers,
+
+        Description
+    )
+    VALUES (
+       p_RoleID,
+       # Builds
+       p_CanAddBuilds,
+       p_CanEditAllBuilds,
+       p_CanDeleteAllBuilds,
+       # BuildTypes
+       p_CanViewBuildTypes,
+       p_CanAddBuildTypes,
+       p_CanEditBuildTypes,
+       p_CanDeleteBuildTypes,
+       # Worlds
+       p_CanViewWorlds,
+       p_CanAddWorlds,
+       p_CanEditWorlds,
+       p_CanDeleteWorlds,
+       # Votes
+       p_CanViewAllVotes,
+       p_CanAddVotes,
+       p_CanEditAllVotes,
+       p_CanDeleteAllVotes,
+       # Roles
+       p_CanViewRoles,
+       p_CanAddRoles,
+       p_CanEditRoles,
+       p_CanDeleteRoles,
+       # Users
+       p_CanViewUsers,
+       p_CanAddUsers,
+       p_CanEditUsers,
+       p_CanBanUsers,
+
+       p_Description
+    )
+    ;
+END;
+
+/* UPDATE ROLE */
+DROP PROCEDURE IF EXISTS sp_update_role;
+CREATE PROCEDURE sp_update_role(
+    IN p_RoleID NVARCHAR(255),
+    # Builds
+    IN p_CanAddBuilds BIT,
+    IN p_CanEditAllBuilds BIT,
+    IN p_CanDeleteAllBuilds BIT,
+    # BuildTypes
+    IN p_CanViewBuildTypes BIT,
+    IN p_CanAddBuildTypes BIT,
+    IN p_CanEditBuildTypes BIT,
+    IN p_CanDeleteBuildTypes BIT,
+    # Worlds
+    IN p_CanViewWorlds BIT,
+    IN p_CanAddWorlds BIT,
+    IN p_CanEditWorlds BIT,
+    IN p_CanDeleteWorlds BIT,
+    # Votes
+    IN p_CanViewAllVotes BIT,
+    IN p_CanAddVotes BIT,
+    IN p_CanEditAllVotes BIT,
+    IN p_CanDeleteAllVotes BIT,
+    # Roles
+    IN p_CanViewRoles BIT,
+    IN p_CanAddRoles BIT,
+    IN p_CanEditRoles BIT,
+    IN p_CanDeleteRoles BIT,
+    # Users
+    IN p_CanViewUsers BIT,
+    IN p_CanAddUsers BIT,
+    IN p_CanEditUsers BIT,
+    IN p_CanBanUsers BIT,
+    IN p_Description NVARCHAR(255)
+)
+BEGIN
+    UPDATE Role
+    SET RoleID = p_RoleID,
+        # Builds
+        CanAddBuilds = p_CanAddBuilds,
+        CanEditAllBuilds = p_CanEditAllBuilds,
+        CanDeleteAllBuilds = p_CanDeleteAllBuilds,
+        # BuildTypes
+        CanViewBuildTypes = p_CanViewBuildTypes,
+        CanAddBuildTypes = p_CanAddBuildTypes,
+        CanEditBuildTypes = p_CanEditBuildTypes,
+        CanDeleteBuildTypes = p_CanDeleteBuildTypes,
+        # Worlds
+        CanViewWorlds = p_CanViewWorlds,
+        CanAddWorlds = p_CanAddWorlds,
+        CanEditWorlds = p_CanEditWorlds,
+        CanDeleteWorlds = p_CanDeleteWorlds,
+        # Votes
+        CanViewAllVotes = p_CanViewAllVotes,
+        CanAddVotes = p_CanAddVotes,
+        CanEditAllVotes = p_CanEditAllVotes,
+        CanDeleteAllVotes = p_CanDeleteAllVotes,
+        # Roles
+        CanViewRoles = p_CanViewRoles,
+        CanAddRoles = p_CanAddRoles,
+        CanEditRoles = p_CanEditRoles,
+        CanDeleteRoles = p_CanDeleteRoles,
+        # Users
+        CanViewUsers = p_CanViewUsers,
+        CanAddUsers = p_CanAddUsers,
+        CanEditUsers = p_CanEditUsers,
+        CanBanUsers = p_CanBanUsers,
+
+        Description = p_Description
+    WHERE RoleID = p_RoleID
+    ;
+END;
 
 /*-----------------------------------USER------------------------------------*/
 
-/* GET ALL USER */
+/* GET ALL USERS */
 DROP PROCEDURE IF EXISTS sp_get_all_users;
 CREATE PROCEDURE sp_get_all_users()
 BEGIN
@@ -264,7 +486,9 @@ BEGIN
             r.CanViewUsers,
             r.CanAddUsers,
             r.CanEditUsers,
-            r.CanBanUsers
+            r.CanBanUsers,
+
+            r.Description
     FROM User AS u
     INNER JOIN Role AS r
     ON u.RoleID = r.RoleID
@@ -936,7 +1160,9 @@ INSERT INTO Role (
     CanViewUsers,
     CanAddUsers,
     CanEditUsers,
-    CanBanUsers
+    CanBanUsers,
+
+    Description
 )
 VALUES (
     'User',
@@ -945,7 +1171,8 @@ VALUES (
     0, 0, 0, 0,
     0, 1, 0, 0,
     0, 0, 0, 0,
-    0, 0, 0, 0
+    0, 0, 0, 0,
+    'Normal default user privileges'
 );
 
 INSERT INTO Role (
@@ -978,7 +1205,9 @@ INSERT INTO Role (
     CanViewUsers,
     CanAddUsers,
     CanEditUsers,
-    CanBanUsers
+    CanBanUsers,
+
+    Description
 )
 VALUES (
     'Admin',
@@ -987,7 +1216,8 @@ VALUES (
     1, 1, 1, 1,
     1, 1, 1, 1,
     1, 1, 1, 1,
-    1, 1, 1, 1
+    1, 1, 1, 1,
+    'Super user that can do anything'
 );
 
 INSERT INTO BuildType (BuildTypeID, Description) VALUES ('Sky Scraper', 'Very tall Build.');
@@ -998,7 +1228,3 @@ INSERT INTO BuildType (BuildTypeID, Description) VALUES ('Shop', 'Place to buy a
 
 INSERT INTO World (WorldID, DateStarted, Description) VALUES ('No Go Outside', '2020-5-11', 'Built in the No Go Outside world');
 INSERT INTO World (WorldID, DateStarted, Description) VALUES ('SummerSMP2022', '2022-6-18', 'Built in the SummerSMP2022 world');
-
-INSERT INTO User (UserID, DisplayName, Password, Status, RoleID) VALUES ('jared.harvey10@gmail.com', 'Jared Harvey', '$2a$12$ChtjH38V8VqFtkJNUPK8Y.khnWXhwzyeBDVZlDqwUrR.wnBZhy51e', 'active', 'admin');
-#
-# INSERT INTO Build (BuildID, UserID, WorldID, BuildType, Description) VALUES ('Test Build', 'jared.harvey10@gmail.com', 'SummerSMP2022', 'Cathedral', 'beansbeansbeansbeansbeans');

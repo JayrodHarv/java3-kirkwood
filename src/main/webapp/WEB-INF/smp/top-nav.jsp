@@ -37,20 +37,24 @@
 
                 <c:if test="${sessionScope.activeSMPUser.getRole().canViewUsers()
                                 or sessionScope.activeSMPUser.getRole().canViewWorlds()
-                                or sessionScope.activeSMPUser.getRole().canViewBuildTypes()}">
+                                or sessionScope.activeSMPUser.getRole().canViewBuildTypes()
+                                or sessionScope.activeSMPUser.getRole().canViewRoles()}">
 <%--                        <li class="nav-item"><a href="${appURL}/smp-admin-dashboard" class="nav-link px-2 <c:if test="${pageTitle eq 'Admin Dashboard'}">link-light</c:if>">Admin Dashboard</a></li>--%>
                     <li class="nav-item dropdown">
                         <a class="nav-link nav-link px-2 dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Manage</a>
                         <ul class="dropdown-menu dropdown-menu-dark">
-                            <c:if test="${sessionScope.activeSMPUser.getRole().canViewUsers()}">
-                                <li><a class="dropdown-item" href="${appURL}/smp-users">Users</a></li>
-                            </c:if>
-                            <c:if test="${sessionScope.activeSMPUser.getRole().canViewWorlds()}">
-                                <li><a class="dropdown-item" href="${appURL}/smp-worlds">Worlds</a></li>
-                            </c:if>
-                            <c:if test="${sessionScope.activeSMPUser.getRole().canViewBuildTypes()}">
-                                <li><a class="dropdown-item" href="${appURL}/smp-build-types">Build Types</a></li>
-                            </c:if>
+                          <c:if test="${sessionScope.activeSMPUser.getRole().canViewUsers()}">
+                            <li><a class="dropdown-item" href="${appURL}/smp-users">Users</a></li>
+                          </c:if>
+                          <c:if test="${sessionScope.activeSMPUser.getRole().canViewRoles()}">
+                            <li><a class="dropdown-item" href="${appURL}/smp-roles">Roles</a></li>
+                          </c:if>
+                          <c:if test="${sessionScope.activeSMPUser.getRole().canViewWorlds()}">
+                            <li><a class="dropdown-item" href="${appURL}/smp-worlds">Worlds</a></li>
+                          </c:if>
+                          <c:if test="${sessionScope.activeSMPUser.getRole().canViewBuildTypes()}">
+                            <li><a class="dropdown-item" href="${appURL}/smp-build-types">Build Types</a></li>
+                          </c:if>
                         </ul>
                     </li>
                 </c:if>

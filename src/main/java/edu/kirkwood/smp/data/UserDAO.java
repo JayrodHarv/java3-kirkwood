@@ -150,6 +150,8 @@ public class UserDAO {
                 role.setCanEditUsers(resultSet.getBoolean("CanEditUsers"));
                 role.setCanBanUsers(resultSet.getBoolean("CanBanUsers"));
 
+                role.setDescription(resultSet.getString("Description"));
+
                 user = new UserVM(UserID, DisplayName, Language, Status, role, CreatedAt, LastLoggedIn, UpdatedAt, Pfp);
                 user.setBase64Pfp(base64Image);
             }
