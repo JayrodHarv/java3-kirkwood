@@ -3,10 +3,7 @@ package edu.kirkwood.smp.controllers;
 import edu.kirkwood.smp.data.BuildDAO;
 import edu.kirkwood.smp.data.BuildTypeDAO;
 import edu.kirkwood.smp.data.WorldDAO;
-import edu.kirkwood.smp.models.Build;
-import edu.kirkwood.smp.models.BuildType;
-import edu.kirkwood.smp.models.User;
-import edu.kirkwood.smp.models.World;
+import edu.kirkwood.smp.models.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -32,7 +29,7 @@ public class EditBuild extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User userFromSession = (User)session.getAttribute("activeSMPUser");
+        UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
         if(userFromSession == null || !userFromSession.getStatus().equals("active")) {
             session.setAttribute("flashMessageWarning", "You must be logged in to add a new building.");
             resp.sendRedirect("smp-login?redirect=edit-build");
@@ -87,7 +84,7 @@ public class EditBuild extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User userFromSession = (User)session.getAttribute("activeSMPUser");
+        UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
 
         Map<String, String> results = new HashMap<>();
 
@@ -145,7 +142,7 @@ public class EditBuild extends HttpServlet {
         String coordinates = null;
 
         if(!xCoord.isEmpty() || !yCoord.isEmpty() || !zCoord.isEmpty()) { // if one isn't null
-            if(xCoord.isEmpty() || yCoord.isEmpty() || zCoord.isEmpty()) { // if one isn't null but one is
+            if(xCoord.isEmpty() || yCoord.isEmpty() || zCoord.isEmpty()) { // if one isn't null but another one is
                 results.put("coordError", "Either leave blank for fill out all values.");
             } else {
                 coordinates = xCoord + ", " + yCoord + ", " + zCoord;

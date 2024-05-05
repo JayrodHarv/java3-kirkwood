@@ -197,23 +197,25 @@ public class UserDAO {
         return results;
     }
 
-    public static void update(User user) {
+    public static boolean update(User user) {
         try (Connection connection = getConnection()) {
             if (connection != null) {
-                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_user(?, ?, ?, ?, ?, ?)}")) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_user(?, ?, ?, ?, ?, ?,?)}")) {
                     statement.setString(1, user.getUserID());
                     statement.setString(2, user.getDisplayName());
-                    statement.setString(3, user.getLanguage());
-                    statement.setString(4, user.getStatus());
-                    statement.setString(5, user.getRole());
-                    statement.setTimestamp(6, Timestamp.from(user.getLastLoggedIn()));
-                    statement.executeUpdate();
-                    // TODO: Return the rows affected and throw exception if user not updated
+                    statement.setBlob(3, new SerialBlob(user.getPfp()));
+                    statement.setString(4, user.getLanguage());
+                    statement.setString(5, user.getStatus());
+                    statement.setString(6, user.getRole());
+                    statement.setTimestamp(7, Timestamp.from(user.getLastLoggedIn()));
+                    int rows = statement.executeUpdate();
+                    return rows > 0;
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return false;
     }
 
     public static boolean passwordReset(String email, HttpServletRequest req) {

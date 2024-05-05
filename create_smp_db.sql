@@ -535,6 +535,7 @@ DROP PROCEDURE IF EXISTS sp_update_user;
 CREATE PROCEDURE sp_update_user(
     IN p_UserID NVARCHAR(255),
     IN p_DisplayName NVARCHAR(100),
+    IN p_Pfp LONGBLOB,
     IN p_Language NVARCHAR(255),
     IN p_Status NVARCHAR(255),
     IN p_RoleID NVARCHAR(255),
@@ -543,6 +544,7 @@ CREATE PROCEDURE sp_update_user(
 BEGIN
     UPDATE User
     SET DisplayName =  p_DisplayName,
+        Pfp = p_Pfp,
         Language =  p_Language,
         Status = p_Status,
         RoleID = p_RoleID,

@@ -30,17 +30,17 @@
             <div class="accordion-body">
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canAddBuilds" name="canAddBuilds">
+                <input class="form-check-input" type="checkbox" role="switch" id="canAddBuilds" name="canAddBuilds" value="yes">
                 <label class="form-check-label" for="canAddBuilds">Can Add Builds</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canEditAllBuilds" name="canEditAllBuilds">
+                <input class="form-check-input" type="checkbox" role="switch" id="canEditAllBuilds" name="canEditAllBuilds" value="yes">
                 <label class="form-check-label" for="canEditAllBuilds">Can Edit All Builds</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canDeleteAllBuilds" name="canDeleteAllBuilds">
+                <input class="form-check-input" type="checkbox" role="switch" id="canDeleteAllBuilds" name="canDeleteAllBuilds" value="yes">
                 <label class="form-check-label" for="canDeleteAllBuilds">Can Delete All Builds</label>
               </div>
 
@@ -57,22 +57,22 @@
             <div class="accordion-body">
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canViewBuildTypes" name="canViewBuildTypes">
+                <input class="form-check-input" type="checkbox" role="switch" id="canViewBuildTypes" name="canViewBuildTypes" value="yes">
                 <label class="form-check-label" for="canViewBuildTypes">Can View Build Types</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canAddBuildTypes" name="canAddBuildTypes">
+                <input class="form-check-input" type="checkbox" role="switch" id="canAddBuildTypes" name="canAddBuildTypes" value="yes">
                 <label class="form-check-label" for="canAddBuildTypes">Can Add Build Types</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canEditBuildTypes" name="canEditBuildTypes">
+                <input class="form-check-input" type="checkbox" role="switch" id="canEditBuildTypes" name="canEditBuildTypes" value="yes">
                 <label class="form-check-label" for="canEditBuildTypes">Can Edit Build Types</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canDeleteBuildTypes" name="canDeleteBuildTypes">
+                <input class="form-check-input" type="checkbox" role="switch" id="canDeleteBuildTypes" name="canDeleteBuildTypes" value="yes">
                 <label class="form-check-label" for="canDeleteBuildTypes">Can Delete Build Types</label>
               </div>
 
@@ -89,22 +89,22 @@
             <div class="accordion-body">
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canViewWorlds" name="canViewWorlds">
+                <input class="form-check-input" type="checkbox" role="switch" id="canViewWorlds" name="canViewWorlds" value="yes">
                 <label class="form-check-label" for="canViewWorlds">Can View Worlds</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canAddWorlds" name="canAddWorlds">
+                <input class="form-check-input" type="checkbox" role="switch" id="canAddWorlds" name="canAddWorlds" value="yes">
                 <label class="form-check-label" for="canAddWorlds">Can Add Worlds</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canEditWorlds" name="canEditWorlds">
+                <input class="form-check-input" type="checkbox" role="switch" id="canEditWorlds" name="canEditWorlds" value="yes">
                 <label class="form-check-label" for="canEditWorlds">Can Edit Worlds</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canDeleteWorlds" name="canDeleteWorlds">
+                <input class="form-check-input" type="checkbox" role="switch" id="canDeleteWorlds" name="canDeleteWorlds" value="yes">
                 <label class="form-check-label" for="canDeleteWorlds">Can Delete Worlds</label>
               </div>
 
@@ -121,22 +121,22 @@
             <div class="accordion-body">
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canViewAllVotes" name="canViewAllVotes">
+                <input class="form-check-input" type="checkbox" role="switch" id="canViewAllVotes" name="canViewAllVotes" value="yes">
                 <label class="form-check-label" for="canViewAllVotes">Can View All Votes</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canAddVotes" name="canAddVotes">
+                <input class="form-check-input" type="checkbox" role="switch" id="canAddVotes" name="canAddVotes" value="yes">
                 <label class="form-check-label" for="canAddVotes">Can Add Votes</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canEditAllVotes" name="canEditAllVotes">
+                <input class="form-check-input" type="checkbox" role="switch" id="canEditAllVotes" name="canEditAllVotes" value="yes">
                 <label class="form-check-label" for="canEditAllVotes">Can Edit All Votes</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canDeleteAllVotes" name="canDeleteAllVotes">
+                <input class="form-check-input" type="checkbox" role="switch" id="canDeleteAllVotes" name="canDeleteAllVotes" value="yes">
                 <label class="form-check-label" for="canDeleteAllVotes">Can Delete All Votes</label>
               </div>
 
@@ -153,22 +153,22 @@
             <div class="accordion-body">
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canViewRoles" name="canViewRoles">
+                <input class="form-check-input" type="checkbox" role="switch" id="canViewRoles" name="canViewRoles" value="yes">
                 <label class="form-check-label" for="canViewRoles">Can View Roles</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canAddRoles" name="canAddRoles">
+                <input class="form-check-input" type="checkbox" role="switch" id="canAddRoles" name="canAddRoles" value="yes">
                 <label class="form-check-label" for="canAddRoles">Can Add Roles</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canEditRoles" name="canEditRoles">
+                <input class="form-check-input" type="checkbox" role="switch" id="canEditRoles" name="canEditRoles" value="yes">
                 <label class="form-check-label" for="canEditRoles">Can Edit Roles</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canDeleteRoles" name="canDeleteRoles">
+                <input class="form-check-input" type="checkbox" role="switch" id="canDeleteRoles" name="canDeleteRoles" value="yes">
                 <label class="form-check-label" for="canDeleteRoles">Can Delete Roles</label>
               </div>
 
@@ -185,22 +185,22 @@
             <div class="accordion-body">
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canViewUsers" name="canViewUsers">
+                <input class="form-check-input" type="checkbox" role="switch" id="canViewUsers" name="canViewUsers" value="yes">
                 <label class="form-check-label" for="canViewUsers">Can View Users</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canAddUsers" name="canAddUsers">
+                <input class="form-check-input" type="checkbox" role="switch" id="canAddUsers" name="canAddUsers" value="yes">
                 <label class="form-check-label" for="canAddUsers">Can Add Users</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canEditUsers" name="canEditUsers">
+                <input class="form-check-input" type="checkbox" role="switch" id="canEditUsers" name="canEditUsers" value="yes">
                 <label class="form-check-label" for="canEditUsers">Can Edit Users</label>
               </div>
 
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="canBanUsers" name="canBanUsers">
+                <input class="form-check-input" type="checkbox" role="switch" id="canBanUsers" name="canBanUsers" value="yes">
                 <label class="form-check-label" for="canBanUsers">Can Ban Users</label>
               </div>
 
@@ -220,7 +220,7 @@
     </div>
     <div class="d-flex justify-content-between p-0">
       <div class="btn btn-group p-0">
-        <a href="${appURL}/smp-users" class="btn btn-secondary">Back</a>
+        <a href="${appURL}/smp-roles" class="btn btn-secondary">Back</a>
         <button type="submit" class="btn btn-primary">Add Role</button>
       </div>
       <p class="form-text text-end">* Indicates required field</p>
