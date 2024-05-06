@@ -32,7 +32,7 @@ public class Signup extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User userFromSession = (User)session.getAttribute("activeSMPUser");
+        UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
         if(userFromSession != null) {
             session.setAttribute("flashMessageWarning", "You are already logged in. Please sign out in order to create another account.");
             resp.sendRedirect("smp");

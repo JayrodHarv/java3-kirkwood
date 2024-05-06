@@ -218,6 +218,20 @@ public class UserDAO {
         return false;
     }
 
+    public static boolean delete(String userID) {
+        try (Connection connection = getConnection()) {
+            if (connection != null) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_delete_user(?)}")) {
+                    statement.setString(1, userID);
+                    return statement.execute();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
     public static boolean passwordReset(String email, HttpServletRequest req) {
         User userFromDB = get(email);
         if(userFromDB != null) {

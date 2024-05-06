@@ -58,7 +58,7 @@ public class BuildDAO {
                     World world = new World(WorldID, WorldDateStarted, WorldDescription);
 
                     // BuildType
-                    String BuildTypeID = resultSet.getString("BuildType");
+                    String BuildTypeID = resultSet.getString("BuildTypeID");
                     String BuildTypeDescription = resultSet.getString("buildtype_description");
                     BuildType buildType = new BuildType(BuildTypeID, BuildTypeDescription);
 
@@ -97,7 +97,7 @@ public class BuildDAO {
                 String base64Image = ImageHelper.getBase64Image(imageType, Image);
 
                 String WorldID = resultSet.getString("WorldID");
-                String BuildType = resultSet.getString("BuildType");
+                String BuildType = resultSet.getString("BuildTypeID");
                 Date DateBuilt = resultSet.getDate("DateBuilt");
                 String Coordinates = resultSet.getString("Coordinates");
                 Instant CreatedAt = resultSet.getTimestamp("CreatedAt").toInstant();

@@ -37,9 +37,39 @@
             </div>
 
             <div class="btn btn-group p-0">
+                <a onclick="Confirm('${results.userID}')" class="btn btn-danger">Delete Profile</a>
                 <button type="submit" class="btn btn-primary">Save changes</button>
             </div>
         </form>
     </div>
+
+    <!-- Modal -->
+    <div class="modal" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Your Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete your profile?</p>
+                </div>
+                <form action="${appURL}/smp-delete-profile" method="POST">
+                    <input type="hidden" id="userID" name="userID"/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Confirm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function Confirm(id) {
+            $('#userID').val(id);
+            $('#deleteModal').modal('show');
+        }
+    </script>
 </main>
 <%@include file="/WEB-INF/smp/bottom.jsp" %>

@@ -2,6 +2,7 @@ package edu.kirkwood.smp.controllers;
 
 import edu.kirkwood.smp.data.VoteDAO;
 import edu.kirkwood.smp.models.User;
+import edu.kirkwood.smp.models.UserVM;
 import edu.kirkwood.smp.models.VoteVM;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -35,7 +36,7 @@ public class Votes extends HttpServlet {
                     break;
                 case "myVotes":
                     HttpSession session = req.getSession();
-                    User userFromSession = (User)session.getAttribute("activeSMPUser");
+                    UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
                     if(userFromSession == null || !userFromSession.getStatus().equals("active")) {
                         session.setAttribute("flashMessageWarning", "You must be logged in to view your votes.");
                         resp.sendRedirect("smp-login?redirect=votes");

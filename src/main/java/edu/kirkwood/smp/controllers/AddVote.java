@@ -27,7 +27,7 @@ public class AddVote extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User userFromSession = (User)session.getAttribute("activeSMPUser");
+        UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
         if(userFromSession == null || !userFromSession.getStatus().equals("active")) {
             session.setAttribute("flashMessageWarning", "You must be logged in to create a new vote.");
             resp.sendRedirect("smp-login?redirect=add-vote");
@@ -41,7 +41,7 @@ public class AddVote extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User userFromSession = (User)session.getAttribute("activeSMPUser");
+        UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
         Map<String, String> results = new HashMap<>();
 
         String voteID = req.getParameter("voteID");

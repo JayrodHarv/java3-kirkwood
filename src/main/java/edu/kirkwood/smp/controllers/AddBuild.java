@@ -3,10 +3,7 @@ package edu.kirkwood.smp.controllers;
 import edu.kirkwood.smp.data.BuildDAO;
 import edu.kirkwood.smp.data.BuildTypeDAO;
 import edu.kirkwood.smp.data.WorldDAO;
-import edu.kirkwood.smp.models.Build;
-import edu.kirkwood.smp.models.BuildType;
-import edu.kirkwood.smp.models.User;
-import edu.kirkwood.smp.models.World;
+import edu.kirkwood.smp.models.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -32,7 +29,7 @@ public class AddBuild extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User userFromSession = (User)session.getAttribute("activeSMPUser");
+        UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
         if(userFromSession == null || !userFromSession.getStatus().equals("active")) {
             session.setAttribute("flashMessageWarning", "You must be logged in to add a new building.");
             resp.sendRedirect("smp-login?redirect=add-build");
@@ -63,7 +60,7 @@ public class AddBuild extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User userFromSession = (User)session.getAttribute("activeSMPUser");
+        UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
 
         Map<String, String> results = new HashMap<>();
 

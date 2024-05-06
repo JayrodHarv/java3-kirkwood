@@ -3,6 +3,7 @@ package edu.kirkwood.smp.controllers;
 import edu.kirkwood.smp.data.VoteDAO;
 import edu.kirkwood.smp.data.VoteOptionDAO;
 import edu.kirkwood.smp.models.User;
+import edu.kirkwood.smp.models.UserVM;
 import edu.kirkwood.smp.models.UserVote;
 import edu.kirkwood.smp.models.VoteVM;
 import jakarta.servlet.ServletException;
@@ -22,7 +23,7 @@ public class AddUserVote extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User userFromSession = (User)session.getAttribute("activeSMPUser");
+        UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
         if(userFromSession == null || !userFromSession.getStatus().equals("active")) {
             session.setAttribute("flashMessageWarning", "You must be logged in to vote.");
             resp.sendRedirect("smp-login?redirect=votes");
@@ -66,7 +67,7 @@ public class AddUserVote extends HttpServlet {
 
         if(!results.containsKey("selectionError")) {
             try {
-                User userFromSession = (User)session.getAttribute("activeSMPUser");
+                UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
                 int selOp = Integer.parseInt(selectedOption);
                 UserVote userVote = new UserVote(userFromSession.getUserID(), voteID, selOp, Instant.now());
                 if(VoteDAO.addUserVote(userVote)) {
