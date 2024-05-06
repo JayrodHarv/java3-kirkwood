@@ -1,8 +1,6 @@
 package edu.kirkwood.smp.controllers;
 
-import edu.kirkwood.smp.data.BuildTypeDAO;
 import edu.kirkwood.smp.data.RoleDAO;
-import edu.kirkwood.smp.models.BuildType;
 import edu.kirkwood.smp.models.Role;
 import edu.kirkwood.smp.models.UserVM;
 import jakarta.servlet.ServletException;
@@ -16,32 +14,55 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/add-role")
-public class AddRole extends HttpServlet {
+@WebServlet("/edit-role")
+public class EditRole extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Map<String, String> results = new HashMap<>();
+        String roleID = req.getParameter("roleID");
         HttpSession session = req.getSession();
         UserVM userFromSession = (UserVM)session.getAttribute("activeSMPUser");
         if(userFromSession == null || !userFromSession.getStatus().equals("active")) {
             session.setAttribute("flashMessageWarning", "You must be logged in to view this page.");
-            resp.sendRedirect("smp-login?redirect=add-role");
+            resp.sendRedirect("smp-login?redirect=edit-role");
             return;
         }
         Role userRole = userFromSession.getRole();
-        if(!userRole.canAddRoles()) {
+        if(!userRole.canEditRoles()) {
             session.setAttribute("flashMessageWarning", "You are not allowed to view this page. Contact website owner to gain this power.");
             resp.sendRedirect("smp");
             return;
         }
 
-        req.setAttribute("pageTitle", "Add Role");
-        req.getRequestDispatcher("WEB-INF/smp/add-role.jsp").forward(req, resp);
+        if(roleID == null || roleID.isEmpty()) {
+            session.setAttribute("flashMessageWarning", "No role id provided");
+            resp.sendRedirect("smp-roles");
+            return;
+        }
+
+        try {
+            Role role = RoleDAO.get(roleID);
+            if(role != null) {
+                req.setAttribute("role", role);
+            } else {
+                session.setAttribute("flashMessageWarning", "No such role found with the name: " + roleID);
+                resp.sendRedirect("smp-roles");
+                return;
+            }
+        } catch(Exception ex) {
+            session.setAttribute("flashMessageDanger", "Unable to retrieve role data:\n" + ex.getMessage());
+        }
+
+        req.setAttribute("results", results);
+        req.setAttribute("pageTitle", "Edit Role");
+        req.getRequestDispatcher("WEB-INF/smp/edit-role.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         String roleID = req.getParameter("roleID");
+        String oldRoleID = req.getParameter("oldRoleID");
         // build permissions
         String[] canAddBuilds = req.getParameterValues("canAddBuilds") == null ? new String[] {"0"} : req.getParameterValues("canAddBuilds");
         String[] canEditAllBuilds = req.getParameterValues("canEditAllBuilds")  == null ? new String[] {"0"} : req.getParameterValues("canEditAllBuilds");
@@ -152,20 +173,33 @@ public class AddRole extends HttpServlet {
                 role.setCanBanUsers(canBanUsers[0].equals("yes"));
 
                 role.setDescription(description);
-                if(RoleDAO.add(role)) {
-                    session.setAttribute("flashMessageSuccess", "Successfully added new role: " + roleID);
+                if(RoleDAO.edit(role, oldRoleID)) {
+                    session.setAttribute("flashMessageSuccess", "Successfully edited role: " + roleID);
                     resp.sendRedirect("smp-roles");
                     return;
                 } else {
-                    session.setAttribute("flashMessageWarning", "Something went wrong while adding new role. Please try again.");
+                    session.setAttribute("flashMessageWarning", "Something went wrong while editing role. Please try again.");
                 }
             } catch (Exception ex) {
                 session.setAttribute("flashMessageError", ex.getMessage());
             }
         }
 
+        try {
+            Role role = RoleDAO.get(roleID);
+            if(role != null) {
+                req.setAttribute("role", role);
+            } else {
+                session.setAttribute("flashMessageWarning", "No such role found with the name: " + roleID);
+                resp.sendRedirect("smp-roles");
+                return;
+            }
+        } catch(Exception ex) {
+            session.setAttribute("flashMessageDanger", "Unable to retrieve role data:\n" + ex.getMessage());
+        }
+
         req.setAttribute("results", results);
-        req.setAttribute("pageTitle", "Add New Role");
-        req.getRequestDispatcher("WEB-INF/smp/add-role.jsp").forward(req, resp);
+        req.setAttribute("pageTitle", "Edit Role");
+        req.getRequestDispatcher("WEB-INF/smp/edit-role.jsp").forward(req, resp);
     }
 }

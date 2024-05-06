@@ -399,7 +399,8 @@ CREATE PROCEDURE sp_update_role(
     IN p_CanAddUsers BIT,
     IN p_CanEditUsers BIT,
     IN p_CanBanUsers BIT,
-    IN p_Description NVARCHAR(255)
+    IN p_Description NVARCHAR(255),
+    IN p_OldRoleID NVARCHAR(255)
 )
 BEGIN
     UPDATE Role
@@ -435,6 +436,49 @@ BEGIN
         CanBanUsers = p_CanBanUsers,
 
         Description = p_Description
+    WHERE RoleID = p_OldRoleID
+    ;
+END;
+
+/* GET ROLE */
+DROP PROCEDURE IF EXISTS sp_get_role;
+CREATE PROCEDURE sp_get_role(
+    IN p_RoleID NVARCHAR(255)
+)
+BEGIN
+    SELECT  RoleID,
+            # Builds
+            CanAddBuilds,
+            CanEditAllBuilds,
+            CanDeleteAllBuilds,
+            # BuildTypes
+            CanViewBuildTypes,
+            CanAddBuildTypes,
+            CanEditBuildTypes,
+            CanDeleteBuildTypes,
+            # Worlds
+            CanViewWorlds,
+            CanAddWorlds,
+            CanEditWorlds,
+            CanDeleteWorlds,
+            # Votes
+            CanViewAllVotes,
+            CanAddVotes,
+            CanEditAllVotes,
+            CanDeleteAllVotes,
+            # Roles
+            CanViewRoles,
+            CanAddRoles,
+            CanEditRoles,
+            CanDeleteRoles,
+            # Users
+            CanViewUsers,
+            CanAddUsers,
+            CanEditUsers,
+            CanBanUsers,
+
+            Description
+    FROM Role
     WHERE RoleID = p_RoleID
     ;
 END;
@@ -725,8 +769,8 @@ BEGIN
     SELECT BuildID, Image, DateBuilt, Coordinates, b.CreatedAt, b.Description AS 'build_description', u.UserID, u.DisplayName, u.Pfp, w.WorldID, w.DateStarted, w.Description AS 'world_description', bt.BuildTypeID, bt.Description AS 'buildtype_description'
 	FROM Build AS b
 	INNER JOIN User AS u ON u.UserID = b.UserID
-	INNER JOIN World AS w ON b.WorldID = w.WorldID
-	INNER JOIN BuildType AS bt ON b.BuildTypeID = bt.BuildTypeID
+	LEFT JOIN World AS w ON b.WorldID = w.WorldID
+	LEFT JOIN BuildType AS bt ON b.BuildTypeID = bt.BuildTypeID
     WHERE (
         IF(p_WorldID <> '', p_WorldID LIKE CONCAT('%', b.WorldID, '%'), TRUE)
     )
@@ -774,13 +818,15 @@ DROP PROCEDURE IF EXISTS sp_update_world;
 CREATE PROCEDURE sp_update_world(
     IN p_WorldID NVARCHAR(255),
     IN p_DateStarted DATE,
-    IN p_Description TEXT
+    IN p_Description TEXT,
+    IN p_oldWorldID NVARCHAR(255)
 )
 BEGIN
     UPDATE World
-    SET DateStarted = p_DateStarted,
+    SET WorldID = p_WorldID,
+        DateStarted = p_DateStarted,
         Description = p_Description
-    WHERE WorldID = p_WorldID
+    WHERE WorldID = p_oldWorldID
     ;
 END;
 
@@ -837,13 +883,14 @@ END;
 DROP PROCEDURE IF EXISTS sp_update_buildtype;
 CREATE PROCEDURE sp_update_buildtype(
     IN p_BuildTypeID NVARCHAR(255),
-    IN p_Description TEXT
+    IN p_Description TEXT,
+    IN p_OldBuildTypeID NVARCHAR(255)
 )
 BEGIN
     UPDATE BuildType
     SET BuildTypeID = p_BuildTypeID,
         Description = p_Description
-    WHERE BuildTypeID = p_BuildTypeID
+    WHERE BuildTypeID = p_OldBuildTypeID
     ;
 END;
 

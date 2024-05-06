@@ -14,6 +14,7 @@
         <table class="table table-responsive table-bordered table-striped table-hover">
             <thead>
             <tr>
+                <th scope="col">Pfp</th>
                 <th scope="col">UserID (Email)</th>
                 <th scope="col">Display Name</th>
                 <th scope="col">Role</th>
@@ -27,6 +28,9 @@
             <tbody>
             <c:forEach items="${users}" var="user">
                 <tr>
+                    <td>
+                        <img src="${user.getBase64Pfp()}" alt="pfp" width="45" height="45" class="rounded-circle">
+                    </td>
                     <td>${user.getUserID()}</td>
                     <td>${user.getDisplayName()}</td>
                     <td>${user.getRole()}</td>
@@ -36,15 +40,20 @@
                     <td>${user.getStatus()}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="${appURL}/edit-user?userId=${user.getUserID()}" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-title="Edit User"><i class="bi bi-pencil-fill"></i></a>
-                            <c:choose>
-                                <c:when test="${user.getStatus() eq 'active'}">
-                                    <a class="btn btn-outline-danger" onclick="ConfirmBan('${user.getUserID()}')" data-bs-toggle="tooltip" data-bs-title="Ban User"><i class="bi bi-hammer"></i></a>
-                                </c:when>
-                                <c:when test="${user.getStatus() eq 'locked'}">
-                                    <a class="btn btn-outline-success" onclick="ConfirmUnBan('${user.getUserID()}')" data-bs-toggle="tooltip" data-bs-title="Un-Ban User"><i class="bi bi-hammer"></i></a>
-                                </c:when>
-                            </c:choose>
+                            <c:if test="${sessionScope.activeSMPUser.getRole().canEditUsers()}">
+                                <a href="${appURL}/smp-edit-user?userID=${user.getUserID()}" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-title="Edit User"><i class="bi bi-pencil-fill"></i></a>
+                            </c:if>
+
+                            <c:if test="${sessionScope.activeSMPUser.getRole().canBanUsers()}">
+                                <c:choose>
+                                    <c:when test="${user.getStatus() eq 'active'}">
+                                        <a class="btn btn-outline-danger" onclick="ConfirmBan('${user.getUserID()}')" data-bs-toggle="tooltip" data-bs-title="Ban User"><i class="bi bi-hammer"></i></a>
+                                    </c:when>
+                                    <c:when test="${user.getStatus() eq 'locked'}">
+                                        <a class="btn btn-outline-success" onclick="ConfirmUnBan('${user.getUserID()}')" data-bs-toggle="tooltip" data-bs-title="Un-Ban User"><i class="bi bi-hammer"></i></a>
+                                    </c:when>
+                                </c:choose>
+                            </c:if>
                         </div>
                     </td>
                 </tr>

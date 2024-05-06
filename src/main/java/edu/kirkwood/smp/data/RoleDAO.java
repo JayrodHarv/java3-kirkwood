@@ -64,32 +64,62 @@ public class RoleDAO {
         return roles;
     }
 
-    public static BuildType get(String buildTypeID) {
-        BuildType buildType = null;
+    public static Role get(String roleID) {
+        Role role = null;
         try(Connection connection = getConnection();
-            CallableStatement statement = connection.prepareCall("{CALL sp_get_buildtype(?)}");
+            CallableStatement statement = connection.prepareCall("{CALL sp_get_role(?)}");
         ) {
-            statement.setString(1, buildTypeID);
+            statement.setString(1, roleID);
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                String BuildTypeID = resultSet.getString("BuildTypeID");
-                String Description = resultSet.getString("Description");
-                buildType = new BuildType(BuildTypeID, Description);
+                role = new Role();
+                role.setRoleID(resultSet.getString("RoleID"));
+                // Build Permissions
+                role.setCanAddBuilds(resultSet.getBoolean("CanAddBuilds"));
+                role.setCanEditAllBuilds(resultSet.getBoolean("CanEditAllBuilds"));
+                role.setCanDeleteAllBuilds(resultSet.getBoolean("CanDeleteAllBuilds"));
+                // Build Type Permissions
+                role.setCanViewBuildTypes(resultSet.getBoolean("CanViewBuildTypes"));
+                role.setCanAddBuildTypes(resultSet.getBoolean("CanAddBuildTypes"));
+                role.setCanEditBuildTypes(resultSet.getBoolean("CanEditBuildTypes"));
+                role.setCanDeleteBuildTypes(resultSet.getBoolean("CanDeleteBuildTypes"));
+                // World Permissions
+                role.setCanViewWorlds(resultSet.getBoolean("CanViewWorlds"));
+                role.setCanAddWorlds(resultSet.getBoolean("CanAddWorlds"));
+                role.setCanEditWorlds(resultSet.getBoolean("CanEditWorlds"));
+                role.setCanDeleteWorlds(resultSet.getBoolean("CanDeleteWorlds"));
+                // Vote Permissions
+                role.setCanViewAllVotes(resultSet.getBoolean("CanViewAllVotes"));
+                role.setCanAddVotes(resultSet.getBoolean("CanAddVotes"));
+                role.setCanEditAllVotes(resultSet.getBoolean("CanEditAllVotes"));
+                role.setCanDeleteAllVotes(resultSet.getBoolean("CanDeleteAllVotes"));
+                // Role Permissions
+                role.setCanViewRoles(resultSet.getBoolean("CanViewRoles"));
+                role.setCanAddRoles(resultSet.getBoolean("CanAddRoles"));
+                role.setCanEditRoles(resultSet.getBoolean("CanEditRoles"));
+                role.setCanDeleteRoles(resultSet.getBoolean("CanDeleteRoles"));
+                // User Permissions
+                role.setCanViewUsers(resultSet.getBoolean("CanViewUsers"));
+                role.setCanAddUsers(resultSet.getBoolean("CanAddUsers"));
+                role.setCanEditUsers(resultSet.getBoolean("CanEditUsers"));
+                role.setCanBanUsers(resultSet.getBoolean("CanBanUsers"));
+
+                role.setDescription(resultSet.getString("Description"));
             }
             resultSet.close();
         } catch (SQLException e) {
             System.out.println("Likely bad SQL query");
             System.out.println(e.getMessage());
         }
-        return buildType;
+        return role;
     }
 
     public static boolean add(Role role) {
         boolean result = false;
         try (Connection connection = getConnection()) {
             if (connection != null) {
-                try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_role(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}")) {
-                    // 24 parameters
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_role(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}")) {
+                    // 25 parameters
                     statement.setString(1, role.getRoleID());
                     // builds
                     statement.setBoolean(2, role.canAddBuilds());
@@ -134,11 +164,11 @@ public class RoleDAO {
         return result;
     }
 
-    public static boolean edit(Role role) {
+    public static boolean edit(Role role, String oldRoleID) throws SQLException {
         boolean result = false;
         try (Connection connection = getConnection()) {
             if (connection != null) {
-                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_role(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}")) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_role(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}")) {
                     // 25 parameters
                     statement.setString(1, role.getRoleID());
                     // builds
@@ -172,14 +202,14 @@ public class RoleDAO {
                     statement.setBoolean(24, role.canBanUsers());
 
                     statement.setString(25, role.getDescription());
+
+                    statement.setString(26, oldRoleID);
                     int rowsAffected = statement.executeUpdate();
                     if(rowsAffected > 0) {
                         result = true;
                     }
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
         return result;
     }

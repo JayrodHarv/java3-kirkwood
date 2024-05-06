@@ -8,7 +8,9 @@
     <div class="d-flex justify-content-between mb-4">
       <h2>${pageTitle}</h2>
       <div class="text-end">
-        <a href="${appURL}/add-role" class="btn btn-success" data-bs-toggle="tooltip" data-bs-title="Add Role"><i class="bi bi-plus-lg"></i></a>
+        <c:if test="${sessionScope.activeSMPUser.getRole().canAddRoles()}">
+          <a href="${appURL}/add-role" class="btn btn-success" data-bs-toggle="tooltip" data-bs-title="Add Role"><i class="bi bi-plus-lg"></i></a>
+        </c:if>
       </div>
     </div>
     <table class="table table-responsive table-bordered table-striped table-hover">
@@ -26,8 +28,12 @@
           <td>${role.getDescription()}</td>
           <td>
             <div class="btn-group">
-              <a href="${appURL}/edit-role?roleID=${role.getRoleID()}" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-title="Edit Role"><i class="bi bi-pencil-fill"></i></a>
-              <a class="btn btn-outline-danger" onclick="Confirm('${role.getRoleID()}')" data-bs-toggle="tooltip" data-bs-title="Delete Role"><i class="bi bi-trash3-fill"></i></a>
+              <c:if test="${sessionScope.activeSMPUser.getRole().canEditRoles()}">
+                <a href="${appURL}/edit-role?roleID=${role.getRoleID()}" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-title="Edit Role"><i class="bi bi-pencil-fill"></i></a>
+              </c:if>
+              <c:if test="${sessionScope.activeSMPUser.getRole().canDeleteRoles()}">
+                <a class="btn btn-outline-danger" onclick="Confirm('${role.getRoleID()}')" data-bs-toggle="tooltip" data-bs-title="Delete Role"><i class="bi bi-trash3-fill"></i></a>
+              </c:if>
             </div>
           </td>
         </tr>

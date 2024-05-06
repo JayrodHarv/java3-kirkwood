@@ -8,6 +8,9 @@
         <div class="container-fluid p-0">
             <h2 class="mb-4">${pageTitle}</h2>
 
+            <!-- Old BuildTypeID -->
+            <input type="hidden" name="oldBuildTypeID" value="${results.buildTypeID}">
+
             <!-- Build Type -->
             <div class="input-group mb-4">
                 <label for="buildTypeID" class="input-group-text">Build Type Name *</label>

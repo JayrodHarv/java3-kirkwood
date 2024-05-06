@@ -7,7 +7,9 @@
     <div class="d-flex justify-content-between mb-4">
         <h2>${pageTitle}</h2>
         <div class="text-end">
-            <a href="${appURL}/add-vote" class="btn btn-success" data-bs-toggle="tooltip" data-bs-title="Add Vote"><i class="bi bi-plus-lg"></i></a>
+            <c:if test="${sessionScope.activeSMPUser.getRole().canAddVotes()}">
+                <a href="${appURL}/add-vote" class="btn btn-success" data-bs-toggle="tooltip" data-bs-title="Add Vote"><i class="bi bi-plus-lg"></i></a>
+            </c:if>
         </div>
     </div>
     <div class="container-fluid p-0">

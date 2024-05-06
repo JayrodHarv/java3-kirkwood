@@ -200,7 +200,7 @@ public class UserDAO {
     public static boolean update(User user) {
         try (Connection connection = getConnection()) {
             if (connection != null) {
-                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_user(?, ?, ?, ?, ?, ?,?)}")) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_user(?,?,?,?,?,?,?)}")) {
                     statement.setString(1, user.getUserID());
                     statement.setString(2, user.getDisplayName());
                     statement.setBlob(3, new SerialBlob(user.getPfp()));

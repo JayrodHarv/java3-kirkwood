@@ -10,10 +10,10 @@
 
       <!-- Role Name -->
       <div class="input-group mb-4">
-        <label for="buildTypeID" class="input-group-text">Role Name *</label>
-        <input type="text" class="form-control rounded-end <c:if test="${not empty results.buildTypeError}">is-invalid</c:if>" placeholder="Ex. Capitol" id="buildTypeID" name="buildTypeID" value="${results.buildTypeID}">
-        <c:if test="${not empty results.buildTypeIDError}">
-          <div class="invalid-feedback">${results.buildTypeIDError}</div>
+        <label for="roleID" class="input-group-text">Role Name *</label>
+        <input type="text" class="form-control rounded-end <c:if test="${not empty results.roleIDError}">is-invalid</c:if>" placeholder="Ex. Moderator" id="roleID" name="roleID" value="${results.roleID}">
+        <c:if test="${not empty results.roleIDError}">
+          <div class="invalid-feedback">${results.roleIDError}</div>
         </c:if>
       </div>
 

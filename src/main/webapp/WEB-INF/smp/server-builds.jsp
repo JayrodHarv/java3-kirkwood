@@ -4,10 +4,42 @@
   <!-- Flash Message -->
   <%@ include file="/WEB-INF/smp/flash-message.jsp"%>
 
+  <!-- Filter Builds -->
+  <div class="container-fluid p-0">
+    <h5>Filter Builds: </h5>
+    <form action="${appURL}/server-builds" method="GET">
+      <div class="row mb-4">
+
+        <div class="col col-3">
+          <select class="form-select" name="worldID" id="worldID">
+            <option value="" <c:if test="${results.worldID eq ''}">selected</c:if>>All Worlds</option>
+            <c:forEach items="${worlds}" var="world">
+              <option value="${world.getWorldID()}" <c:if test="${results.worldID eq world.getWorldID()}">selected</c:if>>${world.getWorldID()}</option>
+            </c:forEach>
+          </select>
+        </div>
+
+        <div class="col-3">
+          <select class="form-select " name="buildTypeID" id="buildTypeID">
+            <option value="" <c:if test="${results.buildTypeID eq ''}">selected</c:if>>All Build Types</option>
+            <c:forEach items="${buildTypes}" var="buildType">
+              <option value="${buildType.getBuildTypeID()}" <c:if test="${results.buildTypeID eq buildType.getBuildTypeID()}">selected</c:if>>${buildType.getBuildTypeID()}</option>
+            </c:forEach>
+          </select>
+        </div>
+        <div class="col">
+          <button type="submit" class="btn btn-outline-success">Filter Builds</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
   <div class="d-flex justify-content-between mb-4">
     <h2>${pageTitle}</h2>
     <div class="text-end">
-      <a href="${appURL}/add-build" class="btn btn-success" data-bs-toggle="tooltip" data-bs-title="Add Build"><i class="bi bi-plus-lg"></i></a>
+      <c:if test="${sessionScope.activeSMPUser.getRole().canAddBuilds()}">
+        <a href="${appURL}/add-build" class="btn btn-success" data-bs-toggle="tooltip" data-bs-title="Add Build"><i class="bi bi-plus-lg"></i></a>
+      </c:if>
     </div>
   </div>
   <div class="container-fluid p-0">
@@ -24,8 +56,12 @@
                 <div class="d-flex justify-content-between mb-2">
                   <div class="d-flex gap-2 align-items-center">
                     <h5 class="m-0">${b.getBuildID()}</h5>
-                    <span class="badge bg-primary-subtle border border-primary-subtle text-primary-emphasis rounded-pill p-2" data-bs-toggle="tooltip" data-bs-title="${b.getWorld().getDescription()}">${b.getWorld().getWorldID()}</span>
-                    <span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill p-2" data-bs-toggle="tooltip" data-bs-title="${b.getBuildType().getDescription()}">${b.getBuildType().getBuildTypeID()}</span>
+                    <c:if test="${b.getWorld() ne null}">
+                      <span class="badge bg-primary-subtle border border-primary-subtle text-primary-emphasis rounded-pill p-2" data-bs-toggle="tooltip" data-bs-title="${b.getWorld().getDescription()}">${b.getWorld().getWorldID()}</span>
+                    </c:if>
+                    <c:if test="${b.getBuildType() ne null}">
+                      <span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill p-2" data-bs-toggle="tooltip" data-bs-title="${b.getBuildType().getDescription()}">${b.getBuildType().getBuildTypeID()}</span>
+                    </c:if>
                   </div>
                   <c:if test="${b.getDateBuilt() != null}">
                     <p class="text-end m-0">Date Built: ${b.getDateBuilt()}</p>
@@ -38,14 +74,18 @@
                   </c:if>
                 </div>
                 <p class="text-end mb-2">Posted By: ${b.getUser().getDisplayName()}</p>
-                <c:if test="${sessionScope.activeSMPUser.getUserID() == b.getUser().getUserID()}">
-                  <div class="text-end">
-                    <div class="btn-group">
+                <div class="text-end">
+                  <div class="btn-group">
+                    <c:if test="${sessionScope.activeSMPUser.getUserID() == b.getUser().getUserID()
+                            || sessionScope.activeSMPUser.getRole().canEditAllBuilds()}">
                       <a href="${appURL}/edit-build?build_id=${b.getBuildID()}" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-title="Edit Build"><i class="bi bi-pencil-fill"></i></a>
+                    </c:if>
+                    <c:if test="${sessionScope.activeSMPUser.getUserID() == b.getUser().getUserID()
+                            || sessionScope.activeSMPUser.getRole().canDeleteAllBuilds()}">
                       <a class="btn btn-outline-danger" onclick="Confirm('${b.getBuildID()}')" data-bs-toggle="tooltip" data-bs-title="Delete Build"><i class="bi bi-trash3-fill"></i></a>
-                    </div>
+                    </c:if>
                   </div>
-                </c:if>
+                </div>
               </div>
             </div>
           </div>

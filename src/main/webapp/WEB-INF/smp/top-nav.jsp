@@ -31,7 +31,9 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a href="${appURL}/smp" class="nav-link px-2 <c:if test="${pageTitle eq 'Home'}">link-light</c:if>">Home</a></li>
 <%--                <li class="nav-item"><a href="${appURL}/world-map" class="nav-link px-2 <c:if test="${pageTitle eq 'World Map'}">link-light</c:if>">World Map</a></li>--%>
+
                 <li class="nav-item"><a href="${appURL}/server-builds" class="nav-link px-2 <c:if test="${pageTitle eq 'Server Builds'}">link-light</c:if>">Server Builds</a></li>
+
 <%--                <li class="nav-item"><a href="${appURL}/discussion-forms" class="nav-link px-2 <c:if test="${pageTitle eq 'Discussion Forms'}">link-light</c:if>">Discussion Forms</a></li>--%>
                 <li class="nav-item"><a href="${appURL}/votes" class="nav-link px-2 <c:if test="${pageTitle eq 'Votes'}">link-light</c:if>">Votes</a></li>
 
@@ -72,6 +74,8 @@
                                 ${activeSMPUser.getDisplayName()}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end text-small">
+                                <li><h5 class="dropdown-item-text">Role: ${activeSMPUser.getRole().getRoleID()}</h5></li>
+                                <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="${appURL}/smp-edit-profile?userID=${activeSMPUser.getUserID()}">Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="${appURL}/smp-logout">Sign out</a></li>

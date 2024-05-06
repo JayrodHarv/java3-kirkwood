@@ -29,7 +29,7 @@
     <div class="d-flex justify-content-between p-0">
       <div class="btn btn-group p-0">
         <a href="${appURL}/smp-build-types" class="btn btn-secondary">Back</a>
-        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="submit" class="btn btn-primary">Add Build Type</button>
       </div>
       <p class="form-text text-end">* Indicates required field</p>
     </div>

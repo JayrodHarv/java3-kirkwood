@@ -8,7 +8,9 @@
         <div class="d-flex justify-content-between mb-4">
             <h2>Build Types</h2>
             <div class="text-end">
-                <a href="${appURL}/add-build-type" class="btn btn-success" data-bs-toggle="tooltip" data-bs-title="Add Build Type"><i class="bi bi-plus-lg"></i></a>
+                <c:if test="${sessionScope.activeSMPUser.getRole().canAddBuildTypes()}">
+                    <a href="${appURL}/add-build-type" class="btn btn-success" data-bs-toggle="tooltip" data-bs-title="Add Build Type"><i class="bi bi-plus-lg"></i></a>
+                </c:if>
             </div>
         </div>
         <table class="table table-responsive table-bordered table-striped table-hover">
@@ -26,8 +28,12 @@
                     <td>${buildType.getDescription()}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="${appURL}/edit-build-type?buildTypeID=${buildType.getBuildTypeID()}" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-title="Edit Build Type"><i class="bi bi-pencil-fill"></i></a>
-                            <a class="btn btn-outline-danger" onclick="Confirm('${buildType.getBuildTypeID()}')" data-bs-toggle="tooltip" data-bs-title="Delete Build Type"><i class="bi bi-trash3-fill"></i></a>
+                            <c:if test="${sessionScope.activeSMPUser.getRole().canEditBuildTypes()}">
+                                <a href="${appURL}/edit-build-type?buildTypeID=${buildType.getBuildTypeID()}" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-title="Edit Build Type"><i class="bi bi-pencil-fill"></i></a>
+                            </c:if>
+                            <c:if test="${sessionScope.activeSMPUser.getRole().canDeleteBuildTypes()}">
+                                <a class="btn btn-outline-danger" onclick="Confirm('${buildType.getBuildTypeID()}')" data-bs-toggle="tooltip" data-bs-title="Delete Build Type"><i class="bi bi-trash3-fill"></i></a>
+                            </c:if>
                         </div>
                     </td>
                 </tr>
@@ -35,23 +41,21 @@
             </tbody>
         </table>
 
-        <!-- Modal -->
-        <div class="modal fade" id="deleteModal" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+        <!-- Delete Modal -->
+        <div class="modal" id="deleteModal" tabindex="-1">
+            <div class="modal-dialog">
                 <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Build Type</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this world?</p>
+                    </div>
                     <form action="${appURL}/delete-build-type" method="POST">
                         <input type="hidden" id="buildTypeID" name="buildTypeID"/>
-                        <div class="modal-header">
-                            <h5 class="modal-title">Delete Build Type</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            Are you sure you want to delete this build type?
-                        </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-danger">Confirm</button>
                         </div>
                     </form>

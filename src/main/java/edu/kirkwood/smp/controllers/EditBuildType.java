@@ -52,6 +52,7 @@ public class EditBuildType extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
+        String oldBuildTypeID = req.getParameter("oldBuildTypeID");
         String buildTypeID = req.getParameter("buildTypeID");
         String description = req.getParameter("description");
 
@@ -71,7 +72,7 @@ public class EditBuildType extends HttpServlet {
         if(!results.containsKey("buildTypeError") && !results.containsKey("descriptionError")) {
             try {
                 BuildType buildType = new BuildType(buildTypeID, description);
-                if(BuildTypeDAO.edit(buildType)) {
+                if(BuildTypeDAO.edit(buildType, oldBuildTypeID)) {
                     session.setAttribute("flashMessageSuccess", "Successfully made changes on build type: " + buildTypeID);
                     resp.sendRedirect("smp-build-types");
                     return;

@@ -74,13 +74,14 @@ public class BuildTypeDAO {
         return result;
     }
 
-    public static boolean edit(BuildType buildType) {
+    public static boolean edit(BuildType buildType, String oldBuildTypeID) {
         boolean result = false;
         try (Connection connection = getConnection()) {
             if (connection != null) {
-                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_buildtype(?,?)}")) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_buildtype(?,?,?)}")) {
                     statement.setString(1, buildType.getBuildTypeID());
                     statement.setString(2, buildType.getDescription());
+                    statement.setString(3, oldBuildTypeID);
                     int rowsAffected = statement.executeUpdate();
                     if(rowsAffected > 0) {
                         result = true;

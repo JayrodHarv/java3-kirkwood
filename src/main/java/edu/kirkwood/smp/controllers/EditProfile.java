@@ -115,6 +115,10 @@ public class EditProfile extends HttpServlet {
                 user.setDisplayName(displayName);
                 user.setPfp(image);
                 if(UserDAO.update(user)) {
+                    session.invalidate();
+                    session = req.getSession();
+                    UserVM userVM = UserDAO.getVM(userID);
+                    session.setAttribute("activeSMPUser", userVM);
                     session.setAttribute("flashMessageSuccess", "Profile Successfully Edited!");
                 } else {
                     session.setAttribute("flashMessageWarning", "Failed to edit profile");
