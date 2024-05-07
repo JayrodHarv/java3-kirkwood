@@ -1,6 +1,7 @@
 package edu.kirkwood.smp.controllers;
 
 import edu.kirkwood.smp.data.BuildTypeDAO;
+import edu.kirkwood.smp.models.BuildType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,11 +19,17 @@ public class DeleteBuildType extends HttpServlet {
         String buildTypeID = req.getParameter("buildTypeID");
 
         if(buildTypeID != null && !buildTypeID.isEmpty()) {
-            if(BuildTypeDAO.delete(buildTypeID)) {
-                session.setAttribute("flashMessageSuccess", "Build type successfully deleted");
-            } else {
-                session.setAttribute("flashMessageDanger", "Failed to delete build type. Please try again.");
+            try {
+                if(BuildTypeDAO.delete(buildTypeID)) {
+                    session.setAttribute("flashMessageSuccess", "Build type successfully deleted");
+                } else {
+                    session.setAttribute("flashMessageWarning", "Couldn't delete build type. Please try again.");
+                }
+            } catch(Exception ex) {
+                session.setAttribute("flashMessageDanger", "Couldn't delete build type:\n" + ex.getMessage());
             }
+        } else {
+            session.setAttribute("flashMessageWarning", "No id provided...");
         }
         resp.sendRedirect("smp-build-types");
     }

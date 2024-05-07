@@ -1,6 +1,7 @@
 package edu.kirkwood.smp.controllers;
 
 import edu.kirkwood.smp.data.BuildDAO;
+import edu.kirkwood.smp.models.Build;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,11 +21,17 @@ public class DeleteBuild extends HttpServlet {
         String buildID = req.getParameter("buildID");
 
         if(buildID != null && !buildID.isEmpty()) {
-            if(BuildDAO.delete(buildID)) {
-                session.setAttribute("flashMessageSuccess", "Build Successfully Deleted");
-            } else {
-                session.setAttribute("flashMessageDanger", "Failed to delete build. Please try again.");
+            try {
+                if(BuildDAO.delete(buildID)) {
+                    session.setAttribute("flashMessageSuccess", "Build Successfully Deleted");
+                } else {
+                    session.setAttribute("flashMessageWarning", "Couldn't delete build. Please try again.");
+                }
+            } catch(Exception ex) {
+                session.setAttribute("flashMessageDanger", "Couldn't delete build:\n" + ex.getMessage());
             }
+        } else {
+            session.setAttribute("flashMessageWarning", "No id provided...");
         }
         resp.sendRedirect("server-builds");
     }

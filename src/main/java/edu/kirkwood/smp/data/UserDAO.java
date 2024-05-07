@@ -223,7 +223,7 @@ public class UserDAO {
             if (connection != null) {
                 try (CallableStatement statement = connection.prepareCall("{CALL sp_delete_user(?)}")) {
                     statement.setString(1, userID);
-                    return statement.execute();
+                    return 0 < statement.executeUpdate();
                 }
             }
         } catch (SQLException e) {

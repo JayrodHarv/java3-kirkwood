@@ -1,6 +1,7 @@
 package edu.kirkwood.smp.controllers;
 
 import edu.kirkwood.smp.data.VoteOptionDAO;
+import edu.kirkwood.smp.models.VoteOption;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,11 +20,17 @@ public class DeleteVoteOption extends HttpServlet {
         HttpSession session = req.getSession();
 
         if(optionID != null && !optionID.isEmpty()) {
-            if(VoteOptionDAO.delete(Integer.parseInt(optionID))) {
-                session.setAttribute("flashMessageSuccess", "Vote Option Successfully Deleted");
-            } else {
-                session.setAttribute("flashMessageDanger", "Failed to delete vote option. Please try again.");
+            try {
+                if (VoteOptionDAO.delete(Integer.parseInt(optionID))) {
+                    session.setAttribute("flashMessageSuccess", "Vote Option Successfully Deleted");
+                } else {
+                    session.setAttribute("flashMessageWarning", "Failed to delete vote option. Please try again.");
+                }
+            } catch (Exception ex) {
+                session.setAttribute("flashMessageDanger", "Couldn't delete vote option:\n" + ex.getMessage());
             }
+        } else {
+            session.setAttribute("flashMessageWarning", "No id provided...");
         }
         resp.sendRedirect("edit-vote?voteID=" + voteID);
     }

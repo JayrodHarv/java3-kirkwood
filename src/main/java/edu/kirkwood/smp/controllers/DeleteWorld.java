@@ -18,11 +18,17 @@ public class DeleteWorld extends HttpServlet {
         String worldID = req.getParameter("worldID");
 
         if(worldID != null && !worldID.isEmpty()) {
-            if(WorldDAO.delete(worldID)) {
-                session.setAttribute("flashMessageSuccess", "World successfully deleted");
-            } else {
-                session.setAttribute("flashMessageDanger", "Failed to delete world. Please try again.");
+            try {
+                if (WorldDAO.delete(worldID)) {
+                    session.setAttribute("flashMessageSuccess", "World successfully deleted");
+                } else {
+                    session.setAttribute("flashMessageWarning", "Failed to delete world. Please try again.");
+                }
+            } catch (Exception ex) {
+                session.setAttribute("flashMessageDanger", "Couldn't delete world:\n" + ex.getMessage());
             }
+        } else {
+            session.setAttribute("flashMessageWarning", "No id provided...");
         }
         resp.sendRedirect("smp-worlds");
     }

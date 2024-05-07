@@ -784,6 +784,32 @@ BEGIN
     ;
 END;
 
+/* GET Number of builds */
+DROP PROCEDURE IF EXISTS sp_get_number_of_builds;
+CREATE PROCEDURE sp_get_number_of_builds(
+    IN p_WorldID NVARCHAR(255),
+    IN p_BuildType NVARCHAR(255),
+    # TODO: Add ability to search by dateBuilt
+    IN p_UserDisplayName NVARCHAR(255)
+)
+BEGIN
+    SELECT COUNT(*) as number_of_builds
+    FROM Build AS b
+     INNER JOIN User AS u ON u.UserID = b.UserID
+     LEFT JOIN World AS w ON b.WorldID = w.WorldID
+     LEFT JOIN BuildType AS bt ON b.BuildTypeID = bt.BuildTypeID
+    WHERE (
+        IF(p_WorldID <> '', p_WorldID LIKE CONCAT('%', b.WorldID, '%'), TRUE)
+    )
+      AND (
+        IF(p_BuildType <> '', p_BuildType LIKE CONCAT('%', b.BuildTypeID, '%'), TRUE)
+    )
+      AND (
+        IF(p_UserDisplayName <> '', p_UserDisplayName LIKE CONCAT('%', u.DisplayName, '%'), TRUE)
+    )
+    ;
+END;
+
 /* GET Build */
 DROP PROCEDURE IF EXISTS sp_get_build;
 CREATE PROCEDURE sp_get_build(

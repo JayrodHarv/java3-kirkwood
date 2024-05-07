@@ -77,6 +77,24 @@ public class BuildDAO {
         return builds;
     }
 
+    public static int getBuildCount(String worldID, String buildTypeID, String userDisplayName) {
+        try(Connection connection = getConnection();
+            CallableStatement statement = connection.prepareCall("{CALL sp_get_number_of_builds(?,?,?)}");
+        ) {
+            statement.setString(1, worldID);
+            statement.setString(2, buildTypeID);
+            statement.setString(3, userDisplayName);
+            try(ResultSet resultSet = statement.executeQuery();) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("number_of_builds");
+                }
+            }
+        } catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
+    }
+
     public static Build get(String buildID) {
         Build build = null;
         try(Connection connection = getConnection();
