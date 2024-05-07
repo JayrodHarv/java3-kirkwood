@@ -29,8 +29,12 @@ public class EditVoteOption extends HttpServlet {
 
         try {
             VoteOption option = VoteOptionDAO.get(Integer.parseInt(optionID));
-            req.setAttribute("option", option);
-            results.put("base64Image", option.getBase64Image());
+            if(option != null) {
+                req.setAttribute("option", option);
+                results.put("base64Image", option.getBase64Image());
+            } else {
+                session.setAttribute("flashMessageWarning", "Failed to retrieve option data");
+            }
         } catch(Exception ex) {
             session.setAttribute("flashMessageError", ex.getMessage());
         }

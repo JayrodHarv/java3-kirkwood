@@ -47,21 +47,21 @@ public class VoteOptionDAO {
             statement.setInt(1, optionID);
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                int OptionID = resultSet.getInt("OptionID");
-                String VoteID = resultSet.getString("VoteID");
-                String Title = resultSet.getString("Title");
-                String Description = resultSet.getString("Description");
+                option = new VoteOption();
+                option.setOptionID(resultSet.getInt("OptionID"));
+                option.setVoteID(resultSet.getString("VoteID"));
+                option.setTitle(resultSet.getString("Title"));
+                option.setDescription(resultSet.getString("Description"));
 
                 Blob blob = resultSet.getBlob("Image");
-                InputStream inputStream = blob.getBinaryStream();
-                String imageType = URLConnection.guessContentTypeFromStream(inputStream);
+                if(blob != null) {
+                    InputStream inputStream = blob.getBinaryStream();
+                    String imageType = URLConnection.guessContentTypeFromStream(inputStream);
 
-                byte[] Image = ImageHelper.getImageBytesFromInputStream(inputStream);
-
-                String base64Image = ImageHelper.getBase64Image(imageType, Image);
-
-                option = new VoteOption(OptionID, VoteID, Title, Description, Image);
-                option.setBase64Image(base64Image);
+                    byte[] Image = ImageHelper.getImageBytesFromInputStream(inputStream);
+                    option.setImage(Image);
+                    option.setBase64Image(ImageHelper.getBase64Image(imageType, Image));
+                }
             }
         } catch (SQLException e) {
             System.out.println("Likely bad SQL query");
