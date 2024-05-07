@@ -951,7 +951,8 @@ CREATE PROCEDURE sp_update_vote(
     IN p_VoteID NVARCHAR(255),
     IN p_Description TEXT,
     IN p_StartTime DATETIME,
-    IN p_EndTime DATETIME
+    IN p_EndTime DATETIME,
+    IN p_OldVoteID NVARCHAR(255)
 )
 BEGIN
     UPDATE Vote
@@ -959,7 +960,7 @@ BEGIN
         Description = p_Description,
         StartTime = p_StartTime,
         EndTime = p_EndTime
-    WHERE VoteID = p_VoteID
+    WHERE VoteID = p_OldVoteID
     ;
 END;
 
@@ -1085,7 +1086,7 @@ CREATE PROCEDURE sp_get_voteoptions(
     IN p_VoteID NVARCHAR(255)
 )
 BEGIN
-    SELECT vo.OptionID, Title, Description, Image, COUNT(uv.UserID) AS 'number_of_votes'
+    SELECT vo.OptionID, vo.VoteID, Title, Description, Image, COUNT(uv.UserID) AS 'number_of_votes'
     FROM VoteOption AS vo
     LEFT JOIN UserVote AS uv ON vo.OptionID = uv.OptionID
     WHERE vo.VoteID = p_VoteID
@@ -1099,7 +1100,7 @@ CREATE PROCEDURE sp_get_voteoption(
     IN p_OptionID INT
 )
 BEGIN
-    SELECT OptionID, Title, Description, Image
+    SELECT OptionID, VoteID, Title, Description, Image
     FROM VoteOption
     WHERE OptionID = p_OptionID
     ;

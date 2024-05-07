@@ -195,15 +195,16 @@ public class VoteDAO {
         return result;
     }
 
-    public static boolean edit(Vote vote) {
+    public static boolean edit(Vote vote, String oldVoteID) {
         boolean result = false;
         try (Connection connection = getConnection()) {
             if (connection != null) {
-                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_vote(?,?,?,?)}")) {
+                try (CallableStatement statement = connection.prepareCall("{CALL sp_update_vote(?,?,?,?,?)}")) {
                     statement.setString(1, vote.getVoteID());
                     statement.setString(2, vote.getDescription());
                     statement.setTimestamp(3, vote.getStartTime() == null ? null : Timestamp.from(vote.getStartTime()));
                     statement.setTimestamp(4, vote.getEndTime() == null ? null : Timestamp.from(vote.getEndTime()));
+                    statement.setString(5, oldVoteID);
                     int rowsAffected = statement.executeUpdate();
                     if(rowsAffected == 1) {
                         result = true;

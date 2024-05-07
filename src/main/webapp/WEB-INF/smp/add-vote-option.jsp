@@ -1,11 +1,9 @@
 <%@ include file="/WEB-INF/smp/top.jsp"%>
 <main class="container py-3" style="margin-top: 75px; margin-bottom: 40px;">
-    <form action="${appURL}/add-option" method="POST" enctype="multipart/form-data">
+    <form action="${appURL}/add-vote-option" method="POST" enctype="multipart/form-data">
 
-        <%-- Add Option Error--%>
-        <c:if test="${not empty results.addOptionError}">
-            <p class="alert alert-danger my-2">${results.addOptionError}</p>
-        </c:if>
+        <!-- Flash Message -->
+        <%@ include file="/WEB-INF/smp/flash-message.jsp"%>
 
         <div class="container-fluid p-0">
             <h5 class="form-label">${pageTitle}</h5>

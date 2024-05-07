@@ -26,7 +26,7 @@ public class StopVote extends HttpServlet {
 
             vote.setEndTime(stopTime);
 
-            if(VoteDAO.edit(vote)) {
+            if(VoteDAO.edit(vote, voteID)) {
                 session.setAttribute("flashMessageSuccess", "Voting has ended for " + voteID);
             } else {
                 session.setAttribute("flashMessageDanger", "Failed to end voting for " + voteID);

@@ -1,7 +1,8 @@
 package edu.kirkwood.smp.controllers;
 
-import edu.kirkwood.smp.data.BuildDAO;
+import edu.kirkwood.smp.data.UserDAO;
 import edu.kirkwood.smp.data.VoteOptionDAO;
+import edu.kirkwood.smp.models.User;
 import edu.kirkwood.smp.models.VoteOption;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -13,30 +14,37 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/add-vote-option")
+@WebServlet("/edit-vote-option")
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024,    // 1 MB
         maxFileSize = 1024 * 1024 * 10,     // 10 MB
         maxRequestSize = 1024 * 1024 * 100 // 100 MB
 )
-public class AddVoteOption extends HttpServlet {
+public class EditVoteOption extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String voteID = req.getParameter("voteID");
-
         Map<String,String> results = new HashMap<>();
+        HttpSession session = req.getSession();
+        String optionID = req.getParameter("optionID");
 
-        results.put("voteID", voteID);
+        try {
+            VoteOption option = VoteOptionDAO.get(Integer.parseInt(optionID));
+            req.setAttribute("option", option);
+            results.put("base64Image", option.getBase64Image());
+        } catch(Exception ex) {
+            session.setAttribute("flashMessageError", ex.getMessage());
+        }
 
         req.setAttribute("results", results);
-        req.setAttribute("pageTitle", "Add Vote Option");
-        req.getRequestDispatcher("WEB-INF/smp/add-vote-option.jsp").forward(req, resp);
+        req.setAttribute("pageTitle", "Edit Vote Option");
+        req.getRequestDispatcher("WEB-INF/smp/edit-vote-option.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         Map<String,String> results = new HashMap<>();
+        String optionID = req.getParameter("optionID");
         String voteID = req.getParameter("voteID");
         String title = req.getParameter("title");
         String description = req.getParameter("description");
@@ -48,16 +56,28 @@ public class AddVoteOption extends HttpServlet {
         String imgName = null;
         try {
             Part imgPart = req.getPart("image");
-            imgName = imgPart.getSubmittedFileName();
+            if(imgPart != null) {
+                imgName = imgPart.getSubmittedFileName();
 
-            if(imgName != null && !imgName.isEmpty()) {
-                InputStream is = imgPart.getInputStream();
-                image = new byte[is.available()];
+                if(imgName != null && !imgName.isEmpty()) {
+                    InputStream is = imgPart.getInputStream();
+                    image = new byte[is.available()];
 
-                is.read(image);
+                    is.read(image);
+                }
             }
         } catch (Exception e) {
             results.put("imageError", "Something went wrong when trying to upload this image.");
+        }
+
+        VoteOption option = VoteOptionDAO.get(Integer.parseInt(optionID));
+        if(image == null) {
+            try {
+                image = option.getImage();
+                results.put("base64Image", option.getBase64Image());
+            } catch(Exception e) {
+                results.put("imageError", "Please select an image");
+            }
         }
 
         // Input Validation
@@ -68,28 +88,30 @@ public class AddVoteOption extends HttpServlet {
             results.put("descriptionError", "Please describe the this option so that a voter has the full picture.");
         }
 
-        results.put("voteID", voteID);
-        results.put("title", title);
-        results.put("description", description);
-        results.put("image", imgName);
-
         if (!results.containsKey("titleError") && !results.containsKey("descriptionError") && !results.containsKey("imageError")) {
             try {
-                VoteOption option = new VoteOption(voteID, title, description, image);
-                if(VoteOptionDAO.add(option)) {
-                    session.setAttribute("flashMessageSuccess", "Vote Option Successfully Added!");
+                VoteOption option2 = new VoteOption(Integer.parseInt(optionID), voteID, title, description, image);
+                if(VoteOptionDAO.edit(option2)) {
+                    session.setAttribute("flashMessageSuccess", "Vote Option Successfully Edited!");
                     resp.sendRedirect("edit-vote?voteID=" + voteID);
                     return;
                 } else {
-                    session.setAttribute("flashMessageWarning", "Failed to add vote option.");
+                    session.setAttribute("flashMessageWarning", "Failed to edit vote option.");
                 }
             } catch(RuntimeException e) {
-                session.setAttribute("flashMessageError", "Failed to add vote option." + e.getMessage());
+                session.setAttribute("flashMessageError", "Failed to edit vote option." + e.getMessage());
             }
         }
 
+        try {
+            req.setAttribute("option", option);
+            results.put("base64Image", option.getBase64Image());
+        } catch(Exception ex) {
+            session.setAttribute("flashMessageError", ex.getMessage());
+        }
+
         req.setAttribute("results", results);
-        req.setAttribute("pageTitle", "Add Vote Option");
-        req.getRequestDispatcher("WEB-INF/smp/add-vote-option.jsp").forward(req, resp);
+        req.setAttribute("pageTitle", "Edit Vote Option");
+        req.getRequestDispatcher("WEB-INF/smp/edit-vote-option.jsp").forward(req, resp);
     }
 }

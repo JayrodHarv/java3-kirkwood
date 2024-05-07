@@ -19,6 +19,14 @@ public class VoteOption {
         Image = image;
     }
 
+    public VoteOption(int optionID, String voteID, String title, String description, byte[] image) {
+        OptionID = optionID;
+        VoteID = voteID;
+        Title = title;
+        Description = description;
+        Image = image;
+    }
+
     public int getOptionID() {
         return OptionID;
     }

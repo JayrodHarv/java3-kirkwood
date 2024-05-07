@@ -86,7 +86,7 @@ public class StartVote extends HttpServlet {
 
                 newVote.setStartTime(startTime);
                 newVote.setEndTime(endTime);
-                if(VoteDAO.edit(newVote)) {
+                if(VoteDAO.edit(newVote, voteID)) {
                     HttpSession session = req.getSession();
                     session.setAttribute("flashMessageSuccess", "Voting has started for " + voteID);
                     resp.sendRedirect("votes");
